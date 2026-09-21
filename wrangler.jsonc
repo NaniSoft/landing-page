@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // NaniSoft — one Worker serving the static export from out/.
+  "name": "nanisoft-www",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "./out",
+    "binding": "ASSETS",
+    // Next's static export emits out/404.html (app/not-found.tsx); the
+    // default auto-trailing-slash html_handling matches trailingSlash: false.
+    "not_found_handling": "404-page"
+  }
+
+}
