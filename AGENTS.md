@@ -2,7 +2,7 @@
 
 ## Project
 
-**www.nanisoft.com** — the NaniSoft company site: landing + about + blog (company level; no docs section). The real landing layers all five packs — this placeholder wears blue until the build ticket lands the approved five-pack design.
+**www.nanisoft.com** — the NaniSoft company site: landing + about + blog (company level; no docs section). The landing layers all five packs; the site itself wears blue — the design language's own pack — as the ground.
 
 Part of the five-site Nanisoft web platform (www + nexus + atlas + alphalens + prism), one design language: Prism's Spectral Refraction (Archivo Variable + JetBrains Mono, hairline elevation, pastel packs, beam-dark).
 
@@ -14,7 +14,7 @@ Import shape (proven by prism's own site, and required — see below): component
 
 ## Wayfinding
 
-The five-repo consistency contract — `CONSISTENCY.md` in this repo, mirrored across the family — binds the dependency pins, import shapes, and shared laws, and it is the only cross-repo document. This repo's own scope, pack, and standing decisions live here and in `README.md`; the published docs are `content/docs/`. The wayfinder map these sites were built from is retired, so its ticket numbers are history — don't cite them.
+The five-repo consistency contract — `CONSISTENCY.md` in this repo, mirrored across the family — binds the dependency pins, import shapes, and shared laws, and it is the only cross-repo document. This repo's own scope, pack, and standing decisions live here and in `README.md`; the published content is `content/blog/`. The wayfinder map these sites were built from is retired, so its ticket numbers are history — don't cite them.
 
 ## Stack
 
