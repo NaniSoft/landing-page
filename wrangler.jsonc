@@ -16,9 +16,9 @@
     // default auto-trailing-slash html_handling matches trailingSlash: false.
     "not_found_handling": "404-page"
   },
-  // The cutover (nanisoft-web map, ticket 14): this Worker owns the company
-  // apex and www. Custom Domains auto-create their DNS on the nanisoft.com
-  // zone; the old `nanisoft` Worker's attachments are detached at cutover.
+  // The cutover has happened: this Worker owns the company apex and www.
+  // Custom Domains auto-create their DNS on the nanisoft.com
+  // zone; the old `nanisoft` Worker's attachments were detached at cutover.
   "routes": [
     { "pattern": "nanisoft.com", "custom_domain": true },
     { "pattern": "www.nanisoft.com", "custom_domain": true }
