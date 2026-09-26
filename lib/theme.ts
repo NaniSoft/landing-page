@@ -6,7 +6,7 @@ import { prismThemeBootScript } from '@nanisoft/prism-ui';
 
 /**
  * The site's fixed pack — identity is static and known at build time; the
- * chrome flips mode only (ADR-0006). www is the company root and layers all five packs in the real landing (ticket 13). Until that build, the placeholder wears blue — the design language's own pack — as the ground.
+ * chrome flips mode only. www is the company root and layers all five packs in the real landing; blue — the design language's own pack — is the ground it sits on.
  */
 export const DEFAULT_PACK: PrismPackId = 'blue';
 
