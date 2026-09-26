@@ -1,0 +1,595 @@
+/*
+ * The www landing (ticket 04's locked design — variant B's hero over variant
+ * A's Factory Floor). Scoped under .www so nothing leaks into the blog or
+ * about pages; the root layout's shared chrome stays outside it.
+ *
+ * Colour always comes from the pre-baked prism-blue-<mode> variable rulesets —
+ * var(--prism-*) tokens, never raw hex. The five-pack law is packs-as-signal:
+ * pack colour arrives as dots, inks, and accents (the ledger rows' --www-ink,
+ * the graph's per-pack strokes), never as a full-bleed pack ground; peach is
+ * reserved for the Future Products node in the graph.
+ *
+ * Motion law ADR-0001: 80/160/280ms, cubic-bezier(0.25, 1, 0.5, 1), no bounce;
+ * the canvas and conveyor run linear (constant motion); reveals ride
+ * transform + opacity only; reduced motion renders everything settled and
+ * drops the packet.
+ */
+
+.www {
+  --www-ease: cubic-bezier(0.25, 1, 0.5, 1);
+  --www-mid: 160ms;
+  --www-slow: 280ms;
+  --www-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --www-sans: var(--font-archivo), -apple-system, 'Segoe UI', sans-serif;
+  --www-hairline: var(--prism-color-border-secondary);
+
+  background: var(--prism-color-bg-layout);
+  color: var(--prism-color-text);
+  font-family: var(--www-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+.www a {
+  color: inherit;
+}
+
+.www a:focus-visible {
+  outline: 2px solid var(--prism-color-primary);
+  outline-offset: 2px;
+}
+
+/* Anchor targets clear the fixed chrome. */
+.www-section[id],
+.www-cta[id] {
+  scroll-margin-top: 84px;
+}
+
+/* ---------- shared primitives ---------- */
+
+.www-shell {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 32px;
+}
+
+.www-eyebrow {
+  font-family: var(--www-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.62;
+  margin: 0 0 20px;
+}
+
+.www-display {
+  font-family: var(--www-sans);
+  font-stretch: 115%;
+  font-weight: 620;
+  letter-spacing: -0.015em;
+  line-height: 1.04;
+  font-size: clamp(44px, 6.4vw, 84px);
+  margin: 0;
+  text-wrap: balance;
+}
+
+.www-display--xl {
+  font-size: clamp(54px, 9vw, 132px);
+  line-height: 0.98;
+}
+
+.www-display--md {
+  font-size: clamp(32px, 4.6vw, 56px);
+}
+
+.www-lede {
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.55;
+  opacity: 0.82;
+  max-width: 56ch;
+  margin: 24px 0 32px;
+}
+
+.www-cta-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.www-cta-row--center {
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.www-caption {
+  font-family: var(--www-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+  opacity: 0.6;
+  max-width: 72ch;
+  margin: 28px 0 0;
+}
+
+.www-section {
+  border-top: 1px solid var(--www-hairline);
+  padding: 104px 0;
+}
+
+.www-section__head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 52px;
+}
+
+.www-section__index {
+  font-family: var(--www-mono);
+  font-size: 12px;
+  color: var(--prism-color-primary);
+}
+
+.www-section__label {
+  font-family: var(--www-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+/* ---------- scroll reveal (components/landing/reveal.ts) ----------
+   The hidden state is CSS-authored, so it has to be able to dismiss itself:
+   if the reveal observer never runs — script blocked, hydration failed — the
+   landing would otherwise stay at opacity 0. A 3s forwards animation settles
+   every [data-reveal] regardless of JS, with no flash on the normal path
+   (adding .is-in cancels the animation before it can start). Nexus's law,
+   inherited by ticket 13 after the prototype's hide-in-CSS approach was found
+   to blank the page on failed hydration. */
+.www [data-reveal] {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity var(--www-slow) var(--www-ease),
+    transform var(--www-slow) var(--www-ease);
+  animation: www-reveal-fallback 1ms linear 3s forwards;
+}
+
+@keyframes www-reveal-fallback {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (scripting: none) {
+  .www [data-reveal] {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.www [data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .www [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- the hero — variant B's single beam ---------- */
+
+.www-hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.www-hero__net {
+  position: absolute;
+  inset: 0;
+  opacity: 0.75;
+}
+
+/* The canvas host is the hero's absolute-inset layer — its size is definite
+   (sized by the hero, never by its own content), so the ResizeObserver cannot
+   feed a growth loop. */
+.www-net {
+  width: 100%;
+  height: 100%;
+}
+
+.www-net__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.www-hero__copy {
+  position: relative;
+  text-align: center;
+  padding-block: 140px;
+}
+
+.www-hero__copy .www-display {
+  max-width: 13ch;
+  margin-inline: auto;
+}
+
+.www-hero__copy .www-lede {
+  margin-inline: auto;
+}
+
+.www-hero__copy .www-cta-row {
+  justify-content: center;
+}
+
+/* ---------- the factory ticker — hero→pipeline transition ---------- */
+
+.www-ticker {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px 32px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--www-hairline);
+  border-bottom: 1px solid var(--www-hairline);
+  padding: 12px 0;
+  font-family: var(--www-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  opacity: 0.68;
+}
+
+/* ---------- 01 — the conveyor rail ---------- */
+
+.www-rail {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) auto;
+  gap: 24px;
+}
+
+/* The packet travels the line (linear: constant motion). */
+.www-rail__packet {
+  position: absolute;
+  top: -3.5px;
+  left: 0;
+  width: 100%;
+  height: 7px;
+  pointer-events: none;
+  animation: www-packet 7s linear infinite;
+}
+
+.www-rail__packet::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--prism-color-primary);
+}
+
+@keyframes www-packet {
+  to {
+    transform: translateX(calc(100% - 7px));
+  }
+}
+
+.www-stage {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  border-top: 1px solid var(--www-hairline);
+  padding-top: 20px;
+}
+
+.www-stage__no {
+  font-family: var(--www-mono);
+  font-size: 11px;
+  opacity: 0.5;
+}
+
+.www-stage__name {
+  font-stretch: 112%;
+  font-weight: 620;
+  font-size: 19px;
+}
+
+.www-stage__caption {
+  font-size: 13.5px;
+  line-height: 1.55;
+  opacity: 0.72;
+}
+
+.www-rail__merged {
+  align-self: start;
+  border-top: 1px solid var(--www-hairline);
+  padding-top: 20px;
+  font-family: var(--www-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--prism-color-success);
+}
+
+/* ---------- 02 — the products ledger ---------- */
+
+.www-ledger {
+  display: grid;
+}
+
+.www-row {
+  display: grid;
+  grid-template-columns: 14px 170px 220px minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: baseline;
+  border-top: 1px solid var(--www-hairline);
+  padding: 24px 8px;
+  text-decoration: none;
+  transition: background-color var(--www-mid) var(--www-ease);
+}
+
+.www-row:last-child {
+  border-bottom: 1px solid var(--www-hairline);
+}
+
+.www-row__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  background: var(--www-ink);
+  align-self: center;
+}
+
+.www-row__name {
+  font-stretch: 112%;
+  font-weight: 620;
+  font-size: 24px;
+}
+
+.www-row__tagline {
+  font-family: var(--www-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.www-row__line {
+  font-size: 14.5px;
+  line-height: 1.5;
+  opacity: 0.78;
+}
+
+.www-row__url {
+  font-family: var(--www-mono);
+  font-size: 11.5px;
+  opacity: 0.55;
+  white-space: nowrap;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .www-row:hover {
+    background: color-mix(in srgb, var(--www-ink) 7%, transparent);
+  }
+}
+
+/* ---------- 03 — the architecture graph ---------- */
+
+.www-diagram {
+  max-width: 880px;
+}
+
+.www-graph {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.www-graph__name {
+  font-family: var(--www-sans);
+  font-weight: 620;
+  font-size: 15px;
+}
+
+.www-graph__role {
+  font-family: var(--www-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.05em;
+}
+
+/* The edges' dash-flow (constant motion → linear). */
+.www-graph--flow .www-graph__flow {
+  stroke-dasharray: 3 9;
+  animation: www-graph-flow 1.6s linear infinite;
+}
+
+@keyframes www-graph-flow {
+  to {
+    stroke-dashoffset: -48;
+  }
+}
+
+/* ---------- 04 — pillars, then the 3+2 card grid ---------- */
+
+.www-pillars {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 40px;
+  margin-bottom: 72px;
+}
+
+.www-pillar h3 {
+  font-stretch: 114%;
+  font-weight: 640;
+  font-size: clamp(24px, 2.6vw, 32px);
+  margin: 0 0 10px;
+}
+
+.www-pillar p {
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.75;
+  max-width: 40ch;
+}
+
+.www-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.www-card {
+  border: 1px solid var(--www-hairline);
+  border-radius: 4px;
+  padding: 22px 20px;
+  transition: border-color var(--www-mid) var(--www-ease);
+}
+
+.www-card__no {
+  font-family: var(--www-mono);
+  font-size: 10.5px;
+  opacity: 0.45;
+}
+
+.www-card h4 {
+  font-stretch: 110%;
+  font-weight: 620;
+  font-size: 16.5px;
+  margin: 14px 0 8px;
+}
+
+.www-card p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  opacity: 0.72;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .www-card:hover {
+    border-color: color-mix(in srgb, var(--prism-color-text) 34%, transparent);
+  }
+}
+
+/* ---------- 05 — the manifesto ---------- */
+
+.www-manifesto {
+  max-width: 58ch;
+}
+
+.www-manifesto p {
+  font-size: clamp(20px, 2.4vw, 28px);
+  font-stretch: 106%;
+  font-weight: 520;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ---------- the closing band ---------- */
+
+.www-cta {
+  border-top: 1px solid var(--www-hairline);
+  padding: 140px 0;
+  text-align: center;
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 1080px) {
+  /* The conveyor stacks into a vertical line; the packet retires. */
+  .www-rail {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .www-rail__packet {
+    display: none;
+  }
+
+  .www-stage {
+    border-top: none;
+    border-left: 1px solid var(--www-hairline);
+    padding: 18px 0 18px 20px;
+  }
+
+  .www-rail__merged {
+    border-top: none;
+    border-left: 1px solid var(--www-hairline);
+    padding: 18px 0 0 20px;
+  }
+
+  .www-row {
+    /* The url takes its own row: sharing the name's row collides once the
+       name is long (AlphaLens at 375px). */
+    grid-template-columns: 14px minmax(0, 1fr);
+    grid-template-areas:
+      'dot name'
+      'dot tagline'
+      'dot line'
+      'dot url';
+    row-gap: 8px;
+  }
+
+  .www-row__dot {
+    grid-area: dot;
+  }
+
+  .www-row__name {
+    grid-area: name;
+  }
+
+  .www-row__tagline {
+    grid-area: tagline;
+  }
+
+  .www-row__line {
+    grid-area: line;
+  }
+
+  .www-row__url {
+    grid-area: url;
+  }
+
+  .www-pillars {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .www-section {
+    padding: 80px 0;
+  }
+
+  .www-shell {
+    padding-inline: 22px;
+  }
+}
+
+/* ---------- reduced motion: keep content, drop movement ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .www-rail__packet {
+    animation: none;
+  }
+
+  .www-graph--flow .www-graph__flow {
+    animation: none;
+    opacity: 0.3;
+  }
+
+  .www-row,
+  .www-card {
+    transition: none;
+  }
+}
