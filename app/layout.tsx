@@ -1,3 +1,4 @@
+import { Inter } from 'next/font/google';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
@@ -40,9 +41,29 @@ export const metadata: Metadata = {
  * the name a switcher takes when a consumer passes no `productsLabel`, so it is the
  * switcher's honest name here.
  */
+// The design system's own first family, and the only file this site loads.
+//
+// `--font-sans` in prism's emitted sheet reads `Inter, ui-sans-serif, system-ui, ...`.
+// Naming a family is not shipping it: 0.6.0 carries no font file, so a site that
+// loads nothing renders in the platform's UI face, which is the one face a design
+// system never means by its first choice. The fallback list prism declares is kept
+// verbatim behind this one, so nothing about the design system's intent changes; the
+// only difference is that its first entry now exists.
+//
+// The migration dropped this site's Archivo and JetBrains Mono and let the display
+// type fall back to the platform face. That was not in the ticket, and it is the
+// most visible change the migration made. The typeface belongs to the design system
+// and lands with it (the open item is that `@nanisoft/prism-ui` should ship one), so
+// a site supplies the file the token already names rather than choosing its own.
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" {...THEME_ATTRIBUTES} suppressHydrationWarning>
+    <html lang="en" className={inter.variable} {...THEME_ATTRIBUTES} suppressHydrationWarning>
       <head>
         {/* Before paint, on the same attributes the server rendered: a stored choice
             is applied and a stored value that no longer parses is left in place, so

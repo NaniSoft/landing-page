@@ -32,6 +32,26 @@
  * is the only indicator on an element no Prism component drew.
  */
 
+/*
+ * The one thing this sheet declares that is not a site class: the design system's
+ * first family, supplied.
+ *
+ * prism's emitted sheet declares `--font-sans: Inter, ui-sans-serif, system-ui, ...`
+ * and 0.6.0 ships no font file, so the first entry is a name nothing resolves to and
+ * every page on the site renders in the platform's UI face. This supplies the file
+ * the token already names and repeats prism's own fallback list verbatim behind it,
+ * so the design system's intent is unchanged and only its first entry becomes real.
+ *
+ * It is a custom property rather than a `font-family` on a bare element on purpose:
+ * a site stylesheet must not declare `font-family` on a selector with no class in it,
+ * because prism's base is layered and this sheet is not. A token is not that.
+ */
+
+:root {
+  --font-sans: var(--font-inter), Inter, ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
 .site-main {
   /* Keeps the footer below the fold on a short page. Layout, so it is a class rule
      and not a bare-element one, and it competes with nothing prism declares. */
