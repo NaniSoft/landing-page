@@ -148,19 +148,35 @@ function outline(document) {
   );
 }
 
+/**
+ * The chrome, as a list of roots rather than one.
+ *
+ * `querySelector('header, footer')` returns a single element, so the pair selector
+ * this tool shipped with read the header and silently never read the footer, while
+ * its own documentation above claimed it read "the same for the header and the
+ * footer". A check that does less than its comment says is worse than no check,
+ * because the comment is what a reader trusts. On this site the footer carries 549
+ * characters of published copy and no anchors, so every one of those characters
+ * was outside the comparison the ticket asked for. Both are collected, in document
+ * order.
+ */
+function chromeOf(document) {
+  return [...document.querySelectorAll('header, footer')];
+}
+
 /** Everything the tool reads about one route. */
 function readRoute(route) {
   const document = documentOf(route);
   const main = document.querySelector('main') ?? document.body;
-  const chrome = document.querySelector('header, footer');
+  const chrome = chromeOf(document);
   return {
     title: tidy(document.title),
     description: document.querySelector('meta[name="description"]')?.getAttribute('content') ?? '',
     outline: outline(document),
     mainText: textLines(main),
     mainLinks: links(main),
-    chromeText: chrome ? textLines(chrome) : [],
-    chromeLinks: chrome ? links(chrome) : [],
+    chromeText: chrome.flatMap((root) => textLines(root)),
+    chromeLinks: chrome.flatMap((root) => links(root)),
   };
 }
 
