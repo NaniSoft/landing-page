@@ -7,7 +7,7 @@ Part of the [NaniSoft](https://www.nanisoft.com) web platform — five sites, on
 - **Live**: https://www.nanisoft.com, with the apex https://nanisoft.com — both Cloudflare Custom Domains on the `nanisoft-www` Worker, which serves this static export
 - **Pack**: `sky` is the ground, on the document element, and it does not change. Four other packs are on marks: the header's product switcher carries `lavender`, `mint`, `blush` and `peach`, and the products section carries the three its rows name. That is the whole five-pack layering, and `scripts/pack-map.json` is the map and `scripts/check-pack-map.mjs` is the gate, checked in both light and dark mode
 - **Stack**: Next 16 static export · fumadocs-mdx · pnpm · TypeScript strict · oxlint · Vitest (jsdom + Testing Library) · Cloudflare Workers
-- **Chrome and every section**: [@nanisoft/prism-ui](https://www.npmjs.com/package/@nanisoft/prism-ui) 0.6.0, pinned exactly. There is no local component and no client runtime: every page is a server component, so the site ships no JavaScript of its own
+- **Chrome and every section**: [@nanisoft/prism-ui](https://www.npmjs.com/package/@nanisoft/prism-ui) 0.7.0, pinned exactly. It brings the token package at the exact version it was released against, so this repository declares one first-party dependency and cannot be handed a mismatched pair. There is no local component and no client runtime: every page is a server component, so the site ships no JavaScript of its own
 
 ## What ships
 
@@ -30,7 +30,8 @@ app/globals.css       130 lines: the blog index, three landing elements, two uti
 lib/site.json         the ground, the default mode, the product directory
 lib/site.ts           those facts, typed by the design system's pack vocabulary
 lib/landing-content.ts every word of the landing, as data
-scripts/              the four gates, the pack map, the parity expectations
+scripts/              the pack map, the region resolver, the parity expectations
+prism-gates.json      this site's half of the cross-repository contract: data only
 ```
 
 Three things are worth knowing before changing anything here.
@@ -41,22 +42,21 @@ Prism component uses it. `mb-12` is safe; a utility Prism happens not to use wou
 nothing and say nothing. Anything this site needs for itself goes in
 `app/globals.css` as a site class.
 
-**The site stylesheet owns almost nothing, and that is a rule.** It must not declare
-the page ground, the body ink, a focus outline or a hairline colour on a selector with
-no class in it, and it must not carry a `:focus` rule at all: the design system's base
-layer is layered and this sheet is not, so a bare-element rule here wins the cascade
-whatever the cascade then does with it. `scripts/check-stylesheet-ownership.mjs` is
-why that is enforced rather than remembered.
+**The site stylesheet owns almost nothing.** It must not declare the page ground, the
+body ink, a focus outline or a hairline colour on a selector with no class in it, and
+it must not carry a `:focus` rule at all: the design system's base layer is layered
+and this sheet is not, so a bare-element rule here wins the cascade whatever the
+cascade then does with it. That sentence is the reason the gate exists rather than the
+gate's rule: the rule is the failure message, and when `pnpm check` is red the message
+says which of these it was and why it matters.
 
 **A pack boundary is not only colour.** It repoints the pack's corner radius beneath
 it, and it wears the mode of the nearest ancestor carrying `.dark`, which is why a
-server-rendered boundary has no mode class of its own. So a boundary belongs on a
-fully rounded mark and nowhere else, and a page that put a second pack on a section
-would be encoding its section index in its corner radius. All five light grounds are
-the same white and the five dark grounds span about three steps of near-neutral, so a
-section ground buys almost nothing and costs a shape change. The map says where two
-regions may carry a second pack; the gate says the count and the identifiers, in both
-modes, and a third region fails the build.
+server-rendered boundary has no mode class of its own. All five light grounds are the
+same white and the five dark grounds span about three steps of near-neutral, so a
+section ground buys almost nothing and costs a shape change. `scripts/pack-map.json`
+says where two regions may carry a second pack and why; the gate checks the count and
+the identifiers in both modes.
 
 ## Develop
 
@@ -67,32 +67,48 @@ pnpm build        # static export to out/
 pnpm lint         # oxlint
 pnpm typecheck    # next typegen && tsc --noEmit
 pnpm test         # vitest
-pnpm check        # the four gates; run after pnpm build
+pnpm check        # the consumer gate kit; run after pnpm build
 ```
 
-The four gates, and what each is for:
+`pnpm check` runs `prism-gates`, the gate kit in `@nanisoft/prism-ui/gates`. The
+laws themselves are not in this repository: they are the failure messages of those
+gates, so a fix to one reaches this site in one release and cannot be declined here.
+The four repositories of the family run the same programs and hold none of the
+wording. What this site holds is its own half, in `prism-gates.json` and the two
+files it names: its stylesheets, its pack map and the reason each region exists, its
+region resolver, and its coverage floors. Every one of those is data.
 
-| gate | what it holds |
+What the kit enforces here, by name, so a failure message is findable:
+
+| gate | law |
 | --- | --- |
-| `check:antd` | No trace of the retired line: no dependency, no import, no generated stylesheet, no build step, no living instruction. The lockfile is read as a dependency graph, and both design-system pins must be exact. |
-| `check:stylesheet` | The site's own sheet competes with nothing the design system declares, and no `color-mix()` takes a `var()` as an operand. |
-| `check:links` | Every internal destination and every in-page fragment resolves to something this site emits. |
-| `check:pack-map` | The pack map, from the built export, in both light and dark mode: the region set, the identifiers, the boundary count, a boundary on a mark and nowhere else, and each boundary's own pack resolved against the published token contract. |
+| `pin` | The design system is an exact version, and the token package is the component package's dependency rather than this site's. |
+| `retired-line` | No trace of the retired component library: no dependency, no import, no generated stylesheet, no build step, no living instruction. The lockfile is read as a graph. |
+| `stylesheet-ownership` | The site's own sheet owns no surface the design system owns, and no `color-mix()` takes a `var()` as an operand. |
+| `token-read` | Every custom property this sheet reads is declared. A read that resolves to nothing is not a wrong colour; it is no declaration at all. |
+| `links` | Every internal destination and every in-page fragment resolves to something this site emits. |
+| `pack-boundary` | The pack map, from the built export, in both modes: the region set, the identifiers, a boundary on a mark and nowhere else, and each boundary's own pack resolved against the published token contract. |
+| `runtime-token-read` | No token is read at runtime, because a read resolves once and a resolved value does not follow the cascade. |
 
-The content-parity comparison is a fifth tool and is not in `pnpm check`, because its
-baseline lives outside the repository and is destroyed at the close of the sweep:
+`hidden-state` is in the kit and not in this site's list: this site authors no hidden
+state, so the gate would pass vacuously. It runs there anyway, and the run reports the
+rule count it read, so a vacuous pass is distinguishable from a scan of nothing.
 
-```bash
-node scripts/check-content-parity.mjs --record <file>            # cut a baseline
-node scripts/check-content-parity.mjs --baseline <file> \
-  --expect scripts/content-parity-expectations.json              # compare
-```
+The kit's limits, which it prints on every run: it reads text rather than resolving a
+cascade, it reads the emitted export rather than a browser, and it cannot see an
+attribute a runtime sets after paint.
 
-It reads the built export through a document parser, so it sees the copy in
-`lib/landing-content.ts` and in JSX as well as the copy in `content/`, which a digest
-of the content tree would have been blind to. Every difference must be declared in
-`scripts/content-parity-expectations.json` with the reason it is a rendering change
-and not a copy change, and a declaration that matches nothing is itself a finding.
+The content-parity comparison was a one-time instrument for the migration sweep and is
+gone with its baseline, which lived outside the repository and was destroyed at the
+close of that sweep. What it did is worth recording, because it is the reason
+`check:links` is the gate that survived: it read the built export through a document
+parser rather than a digest of `content/`, so it saw the copy in
+`lib/landing-content.ts` and in JSX, which a content-tree digest would have been blind
+to. Every difference had to be declared in `scripts/content-parity-expectations.json`
+with the reason it was a rendering change and not a copy change, and a declaration
+that matched nothing was itself a finding. The permanent successor asks a question
+that is true of every future build rather than of one migration: does a reader who
+follows a link on this site arrive somewhere.
 
 ## Deploy
 
@@ -113,5 +129,8 @@ defers to.
 
 The wayfinder map these sites were built from is retired, and it and its ticket numbers
 are gone from this repository's documents. The standing references are `AGENTS.md`
-(this repository's own scope, stack and commands), `CONSISTENCY.md` (the
-cross-repository law and the gate that holds each clause) and this file.
+(this repository's own scope, stack and commands), `prism-gates.json` (this site's
+half of the cross-repository contract, which is data only) and this file. The laws
+themselves are not a reference in this repository: they are the failure messages of
+the gates in `@nanisoft/prism-ui/gates`, which this site installs by pinning that
+package exactly.

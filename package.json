@@ -19,10 +19,10 @@
     "check:stylesheet": "node scripts/check-stylesheet-ownership.mjs",
     "check:links": "node scripts/check-links.mjs",
     "check:pack-map": "node scripts/check-pack-map.mjs",
+    "check:prism-gates": "prism-gates",
     "check": "pnpm check:antd && pnpm check:stylesheet && pnpm check:links && pnpm check:pack-map"
   },
   "dependencies": {
-    "@nanisoft/prism-tokens": "0.6.0",
     "@nanisoft/prism-ui": "0.7.0",
     "fumadocs-core": "^16.15.12",
     "fumadocs-mdx": "^15.4.2",

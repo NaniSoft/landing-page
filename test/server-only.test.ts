@@ -72,8 +72,12 @@ describe('the site has no client code', () => {
   });
 
   it('reads no token at runtime, and takes no colour from a computed style', () => {
-    // The canvas law, as an assertion about the whole tree rather than about a canvas.
-    const pattern = /getPropertyValue|getComputedStyle|prismBrandPacks|prismCssVarKey/;
+    // The runtime token-read law, as an assertion about the whole tree rather than
+    // about a canvas. The law's wording is in the gate kit and its gate runs over this
+    // same tree; this test is here for the other half, which is the file list above. A
+    // test that repeats the law's wording is a second copy of the law, and the failure
+    // this programme exists to end is four copies of a sentence.
+    const pattern = /getPropertyValue|getComputedStyle/;
     const offenders = files.filter((file) => pattern.test(readFileSync(file, 'utf8')));
     expect(offenders, `a runtime token read in ${offenders.join(', ')}`).toEqual([]);
   });
@@ -81,7 +85,9 @@ describe('the site has no client code', () => {
   it('authors no hidden state, so the reveal law has nothing to govern', () => {
     // The reveal law, as an assertion: a CSS-authored hidden state needs an escapable
     // condition, and the cheapest way to be sure there is none is that the stylesheet
-    // declares no opacity or visibility of zero at all.
+    // declares no opacity or visibility of zero at all. The gate kit's hidden-state
+    // gate runs here vacuously and prints that it did, which is the half this test
+    // cannot see.
     const css = readFileSync(path.join(ROOT, 'app', 'globals.css'), 'utf8');
     expect(css).not.toMatch(/opacity:\s*0\b/);
     expect(css).not.toMatch(/visibility:\s*hidden/);
