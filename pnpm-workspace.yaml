@@ -10,5 +10,5 @@ allowBuilds:
 # are ours, resolved from npm by exact version in the lockfile, and fresh
 # releases are precisely what this repo wants to pick up.
 minimumReleaseAgeExclude:
-  - '@nanisoft/prism-tokens@0.3.0'
-  - '@nanisoft/prism-ui@0.4.0'
+  - '@nanisoft/prism-tokens@0.3.0 || 0.6.0'
+  - '@nanisoft/prism-ui@0.4.0 || 0.6.0'

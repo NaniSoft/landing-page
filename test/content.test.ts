@@ -46,7 +46,7 @@ describe('blog content', () => {
     expect(meta, 'no frontmatter block').toBeTruthy();
     expect(meta).toMatch(/^title: \S/m);
     expect(meta).toMatch(/^description: \S/m);
-    // Required ISO date — the index sorts on it.
+    // Required ISO date. The index sorts on it.
     expect(meta).toMatch(/^date: '\d{4}-\d{2}-\d{2}'$/m);
     expect(meta).toMatch(/^tags:/m);
     expect(meta).not.toMatch(/^draft: true$/m);

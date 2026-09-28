@@ -3,8 +3,9 @@
 // The fumadocs-mdx Macro API is compile-time: `defineCollections` may only
 // appear at top level in this module with a literal `dir`, and the module must
 // not re-export the macro. Frontmatter is fumadocs' page schema plus the
-// blog's date/tags/draft — no www-specific fields. www has no docs corpus
-// (locked scope: landing + about + blog), so there is no docs collection.
+// blog's date, tags and draft, and nothing specific to this site. This site has
+// no docs corpus (its locked scope is landing, about and blog), so there is no
+// docs collection here.
 import { defineCollections } from 'fumadocs-mdx/macro';
 import { loader } from 'fumadocs-core/source';
 import { pageSchema } from 'fumadocs-core/source/schema';

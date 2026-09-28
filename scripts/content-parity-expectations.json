@@ -1,0 +1,579 @@
+[
+  {
+    "$comment": [
+      "The differences the migration is allowed to make, each with the reason it is a",
+      "rendering change and not a copy change. The value on every entry is the string",
+      "the built page printed or stopped printing, byte for byte, which is why this file",
+      "holds some of the site's own em dashes: it quotes frozen copy exactly rather",
+      "than paraphrasing it, because an expectation that does not match is a rule that",
+      "fires on nothing. A route of \"*\" covers the same difference on every route,",
+      "which is what a chrome change is."
+    ]
+  },
+  {
+    "route": "*",
+    "surface": "chromeText",
+    "change": "added",
+    "value": "Nexus",
+    "reason": "The header's product switcher is the catalogue's, and it draws each product's mark with the product's name beside it. The old chrome drew five unlabelled coloured dots, so the four product names are new visible words in the chrome on every route. No published copy was rewritten: these are the products' own names, which the switcher is the only new place that has to print them."
+  },
+  {
+    "route": "*",
+    "surface": "chromeText",
+    "change": "added",
+    "value": "Atlas",
+    "reason": "The header's product switcher is the catalogue's, and it draws each product's mark with the product's name beside it. The old chrome drew five unlabelled coloured dots, so the four product names are new visible words in the chrome on every route."
+  },
+  {
+    "route": "*",
+    "surface": "chromeText",
+    "change": "added",
+    "value": "AlphaLens",
+    "reason": "The header's product switcher is the catalogue's, and it draws each product's mark with the product's name beside it. The old chrome drew five unlabelled coloured dots, so the four product names are new visible words in the chrome on every route."
+  },
+  {
+    "route": "*",
+    "surface": "chromeText",
+    "change": "added",
+    "value": "Prism",
+    "reason": "The header's product switcher is the catalogue's, and it draws each product's mark with the product's name beside it. The old chrome drew five unlabelled coloured dots, so the four product names are new visible words in the chrome on every route."
+  },
+  {
+    "route": "*",
+    "surface": "chromeLinks",
+    "change": "added",
+    "value": "NaniSoft -> /",
+    "reason": "The brand lockup is the catalogue's too, so the site's name is now a link in the header and in the footer rather than one link in the header. The destination is the same address as before, so no address changed; the count of links carrying it went from one to two."
+  },
+  {
+    "route": "*",
+    "surface": "chromeLinks",
+    "change": "added",
+    "value": "Nexus -> https://nexus.nanisoft.com",
+    "reason": "The switcher moves between the whole product set, so the four product destinations are real anchors in the chrome. They were dots before and are destinations now, with each product's own name as the link text."
+  },
+  {
+    "route": "*",
+    "surface": "chromeLinks",
+    "change": "added",
+    "value": "Atlas -> https://atlas.nanisoft.com",
+    "reason": "The switcher moves between the whole product set, so the four product destinations are real anchors in the chrome. They were dots before and are destinations now, with each product's own name as the link text."
+  },
+  {
+    "route": "*",
+    "surface": "chromeLinks",
+    "change": "added",
+    "value": "AlphaLens -> https://alphalens.nanisoft.com",
+    "reason": "The switcher moves between the whole product set, so the four product destinations are real anchors in the chrome. They were dots before and are destinations now, with each product's own name as the link text."
+  },
+  {
+    "route": "*",
+    "surface": "chromeLinks",
+    "change": "added",
+    "value": "Prism -> https://prism.nanisoft.com",
+    "reason": "The switcher moves between the whole product set, so the four product destinations are real anchors in the chrome. They were dots before and are destinations now, with each product's own name as the link text."
+  },
+
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "01",
+    "reason": "The six stage ordinals the old rail printed. The catalogue's process rail admits at most four steps and this page states six, so the six stages are drawn as a grid of short points, which prints a title and a line per point and no ordinal. The five section ordinals survive, in the heading's eyebrow slot; only the six stage ordinals are gone, and one occurrence of 01 to 05 goes with them because each appeared twice before."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "02",
+    "reason": "One of the six stage ordinals the old rail printed, not the section ordinal: the section ordinal survives in the heading's eyebrow slot, so exactly one occurrence of 02 leaves the page."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "03",
+    "reason": "One of the six stage ordinals the old rail printed, not the section ordinal: the section ordinal survives in the heading's eyebrow slot, so exactly one occurrence of 03 leaves the page."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "04",
+    "reason": "One of the six stage ordinals the old rail printed, not the section ordinal: the section ordinal survives in the heading's eyebrow slot, so exactly one occurrence of 04 leaves the page."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "05",
+    "reason": "One of the six stage ordinals the old rail printed, not the section ordinal: the section ordinal survives in the heading's eyebrow slot, so exactly one occurrence of 05 leaves the page."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "06",
+    "reason": "The sixth stage ordinal, which had no section ordinal of its own to share the number with. Same reason as the other five: the item that draws the pipeline prints no ordinal per point."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "merged",
+    "reason": "The label the old rail printed beside its last step. The catalogue's process rail is the only item that has such a slot, and it admits at most four steps, so this page's six stages cannot use it; the item that draws this section has no terminal label. The word is recorded as removed rather than rewritten into a stage caption, because rewriting it would be a copy edit."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "Autonomous software creation, supervised by you.",
+    "reason": "The product row's detail line. The catalogue's product row carries a mark, a name and a tagline and has no slot for a second line; its own documentation says a second line per row belongs above the grid in the section description, which is a claim about the set and not about one member of it. This is a real loss of published copy and it is a catalogue gap, reported rather than papered over."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "Living models of real systems — built by the factory.",
+    "reason": "The product row's detail line. The catalogue's product row carries a mark, a name and a tagline and has no slot for a second line. Reported as a catalogue gap rather than rewritten into the tagline, because rewriting it would be a copy edit."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "Quantitative trading research for the Indian market — the factory’s newest build.",
+    "reason": "The product row's detail line. The catalogue's product row carries a mark, a name and a tagline and has no slot for a second line. Reported as a catalogue gap rather than rewritten into the tagline, because rewriting it would be a copy edit."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "nexus.nanisoft.com",
+    "reason": "The row printed its own destination as text after the host name. The row is a whole-row anchor whose href is that destination, so the address survives as the link itself and is no longer printed beside it; a reader still sees where the row goes in the status bar, and a screen reader announces the destination."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "atlas.nanisoft.com",
+    "reason": "The row printed its own destination as text after the host name. The row is a whole-row anchor whose href is that destination, so the address survives as the link itself."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "alphalens.nanisoft.com",
+    "reason": "The row printed its own destination as text after the host name. The row is a whole-row anchor whose href is that destination, so the address survives as the link itself."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "→",
+    "reason": "The arrow that followed each printed destination. The catalogue's product row draws no arrow, and the arrow was a glyph a screen reader read as punctuation rather than as an affordance."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "the shared language",
+    "reason": "The subtitle under the Prism node. The Diagram takes a name per thing and a required word per relation and has no subtitle slot, so the five role subtitles have nowhere to go. The same sentence is still published on the page as the drawing's accessible name, which is ARCHITECTURE.aria verbatim and says exactly what the five subtitles said."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "the engine",
+    "reason": "The subtitle under the Nexus node. The Diagram has no subtitle slot; the same sentence is still the drawing's accessible name, which is ARCHITECTURE.aria verbatim."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "digital twins",
+    "reason": "The subtitle under the Atlas node. The Diagram has no subtitle slot; the same sentence is still the drawing's accessible name, which is ARCHITECTURE.aria verbatim."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "market research",
+    "reason": "The subtitle under the AlphaLens node. The Diagram has no subtitle slot; the same sentence is still the drawing's accessible name, which is ARCHITECTURE.aria verbatim."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "built next",
+    "reason": "The subtitle under the Future Products node. The Diagram has no subtitle slot; the same sentence is still the drawing's accessible name, which is ARCHITECTURE.aria verbatim."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "added",
+    "value": "feeds",
+    "reason": "A word on the Prism-to-Nexus relation. The Diagram requires a word on every relation and the old hand-drawn graph had none, so five words are new visible text in the drawing. They are the verbs of the sentence the drawing is named by: Prism, the shared language, feeds Nexus."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "added",
+    "value": "builds",
+    "reason": "A word on a Nexus-to-product relation. The Diagram requires a word on every relation and the old hand-drawn graph had none. The words are the verbs of ARCHITECTURE.aria, which is the drawing's accessible name."
+  },
+  {
+    "route": "/",
+    "surface": "mainText",
+    "change": "added",
+    "value": "points at",
+    "reason": "A word on a product-to-future relation, drawn dashed because the relation holds but not by that route, which is how the old drawing distinguished the Future Products edges. The Diagram requires a word on every relation and the old graph had none."
+  },
+  {
+    "route": "/",
+    "surface": "mainLinks",
+    "change": "removed",
+    "value": "Nexus The Agent Factory Autonomous software creation, supervised by you. nexus.nanisoft.com → -> https://nexus.nanisoft.com",
+    "reason": "The row's link text changes because two of the four things the row printed have no slot on the catalogue's row: the detail line and the printed destination. The destination is unchanged, and the diff records the href on both sides so a changed address could not pass."
+  },
+  {
+    "route": "/",
+    "surface": "mainLinks",
+    "change": "removed",
+    "value": "Atlas The Digital Twin Platform Living models of real systems — built by the factory. atlas.nanisoft.com → -> https://atlas.nanisoft.com",
+    "reason": "The row's link text changes because two of the four things the row printed have no slot on the catalogue's row. The destination is unchanged."
+  },
+  {
+    "route": "/",
+    "surface": "mainLinks",
+    "change": "removed",
+    "value": "AlphaLens Market research, quantified Quantitative trading research for the Indian market — the factory’s newest build. alphalens.nanisoft.com → -> https://alphalens.nanisoft.com",
+    "reason": "The row's link text changes because two of the four things the row printed have no slot on the catalogue's row. The destination is unchanged."
+  },
+  {
+    "route": "/",
+    "surface": "mainLinks",
+    "change": "added",
+    "value": "Nexus The Agent Factory -> https://nexus.nanisoft.com",
+    "reason": "The same row after the rebuild: a mark, the name, the tagline, and the destination as the link itself. The address on this line is the address on the line it replaces, which is the assertion that matters."
+  },
+  {
+    "route": "/",
+    "surface": "mainLinks",
+    "change": "added",
+    "value": "Atlas The Digital Twin Platform -> https://atlas.nanisoft.com",
+    "reason": "The same row after the rebuild: a mark, the name, the tagline, and the destination as the link itself. The address is unchanged."
+  },
+  {
+    "route": "/",
+    "surface": "mainLinks",
+    "change": "added",
+    "value": "AlphaLens Market research, quantified -> https://alphalens.nanisoft.com",
+    "reason": "The same row after the rebuild: a mark, the name, the tagline, and the destination as the link itself. The address is unchanged."
+  },
+  {
+    "route": "/",
+    "surface": "outline",
+    "change": "added",
+    "value": "h2: The pipeline — issue to release",
+    "reason": "The five numbered bands print their section title as a real heading now. The old page printed each band's index and label as two spans above a div and had no heading at all for a section, so a screen reader navigating by heading found the page's thesis and then the closing band and nothing between. This is the design system's choice and it is the correct one."
+  },
+  {
+    "route": "/",
+    "surface": "outline",
+    "change": "added",
+    "value": "h2: Products — all built by Nexus",
+    "reason": "The section title is a real heading now, for the reason given on the pipeline's title."
+  },
+  {
+    "route": "/",
+    "surface": "outline",
+    "change": "added",
+    "value": "h2: Architecture — one engine, everything on it",
+    "reason": "The section title is a real heading now, for the reason given on the pipeline's title."
+  },
+  {
+    "route": "/",
+    "surface": "outline",
+    "change": "added",
+    "value": "h2: Why Nanisoft",
+    "reason": "The section title is a real heading now, for the reason given on the pipeline's title."
+  },
+  {
+    "route": "/",
+    "surface": "outline",
+    "change": "added",
+    "value": "h2: Philosophy",
+    "reason": "The section title is a real heading now, for the reason given on the pipeline's title."
+  },
+  {
+    "route": "/",
+    "surface": "outline",
+    "change": "removed",
+    "value": "h3: Autonomy",
+    "reason": "The three pillars are a definition list now, and a definition list carries terms rather than headings. The words are unchanged and each is announced with its explanation, which is the pairing a heading and a paragraph did not give a screen reader."
+  },
+  {
+    "route": "/",
+    "surface": "outline",
+    "change": "removed",
+    "value": "h3: Intelligence",
+    "reason": "The three pillars are a definition list now, for the reason given on Autonomy."
+  },
+  {
+    "route": "/",
+    "surface": "outline",
+    "change": "removed",
+    "value": "h3: Scale",
+    "reason": "The three pillars are a definition list now, for the reason given on Autonomy."
+  },
+  {
+    "route": "/",
+    "surface": "outline",
+    "change": "removed",
+    "value": "h4: Multi-Agent Orchestration",
+    "reason": "The five features are cards now, and a card title is not a heading. This is a real loss for a reader navigating by heading, and it is the catalogue's decision rather than this site's: a card is a surface, not a section, and a grid of features is a set rather than a sequence."
+  },
+  {
+    "route": "/",
+    "surface": "outline",
+    "change": "removed",
+    "value": "h4: Autonomous Development",
+    "reason": "The five features are cards now, for the reason given on Multi-Agent Orchestration."
+  },
+  {
+    "route": "/",
+    "surface": "outline",
+    "change": "removed",
+    "value": "h4: Continuous Validation",
+    "reason": "The five features are cards now, for the reason given on Multi-Agent Orchestration."
+  },
+  {
+    "route": "/",
+    "surface": "outline",
+    "change": "removed",
+    "value": "h4: Adaptive Learning",
+    "reason": "The five features are cards now, for the reason given on Multi-Agent Orchestration."
+  },
+  {
+    "route": "/",
+    "surface": "outline",
+    "change": "removed",
+    "value": "h4: Assembly Pipelines",
+    "reason": "The five features are cards now, for the reason given on Multi-Agent Orchestration."
+  },
+
+  {
+    "route": "/404",
+    "surface": "outline",
+    "change": "added",
+    "value": "h2: This page does not exist (yet).",
+    "reason": "The catalogue's not-found Page makes the code the page's h1 and the sentence an h2, which is the reverse of what a reader sees first and the right way round for anything that reads the outline. The sentence is the site's own published sentence, unchanged."
+  },
+  {
+    "route": "/404",
+    "surface": "mainText",
+    "change": "added",
+    "value": "NaniSoft",
+    "reason": "A way out of the not-found page, which the old screen had none of. It is labelled with the site's own name rather than with a new word, so no copy was written for it: the label is a string this site already publishes in its chrome."
+  },
+  {
+    "route": "/404",
+    "surface": "mainLinks",
+    "change": "added",
+    "value": "NaniSoft -> /",
+    "reason": "The same way out, as an anchor with the destination a reader can see, copy and open in a new tab."
+  },
+  {
+    "route": "/_not-found",
+    "surface": "outline",
+    "change": "added",
+    "value": "h2: This page does not exist (yet).",
+    "reason": "The same document as /404, which the static export emits under both names, so the same sentence gains a heading on both routes."
+  },
+  {
+    "route": "/_not-found",
+    "surface": "mainText",
+    "change": "added",
+    "value": "NaniSoft",
+    "reason": "The same way out, on the same document under its other name."
+  },
+  {
+    "route": "/_not-found",
+    "surface": "mainLinks",
+    "change": "added",
+    "value": "NaniSoft -> /",
+    "reason": "The same way out, on the same document under its other name."
+  },
+
+  {
+    "route": "/blog/one-design-language-five-sites",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "←",
+    "reason": "The arrow that stood in for the word Previous. The catalogue's blog post Page takes the two trail words as required props and prints them beside the neighbouring titles, because a glyph is punctuation a screen reader reads as punctuation and a word is a label."
+  },
+  {
+    "route": "/blog/one-design-language-five-sites",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "→",
+    "reason": "The arrow that stood in for the word Next, for the reason given on the previous arrow."
+  },
+  {
+    "route": "/blog/one-design-language-five-sites",
+    "surface": "mainText",
+    "change": "added",
+    "value": "Previous",
+    "reason": "The word the trail now prints instead of an arrow. Two words appear on every post page that the old markup did not have, and the words are labels rather than punctuation."
+  },
+  {
+    "route": "/blog/one-design-language-five-sites",
+    "surface": "mainText",
+    "change": "added",
+    "value": "Next",
+    "reason": "The word the trail now prints instead of an arrow, for the reason given on Previous."
+  },
+  {
+    "route": "/blog/one-design-language-five-sites",
+    "surface": "mainLinks",
+    "change": "removed",
+    "value": "← Directed by a person, built by agents -> /blog/directed-by-a-person-built-by-agents",
+    "reason": "The trail link's text changes from a glyph to a word. The destination is byte-identical on both sides of this diff, which is the assertion that matters about a trail."
+  },
+  {
+    "route": "/blog/one-design-language-five-sites",
+    "surface": "mainLinks",
+    "change": "removed",
+    "value": "Where the products stand → -> /blog/where-the-products-stand",
+    "reason": "The trail link's text changes from a glyph to a word. The destination is unchanged."
+  },
+  {
+    "route": "/blog/one-design-language-five-sites",
+    "surface": "mainLinks",
+    "change": "added",
+    "value": "Previous Directed by a person, built by agents -> /blog/directed-by-a-person-built-by-agents",
+    "reason": "The same trail link with a word in place of the glyph, and the same destination."
+  },
+  {
+    "route": "/blog/one-design-language-five-sites",
+    "surface": "mainLinks",
+    "change": "added",
+    "value": "Next Where the products stand -> /blog/where-the-products-stand",
+    "reason": "The same trail link with a word in place of the glyph, and the same destination."
+  },
+
+  {
+    "route": "/blog/directed-by-a-person-built-by-agents",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "←",
+    "reason": "The arrow that stood in for the word Previous, for the reason given on the other posts."
+  },
+  {
+    "route": "/blog/directed-by-a-person-built-by-agents",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "→",
+    "reason": "The arrow that stood in for the word Next, for the reason given on the other posts."
+  },
+  {
+    "route": "/blog/directed-by-a-person-built-by-agents",
+    "surface": "mainText",
+    "change": "added",
+    "value": "Previous",
+    "reason": "The word the trail prints instead of an arrow, for the reason given on the other posts."
+  },
+  {
+    "route": "/blog/directed-by-a-person-built-by-agents",
+    "surface": "mainText",
+    "change": "added",
+    "value": "Next",
+    "reason": "The word the trail prints instead of an arrow, for the reason given on the other posts."
+  },
+  {
+    "route": "/blog/directed-by-a-person-built-by-agents",
+    "surface": "mainLinks",
+    "change": "removed",
+    "value": "← The company that builds the builder -> /blog/the-company-that-builds-the-builder",
+    "reason": "The trail link's text changes from a glyph to a word; the destination is unchanged."
+  },
+  {
+    "route": "/blog/directed-by-a-person-built-by-agents",
+    "surface": "mainLinks",
+    "change": "removed",
+    "value": "One design language, five sites → -> /blog/one-design-language-five-sites",
+    "reason": "The trail link's text changes from a glyph to a word; the destination is unchanged."
+  },
+  {
+    "route": "/blog/directed-by-a-person-built-by-agents",
+    "surface": "mainLinks",
+    "change": "added",
+    "value": "Previous The company that builds the builder -> /blog/the-company-that-builds-the-builder",
+    "reason": "The same trail link with a word in place of the glyph, and the same destination."
+  },
+  {
+    "route": "/blog/directed-by-a-person-built-by-agents",
+    "surface": "mainLinks",
+    "change": "added",
+    "value": "Next One design language, five sites -> /blog/one-design-language-five-sites",
+    "reason": "The same trail link with a word in place of the glyph, and the same destination."
+  },
+
+  {
+    "route": "/blog/the-company-that-builds-the-builder",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "→",
+    "reason": "The arrow that stood in for the word Next. This is the oldest post, so it has no Previous and never had one; the trail renders only the halves it is given, which is the catalogue's rule and the old markup's rule too."
+  },
+  {
+    "route": "/blog/the-company-that-builds-the-builder",
+    "surface": "mainText",
+    "change": "added",
+    "value": "Next",
+    "reason": "The word the trail prints instead of an arrow, for the reason given on the other posts."
+  },
+  {
+    "route": "/blog/the-company-that-builds-the-builder",
+    "surface": "mainLinks",
+    "change": "removed",
+    "value": "Directed by a person, built by agents → -> /blog/directed-by-a-person-built-by-agents",
+    "reason": "The trail link's text changes from a glyph to a word; the destination is unchanged."
+  },
+  {
+    "route": "/blog/the-company-that-builds-the-builder",
+    "surface": "mainLinks",
+    "change": "added",
+    "value": "Next Directed by a person, built by agents -> /blog/directed-by-a-person-built-by-agents",
+    "reason": "The same trail link with a word in place of the glyph, and the same destination."
+  },
+
+  {
+    "route": "/blog/where-the-products-stand",
+    "surface": "mainText",
+    "change": "removed",
+    "value": "←",
+    "reason": "The arrow that stood in for the word Previous. This is the newest post, so it has no Next; the trail renders only the halves it is given."
+  },
+  {
+    "route": "/blog/where-the-products-stand",
+    "surface": "mainText",
+    "change": "added",
+    "value": "Previous",
+    "reason": "The word the trail prints instead of an arrow, for the reason given on the other posts."
+  },
+  {
+    "route": "/blog/where-the-products-stand",
+    "surface": "mainLinks",
+    "change": "removed",
+    "value": "← One design language, five sites -> /blog/one-design-language-five-sites",
+    "reason": "The trail link's text changes from a glyph to a word; the destination is unchanged."
+  },
+  {
+    "route": "/blog/where-the-products-stand",
+    "surface": "mainLinks",
+    "change": "added",
+    "value": "Previous One design language, five sites -> /blog/one-design-language-five-sites",
+    "reason": "The same trail link with a word in place of the glyph, and the same destination."
+  }
+]

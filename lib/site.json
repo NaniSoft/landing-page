@@ -1,0 +1,21 @@
+{
+  "$comment": [
+    "The company site's own facts, as data: which pack is the ground, which mode a",
+    "visitor gets who has never chosen, and the set of products the switcher moves",
+    "between. A pack identifier is a token, and this file is the one place a site",
+    "picks one, so a renamed or retired pack is a compile error rather than a page",
+    "that quietly inherits the ground. The data-system records the page ground and a",
+    "product's mark as two different axes: the ground is stable for the life of the",
+    "page, and a product's mark comes from this directory."
+  ],
+  "siteId": "www",
+  "ground": "sky",
+  "defaultMode": "dark",
+  "products": [
+    { "id": "www", "name": "NaniSoft", "pack": "sky", "href": "/" },
+    { "id": "nexus", "name": "Nexus", "pack": "lavender", "href": "https://nexus.nanisoft.com" },
+    { "id": "atlas", "name": "Atlas", "pack": "mint", "href": "https://atlas.nanisoft.com" },
+    { "id": "alphalens", "name": "AlphaLens", "pack": "blush", "href": "https://alphalens.nanisoft.com" },
+    { "id": "prism", "name": "Prism", "pack": "peach", "href": "https://prism.nanisoft.com" }
+  ]
+}

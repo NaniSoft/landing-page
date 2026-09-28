@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import type { ReactElement } from 'react';
 import Link from 'next/link';
-import { BlogLayout } from '@nanisoft/prism-ui/pages';
+import { BlogPostPage } from '@nanisoft/prism-ui/pages/blog-post-page';
 
 import { getMdxComponents } from '@/lib/mdx-components';
 import { blogSource } from '@/lib/source';
@@ -43,6 +43,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return { title: page.data.title, description: page.data.description };
 }
 
+/**
+ * The index stays this site's own content, and the post becomes the design system's
+ * Page for one.
+ *
+ * The index is a deliberate design rather than a default: the four blog lists in this
+ * family are four designs, and the design system deliberately ships no index. So the
+ * four dates, the four titles and the tag runs are still composed here, in this
+ * repository's own stylesheet, and only the post screen moved.
+ *
+ * The post moved because the frontmatter of a post is a contract, and a contract
+ * belongs to something that can be checked. `BlogPostPage` takes the title, the
+ * standfirst, the displayed date and the machine date as separate props, so a field
+ * that is not passed cannot quietly be missing, and it owns the trail to the
+ * neighbouring posts rather than each site deriving it.
+ *
+ * Two words appear on the page that were not there before: the trail now says
+ * `Previous` and `Next` beside the titles, where the old markup drew an arrow glyph.
+ * A glyph is punctuation a screen reader reads as punctuation; a word is a label.
+ */
 export default async function BlogPage({ params }: PageProps): Promise<ReactElement> {
   const { slug } = await params;
 
@@ -85,22 +104,18 @@ export default async function BlogPage({ params }: PageProps): Promise<ReactElem
   const MDX = page.data.body;
 
   return (
-    <BlogLayout frontmatter={page.data}>
-      <div className="site-prose">
-        <MDX components={getMdxComponents()} />
-      </div>
-      <nav className="prism-docs-shell__neighbours">
-        {previous && (
-          <Link href={previous.url} rel="prev">
-            ← {previous.data.title}
-          </Link>
-        )}
-        {next && (
-          <Link href={next.url} rel="next" style={{ marginLeft: 'auto' }}>
-            {next.data.title} →
-          </Link>
-        )}
-      </nav>
-    </BlogLayout>
+    <BlogPostPage
+      title={page.data.title}
+      description={page.data.description}
+      date={page.data.date}
+      dateTime={page.data.date}
+      tags={page.data.tags.map((tag) => ({ label: tag }))}
+      previous={previous ? { title: previous.data.title, href: previous.url } : undefined}
+      next={next ? { title: next.data.title, href: next.url } : undefined}
+      trailLabels={{ previous: 'Previous', next: 'Next' }}
+      trailLabel="More posts"
+    >
+      <MDX components={getMdxComponents()} />
+    </BlogPostPage>
   );
 }

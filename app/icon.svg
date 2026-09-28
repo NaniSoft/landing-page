@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Prism mark: a white beam entering a prism, refracted into the blue inks
-       (ADR-0001 — the beam is neutral, refraction is the brand). -->
+  <!-- Prism mark: a white beam entering a prism, refracted into the blue inks.
+       The beam is neutral and the refraction is the brand. -->
   <rect width="32" height="32" rx="4" fill="#0B1220" />
   <g stroke-linecap="round">
     <path d="M4 16 L13 16" stroke="#E8EEF9" stroke-width="2.5" />

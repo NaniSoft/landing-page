@@ -1,38 +1,17 @@
-import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { Archivo, JetBrains_Mono } from 'next/font/google';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
-// Chrome via its subpaths — the proven import pattern (prism's own site never
-// pulls components from the root barrel: in Next's RSC graph, root-barrel
-// components resolve to undefined, found while scaffolding, ticket 05).
-import { SiteFooter, SiteHeader } from '@nanisoft/prism-ui/blocks';
-import { PrismThemeModeProvider } from '@nanisoft/prism-ui/provider';
-import { prismCssVarKey } from '@nanisoft/prism-tokens';
+import { SiteFooter } from '@nanisoft/prism-ui/blocks/site-footer';
+import { SiteHeader } from '@nanisoft/prism-ui/blocks/site-header';
+import { PrismThemeScript } from '@nanisoft/prism-ui/provider';
 
-import { DEFAULT_MODE, DEFAULT_PACK, SITE_ID, themeBootScript } from '@/lib/theme';
+import { DEFAULT_MODE, GROUND_PACK, PRODUCTS, SITE_PRODUCT, THEME_ATTRIBUTES } from '@/lib/site';
 
-// prism-ui's font faces / display width-axis / dither patterns (ADR-0001) —
-// the shared visual ground every Nanisoft site stands on.
+// The one stylesheet. Every token, every utility and every base rule on this site
+// arrives in this one import: the design system compiles its own source into it, and
+// a consumer adds its own sheet after it and nothing else.
 import '@nanisoft/prism-ui/styles.css';
-// Pre-baked antd variable rulesets for this site's pack in both modes
-// (scripts/bake-antd-css.mjs), keyed by the prism-<pack>-<mode> cssVar class.
-import './antd-vars.css';
 import './globals.css';
-
-const archivo = Archivo({
-  subsets: ['latin'],
-  // The width axis IS the refraction (ADR-0001) — wght comes implicitly.
-  axes: ['wdth'],
-  variable: '--font-archivo',
-  display: 'swap',
-});
-
-const jetbrains = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-jetbrains',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: {
@@ -42,20 +21,43 @@ export const metadata: Metadata = {
   description: 'Software that builds software.',
 };
 
+/**
+ * The document: the two theme attributes, one blocking script, the chrome, the page.
+ *
+ * **No provider, no client runtime, no baked stylesheet.** The old layout mounted a
+ * theme provider, imported a registry for a component library that no longer exists,
+ * and loaded 126 KB of generated variables to define the sixty custom properties the
+ * site's own CSS read. The theme is now two attributes on the document element and a
+ * blocking script that applies a stored choice to them before first paint, which is
+ * the arrangement the design system documents as the default and the one the whole
+ * page is built for: a server render, no client JavaScript, and a page that is correct
+ * with scripting disabled.
+ *
+ * The switcher moves between the five members of the company's product set, so all
+ * five pastel packs are on every page rather than on one page of one site. There is
+ * no `nav`: the old header had none, and adding one is an information-architecture
+ * decision this migration is not making. `navLabel` is required by the Block and is
+ * the name a switcher takes when a consumer passes no `productsLabel`, so it is the
+ * switcher's honest name here.
+ */
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={prismCssVarKey(DEFAULT_PACK, DEFAULT_MODE)}>
-      <body className={archivo.variable + ' ' + jetbrains.variable}>
-        {/* Blocking, before paint: applies the stored (or default) theme class —
-            the flash-free half of the class-swap recipe. */}
-        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
-        <AntdRegistry>
-          <PrismThemeModeProvider pack={DEFAULT_PACK} defaultMode={DEFAULT_MODE}>
-            <SiteHeader site={SITE_ID} />
-            <main className="site-main">{children}</main>
-            <SiteFooter site={SITE_ID} />
-          </PrismThemeModeProvider>
-        </AntdRegistry>
+    <html lang="en" {...THEME_ATTRIBUTES} suppressHydrationWarning>
+      <head>
+        {/* Before paint, on the same attributes the server rendered: a stored choice
+            is applied and a stored value that no longer parses is left in place, so
+            nothing a reader chose is ever cleared by this site. */}
+        <PrismThemeScript defaultPack={GROUND_PACK} defaultMode={DEFAULT_MODE} />
+      </head>
+      <body>
+        <SiteHeader
+          product={SITE_PRODUCT}
+          products={PRODUCTS}
+          navLabel="Products"
+          productsLabel="Products"
+        />
+        <main className="site-main">{children}</main>
+        <SiteFooter product={SITE_PRODUCT} />
       </body>
     </html>
   );

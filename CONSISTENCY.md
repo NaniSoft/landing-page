@@ -1,90 +1,54 @@
-# CONSISTENCY.md — the Nanisoft five-repo consistency contract
+# CONSISTENCY.md — the cross-repository law, and where each of it is enforced
 
-Binds www (`landing-page`), `nexus`, `atlas`, `alphalens`, and `prism` to one
-way of staying consistent as changes are made and published. This copy lives
-in `landing-page`; the contract is mirrored across the family and the copies differ
-only in this line. Changes are made family-wide in one sweep or not at all.
+This file used to be a mirror of one document across five repositories, differing in
+one line, holding forty-one clauses of prose. It was replaced because a clause earns
+a gate when its violation is silent, and a mirror in four repositories cannot fail:
+the two sites that mattered had already drifted into three implementations of one
+rule, and one of the three rules was false.
 
-## 1. Dependency policy — the frozen Prism line
+So the law is the failure message of a check, and the checks live where they can run.
+There is no version line in this file: **the pinned package is the version**, and
+`scripts/check-antd.mjs` fails if either pin is a range.
 
-- All four sites consume `@nanisoft/prism-ui@0.4.0` and
-  `@nanisoft/prism-tokens@0.3.0`, pinned **exact** — no ranges.
-- The prism repository was rebuilt out of context after these sites shipped
-  (a clean-break new line: prism-ui/prism-tokens 0.5.0, new API, new pack
-  ids, Inter, antd out of scope — see prism's `MIGRATION.md`). The old line
-  is deprecated, not unpublished: it keeps serving these sites indefinitely.
-- There are therefore **no routine lockstep sweeps**. The sweep runbook —
-  bump the pin in all four → `pnpm install` → `pnpm build` → verify →
-  deploy → push, one repo at a time — exists only for a first-party hotfix
-  on the 0.4.x line, which is not expected.
-- Migrating onto the new Prism line is a redesign of every site — a new
-  effort with its own plan, not maintenance on this family.
+| The law | Where it is enforced here | What it stops |
+| --- | --- | --- |
+| No trace of the retired component library | `scripts/check-antd.mjs` | A dependency line, an import, a generated stylesheet, a build step or a living instruction coming back. The lockfile is read as a dependency graph, because deleting a dependency line does not empty a lockfile while another package declares the library. |
+| A site stylesheet does not own a surface the design system owns | `scripts/check-stylesheet-ownership.mjs` | An unlayered bare-element declaration of the page ground, the body ink, a focus outline or a hairline colour, and any `:focus` rule at all. The cascade layer is not the cause of those failures; it is the reason they were invisible. |
+| Every internal destination resolves, and every fragment names an element that exists | `scripts/check-links.mjs` | A link that renders, looks right, and goes nowhere. Off-site hosts are listed, not resolved. |
+| A pack boundary lands on a mark, and exactly two regions of a page may carry a second pack | `scripts/check-pack-map.mjs`, `test/pack-map.test.tsx`, `scripts/pack-map.json` | A third region wearing a pack, a boundary on something whose corner radius the pack moves, and a boundary that resolves the light block on a dark page. Checked in both modes; a screenshot in one mode is not evidence. |
+| No client code, so no runtime token read and no CSS-authored hidden state | `test/server-only.test.ts` | The two laws this repository used to carry in prose. Both were laws about client code; the tree has none, and this asserts that it keeps none. |
+| Content tests read from disk | `test/content.test.ts` | A content contract that passes because a compile-time macro made a loader importable. fumadocs' `defineCollections` is expanded by the bundler only, so the loaders cannot run under this runner. |
+| The landing is composed from the catalogue, with no local component | `test/smoke.test.tsx` | A hand-written section, a local wrapper, or a Block that silently drops the copy it was given. Every stage name and every stage caption is asserted. |
+| The rebuild changed the rendering layer and not the content | `scripts/check-content-parity.mjs` with `scripts/content-parity-expectations.json` | A copy edit during a migration. The baseline is cut before the first edit, lives outside the repository, and is destroyed at the close of the sweep; the permanent gate that outlives it is `check-links.mjs`. |
+| In-development is described in the present tense of design | A review convention, and stated here because no gate can hold it | A shipped feature described as live. The honesty gate reads prose, so it cannot see a dishonest data source; that is a content decision and this file is the only place it can be written down. |
 
-## 2. Shared chrome is npm-only
+## What is not here any more, and why
 
-`SiteHeader`/`SiteFooter`/`PrismThemeModeProvider`/the boot script come from
-prism-ui — never copied into an app. Import shapes: components via
-per-component subpaths, blocks via `/blocks`, provider via `/provider`, the
-boot script via the root barrel; never `@nanisoft/prism-ui/theming` in app
-code (it pulls the SSR extractor). antd ships `'use client'`:
-`Typography.*` and `DisplayTitle` cross the RSC boundary only through the
-site's `components/prism-client.tsx`.
+- **A pinned Prism line as a contract.** The pins are in `package.json`, exact, and the
+  gate fails a range. That is the whole clause.
+- **A client boundary for shared components.** The design system's items are server
+  components, so there is nothing to cross and no file that exists only to cross it.
+- **A baked variable ruleset and a pre-paint class swap.** The theme is two attributes
+  on the document element and a blocking script the design system ships.
+- **Parity-locked shell styles.** The shell moved into the design system, so the
+  selectors that four repositories copied by hand match nothing and are deleted.
+- **A section-level law about pack grounds.** The old rule was that pack colour is a
+  signal and never a ground, and it existed because a stylesheet could hold one pack.
+  What replaces it is arithmetic: a boundary moves the corner radius, and a section
+  ground would make the corner radius an encoding of the section index. That is
+  checkable, so it is in `scripts/pack-map.json` and in a gate, and it is no longer
+  prose.
 
-## 3. Theming
+## The three sites that copy this repository
 
-Mode-only: the pack never changes at runtime. `<html>` carries
-`prism-<pack>-<mode>`, applied pre-paint by the blocking boot script; the
-provider swaps the class synchronously in the toggle handler, before React
-state updates. Colour comes from the pre-baked variable rulesets
-(`pnpm bake` → `app/antd-vars.css`); raw hex is forbidden in app CSS.
+`landing-page` is the first site on the new line and the template for the other three.
+What it hands them, in the order the checks name it:
 
-## 4. Canvas re-theme law
-
-A canvas reads its palette either (a) in a mode-keyed effect via
-`usePrismThemeMode()` — the class is already swapped when the effect
-re-runs — or (b) through the observer path: a two-frame-deferred re-read,
-followed by a redraw so reduced motion re-renders. **Never** a token read
-inside a `MutationObserver` callback: Chromium recalculates style only after
-the callback, so the read returns the outgoing theme (measured by
-pixel-sampling; found live in AlphaLens, and fixed there).
-
-## 5. Reveal-safety law
-
-A CSS-authored hidden state must be able to dismiss itself:
-`[data-reveal]` hidden by CSS + `animation: <fallback> 1ms linear 3s
-forwards` + a `@media (scripting: none)` guard; adding `.is-in` cancels the
-animation before it can start.
-
-## 6. Docs/blog shell styles are parity-locked
-
-The pages-layer styles prism-ui ships without live app-locally in each repo
-— identical copies, parity like the scaffold itself. Selectors covered:
-`prism-docs-shell__neighbours`, `prism-blog-layout__*`, `site-prose`,
-`site-catalog`, `site-blog-list`, `site-about`, `site-mono`, `site-eyebrow`.
-A change to one site's copy is a change to all four in the same sweep.
-
-## 7. Content tests read from disk
-
-fumadocs' loaders cannot run under vitest (`defineDocs`/`defineCollections`
-are compile-time macros only the bundler expands): content contracts read
-`content/` from the filesystem.
-
-## 8. The honesty law
-
-In-development is described in the present tense of design — no invented
-features, quickstarts, screenshots, or changelogs. Live / in-development /
-designed stay separated everywhere they appear.
-
-## 9. Mirrors
-
-| Repo | Copy |
-| --- | --- |
-| landing-page | `CONSISTENCY.md` |
-| nexus | `CONSISTENCY.md` |
-| atlas | `CONSISTENCY.md` |
-| alphalens | `CONSISTENCY.md` |
-| prism | landed — the contract governs the four sites only |
-
-*Contract version 1.1, 2026-09-27. No sweeps have been required (frozen
-line). The retired wayfinder map and its ticket numbers are gone; the laws
-above stand on their own.*
+1. A pack map is a data file with a declared region set, and a region that grows a
+   pack fails the build. A page with no map is a drift.
+2. A consumer cannot write a Prism utility class. The emitted stylesheet contains a
+   utility only if a Prism component uses it, so a site's own layout goes in the
+   site's own sheet, as a class.
+3. The published JavaScript is not loadable by Node's ESM resolver, so a site whose
+   tests render a catalogue item has to inline the package in its test runner. This is
+   recorded as a defect against the design system, not as a practice.

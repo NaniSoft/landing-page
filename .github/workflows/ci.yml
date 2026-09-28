@@ -3,11 +3,11 @@ name: CI
 # The deploy lives in this workflow, as a job that needs `verify`, rather than in
 # a second workflow on the same push.
 #
-# Two separate workflows on `push: main` cannot be ordered against each other, so
-# a migration that breaks the site produced a green check run and a broken live
-# page simultaneously. Folding the deploy in makes the ordering a property of the
-# graph rather than a matter of two runs happening to race: a push that fails its
-# checks cannot deploy, because the deploy job is never reached.
+# Two separate workflows on `push: main` cannot be ordered against each other, so a
+# migration that breaks the site produces a green check run and a broken live page
+# simultaneously. Folding the deploy in makes the ordering a property of the graph
+# rather than a matter of two runs happening to race: a push that fails its checks
+# cannot deploy, because the deploy job is never reached.
 #
 # `workflow_dispatch` re-runs the same path rather than a shortcut, so a manual
 # deploy is gated by the same checks as an automatic one.
@@ -33,8 +33,16 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
+      # The compiler is a check in its own right and not a footnote to the build: a
+      # site that never ran it could not tell a typed import from an untyped one, and
+      # an untyped import silences every diagnostic a rename would have produced.
+      - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
+      # After the build, because three of the four gates read the export. The
+      # dependency gate reads the lockfile and would pass earlier; running it here
+      # keeps the whole `check` a single step a reader can run locally.
+      - run: pnpm check
 
   deploy:
     needs: verify

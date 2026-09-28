@@ -1,7 +1,7 @@
 // Headless MDX component mapping (fumadocs-core headless: the site owns the
-// HTML). www writes no custom MDX components — prose elements are plain HTML
-// styled by `.site-prose`. The hook stays so pages have one place to add a
-// mapping later without touching the loader.
+// HTML). This site writes no custom MDX components: the prose elements are plain
+// HTML and the design system's Prose component styles them. The hook stays so a
+// page has one place to add a mapping later without touching the loader.
 import type { ComponentType } from 'react';
 
 type MdxComponentMap = Record<string, ComponentType<Record<string, unknown>>>;
