@@ -15,12 +15,8 @@
     "lint": "oxlint .",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
-    "check:antd": "node scripts/check-antd.mjs",
-    "check:stylesheet": "node scripts/check-stylesheet-ownership.mjs",
-    "check:links": "node scripts/check-links.mjs",
-    "check:pack-map": "node scripts/check-pack-map.mjs",
     "check:prism-gates": "prism-gates",
-    "check": "pnpm check:antd && pnpm check:stylesheet && pnpm check:links && pnpm check:pack-map"
+    "check": "pnpm check:prism-gates"
   },
   "dependencies": {
     "@nanisoft/prism-ui": "0.8.0",
