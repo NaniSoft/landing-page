@@ -1,14 +1,16 @@
 import type { ReactElement } from 'react';
 
-import { CtaLink } from '@nanisoft/prism-ui/components/cta-link';
 import { Diagram } from '@nanisoft/prism-ui/components/diagram';
 import { Prose } from '@nanisoft/prism-ui/components/prose';
 import { Section, SectionHeading } from '@nanisoft/prism-ui/components/section';
 import { Cta01 } from '@nanisoft/prism-ui/blocks/cta-01';
 import { FeatureGrid01 } from '@nanisoft/prism-ui/blocks/feature-grid-01';
+import { Hero01 } from '@nanisoft/prism-ui/blocks/hero-01';
+import { InstrumentPanel01 } from '@nanisoft/prism-ui/blocks/instrument-panel-01';
 import { LogoStrip01 } from '@nanisoft/prism-ui/blocks/logo-strip-01';
 import { NoteGrid01 } from '@nanisoft/prism-ui/blocks/note-grid-01';
 import { ProductGrid01 } from '@nanisoft/prism-ui/blocks/product-grid-01';
+import { PulseGraph } from '@nanisoft/prism-ui/components/pulse-graph';
 
 import {
   ARCHITECTURE,
@@ -16,6 +18,7 @@ import {
   HERO,
   PHILOSOPHY,
   PIPELINE,
+  PIPELINE_FIGURE,
   PRODUCTS,
   TICKER,
   TICKER_LABEL,
@@ -59,20 +62,6 @@ import { GROUND_PACK, PRODUCTS as SITE_PRODUCTS } from '@/lib/site';
  * silently do nothing. Anything a site needs for itself goes in the site's own sheet.
  */
 
-/** The two calls to action under the thesis, as real links. */
-function heroActions(): ReactElement {
-  return (
-    <div className="site-hero__actions">
-      <CtaLink href={HERO.primaryCta.href} size="lg" variant="default">
-        {HERO.primaryCta.label}
-      </CtaLink>
-      <CtaLink href={HERO.secondaryCta.href} size="lg" variant="outline">
-        {HERO.secondaryCta.label}
-      </CtaLink>
-    </div>
-  );
-}
-
 /** The pack a product row's mark is drawn in, from the site's own directory. */
 function markPack(productId: string) {
   return SITE_PRODUCTS.find((entry) => entry.id === productId)?.pack ?? GROUND_PACK;
@@ -81,20 +70,45 @@ function markPack(productId: string) {
 export default function Landing(): ReactElement {
   return (
     <>
-      {/* The thesis, and the page's own h1. The band above the numbered sections is
-          deliberately empty: the old hero's canvas was aria-hidden atmosphere behind
-          the type, and a band that says one thing should not carry a drawing that
-          says nothing. */}
-      <Section className="site-hero">
-        <SectionHeading
-          as="h1"
-          align="center"
-          eyebrow={HERO.eyebrow}
-          title={HERO.title}
-          description={HERO.lede}
-        />
-        {heroActions()}
-      </Section>
+      {/* The thesis, the page's own h1, and the factory running beside it.
+
+          The band above the numbered sections used to be deliberately empty, on the
+          reasoning that the old hero's canvas was aria-hidden atmosphere behind the
+          type and a band that says one thing should not carry a drawing that says
+          nothing. That reasoning was right about the canvas and wrong about the
+          conclusion, because the canvas was removed and nothing replaced it. This is
+          the replacement: the six stages of the factory on one rail with a marker
+          travelling them, which says something, and still says it with every
+          animation stopped.
+
+          The band itself is the catalogue's, so the column split and the width at
+          which the columns stack are one decision made in the place that owns the
+          container contract rather than five sites' five grids. */}
+      <Hero01
+        headingLevel="h1"
+        eyebrow={HERO.eyebrow}
+        title={HERO.title}
+        description={HERO.lede}
+        actions={[
+          { ...HERO.primaryCta },
+          { ...HERO.secondaryCta, variant: 'outline' as const },
+        ]}
+        instrument={
+          <InstrumentPanel01
+            label={PIPELINE_FIGURE.panel.label}
+            state="live"
+            stateLabel={PIPELINE_FIGURE.panel.mode}
+            caption={PIPELINE_FIGURE.aria}
+            footnote={PIPELINE_FIGURE.panel.footnote}
+          >
+            <PulseGraph
+              nodes={PIPELINE_FIGURE.nodes}
+              relations={PIPELINE_FIGURE.relations}
+              label={PIPELINE_FIGURE.aria}
+            />
+          </InstrumentPanel01>
+        }
+      />
 
       {/* The transition band between the thesis and the first numbered section. */}
       <LogoStrip01 items={[...TICKER]} label={TICKER_LABEL} />

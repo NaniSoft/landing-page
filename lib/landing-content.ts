@@ -45,6 +45,46 @@ export const PIPELINE = {
   ],
 } as const;
 
+/**
+ * The pipeline as a running figure, which is the shape the hero draws.
+ *
+ * Six stages on one rail, each a lane, each edge carrying, so the drawing grows a
+ * marker that travels from an idea to a deployment. The names are the six stage
+ * names this section already lists and the captions are its own, so the figure
+ * introduces no claim the grid does not already make.
+ *
+ * The hero is a claim about a factory, and a factory is a thing that runs. The old
+ * hero drew the agent network behind the type as an opaque canvas that a
+ * `requestAnimationFrame` loop kept sweeping; the migration removed it and left the
+ * thesis with an empty band, on the reasoning that a band saying one thing should
+ * not carry a drawing saying nothing. The drawing below says something, and it
+ * still says it with every animation stopped, which is the line the second law of
+ * motion draws.
+ */
+export const PIPELINE_FIGURE = {
+  nodes: PIPELINE.stages.map((stage, index) => ({
+    id: stage.name.toLowerCase(),
+    name: stage.name.toLowerCase(),
+    x: index / (PIPELINE.stages.length - 1),
+    y: 0.5,
+    lane: index,
+    emphasis: stage.name === 'Implementation',
+  })),
+  relations: PIPELINE.stages.slice(0, -1).map((stage, index) => ({
+    from: stage.name.toLowerCase(),
+    to: PIPELINE.stages[index + 1]!.name.toLowerCase(),
+    carries: true,
+  })),
+  aria:
+    'The factory pipeline as six stages on one rail: idea, planning, architecture, implementation, testing and deployment, with a marker travelling from one to the next.',
+  panel: {
+    label: 'the factory floor, running',
+    mode: 'live',
+    footnote:
+      'The six stages one issue passes through. The marker is that issue making the walk, and the rail is the order it makes it in.',
+  },
+} as const;
+
 export const PRODUCTS = {
   index: '02',
   label: 'Products — all built by Nexus',
