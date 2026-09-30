@@ -27,7 +27,7 @@ import site from './site.json';
 /** Every pack the token build emits, so a mistyped id fails here rather than silently. */
 const PACK_IDS: readonly string[] = PACKS;
 
-function pack(value: string): PackId {
+function check(value: string): PackId {
   if (!PACK_IDS.includes(value)) {
     throw new Error(
       `site.json: "${value}" is not one of the published packs (${PACK_IDS.join(', ')}), so a mark ` +
@@ -37,8 +37,32 @@ function pack(value: string): PackId {
   return value as PackId;
 }
 
-/** The pack the whole page sits on. See the note above: a ground does not change. */
-export const GROUND_PACK: PackId = pack(site.ground);
+/**
+ * One product's pack, or null for the member of the set that has none.
+ *
+ * `null` is a value here rather than an omission, because it is the answer Prism gets:
+ * `prism.nanisoft.com` renders its own document with no `data-pack` attribute, which is
+ * the neutral base pack, so Prism owns no hue and this directory will not invent one
+ * for it. A mark drawn with no pack is the one case `ProductMark` draws as the full
+ * spectrum rather than as a colourless dot, and it is also what keeps the five marks in
+ * the switcher distinct from each other without a fifth pastel that belongs to nothing.
+ *
+ * Everything else is still checked: an unrecognised id throws here rather than becoming
+ * a `data-pack` attribute that matches no emitted rule and silently paints the ground.
+ */
+function optionalPack(value: string | null): PackId | null {
+  return value === null ? null : check(value);
+}
+
+/**
+ * The pack the whole page sits on.
+ *
+ * A separate function from the one a product's mark is drawn from, because a ground can
+ * never be the answer Prism gets: `null` here would mean a document with no pack at all,
+ * which is Prism's own site and not this one. Reading it through `optionalPack` would
+ * type the ground as nullable and quietly allow that.
+ */
+export const GROUND_PACK: PackId = check(site.ground);
 
 /** What a reader who has never chosen a theme sees. Beam-dark, the platform precedent. */
 export const DEFAULT_MODE = site.defaultMode as Mode;
@@ -66,11 +90,15 @@ export const SITE_PRODUCT = {
  * The set of products the switcher moves between, in the order a reader meets them.
  *
  * This company site is the apex, so its set is every product in the family, itself
- * first. Its own mark wears `sky` rather than the spectrum, because this site does
- * have a pack: `sky` is the ground, and a brand lockup drawn in the colour the page is
- * painted in is the honest mark for the page that is not a product. `peach` is the
- * fifth pastel and it is what the switcher wears for Prism, which is the one member of
- * the set that cannot also be the ground.
+ * first. Its own mark wears `sky` rather than the spectrum, because this site does have
+ * a pack: `sky` is the ground, and a brand lockup drawn in the colour the page is
+ * painted in is the honest mark for the page that is not a product.
+ *
+ * Prism is the fifth member and the only one with no pack, because it is the design
+ * system these four are built in rather than a fifth thing built alongside them. That
+ * makes it the one entry a mark is drawn as the spectrum for, and it is what leaves
+ * `peach` unowned: four products own four pastels, this site owns the ground, and the
+ * fifth pastel is still free for whatever the factory builds next.
  *
  * The directory is a JSON file rather than a list in this module, because two
  * independent readers need it and a TypeScript module is not one of them: the test
@@ -80,6 +108,6 @@ export const SITE_PRODUCT = {
 export const PRODUCTS: readonly SwitcherProduct[] = site.products.map((product) => ({
   id: product.id,
   name: product.name,
-  pack: pack(product.pack),
+  pack: optionalPack(product.pack),
   href: product.href,
 }));

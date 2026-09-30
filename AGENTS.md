@@ -2,7 +2,7 @@
 
 ## Project
 
-**www.nanisoft.com** — the NaniSoft company site: landing + about + blog (company level; no docs section). The site wears `sky` as its ground and puts the other four packs on marks.
+**www.nanisoft.com** — the NaniSoft company site: landing + about + blog (company level; no docs section). The site wears `sky` as its ground and puts the packs products own on marks; Prism owns none, so its mark is drawn as the spectrum.
 
 Part of the five-site Nanisoft web platform (www + nexus + atlas + alphalens + prism), one design language: Prism.
 

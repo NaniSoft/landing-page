@@ -14,11 +14,16 @@
     "already two, and both are one row of marks beside something else. The hero's",
     "right column is a third such row, and it is the reason this page is allowed to",
     "have any colour on it at all: a boundary may only land on a ProductMark, so a",
-    "mark is the one element that can wear a hue other than the ground's, and five",
-    "marks in the hero plus three in the products band plus five in the switcher is",
-    "every pastel this design system will let a consumer put on one page. The law is",
-    "not a limit to work around. It is the reason the page's colour is five",
-    "identifiable colours rather than a gradient.",
+    "mark is the one element that can wear a hue other than the ground's, and eleven",
+    "marks across three rows is every hue this design system will let a consumer put",
+    "on one page. The law is not a limit to work around. It is the reason the page's",
+    "colour is four identifiable pastels and a spectrum rather than a gradient.",
+    "",
+    "`peach` appears nowhere in this file. Four products own four pastels, this site",
+    "owns the ground, and Prism owns none because prism.nanisoft.com renders with no",
+    "data-pack at all, so the fifth pastel is still unowned and the architecture",
+    "caption's claim that peach is reserved for what the factory builds next is what",
+    "makes that caption true rather than a hope.",
     "",
     "`regions` lists every region that carries a boundary at all, with the exact",
     "multiset of packs each one carries, so a boundary added by accident is a finding",
@@ -30,8 +35,8 @@
   "secondPackRegions": ["header.switcher", "landing.hero", "landing.products"],
   "regions": {
     "header.switcher": {
-      "why": "The company site is the apex, so its switcher is the whole product set, and a set that tells five products apart is the reason five packs are on one page at all. Four of the five are not the ground; the fifth is this site, whose own mark is the pack the page is painted in.",
-      "packs": ["sky", "lavender", "mint", "blush", "peach"]
+      "why": "The company site is the apex, so its switcher is the whole product set, and a set that tells five products apart is the reason four packs and a spectrum are on one page at all. Four members carry a pack that is not the ground; the fifth is this site, whose own mark is the pack the page is painted in; and Prism carries none, because prism.nanisoft.com renders with no data-pack at all and a mark with no pack is drawn as the spectrum rather than as a colourless dot.",
+      "packs": ["sky", "lavender", "mint", "blush"]
     },
     "header.brand": {
       "why": "The header's brand lockup is this site, and this site's pack is the page's pack, so its boundary is the ground rather than a second pack.",
@@ -42,8 +47,8 @@
       "packs": ["sky"]
     },
     "landing.hero": {
-      "why": "The hero's identity column is the whole product set at the largest size a mark is drawn at, one mark per member and each in its own pack's hue. It is the one claim on this page a reader can check rather than take: five products, five colours, one ground. Every boundary is a ProductMark, which is a fully rounded disc, so the boundary moves nothing about any shape.",
-      "packs": ["sky", "lavender", "mint", "blush", "peach"]
+      "why": "The hero's identity column is the whole product set at the largest size a mark is drawn at, one mark per member. It is the one claim on this page a reader can check rather than take: four products in four pastels, this site in the ground, and the design system in the spectrum it is. Every boundary is a ProductMark, which is a fully rounded disc, so the boundary moves nothing about any shape.",
+      "packs": ["sky", "lavender", "mint", "blush"]
     },
     "landing.products": {
       "why": "A product row's mark is that product's own hue, and it is the one claim in this section a reader makes a decision from: which product is this, and does its colour mean anything. The mark is a fully rounded disc, so the boundary moves nothing about its shape. The region is named by the Block that draws it rather than by an ordinal the band used to print, so deleting the section numbers cannot rename a pack region.",

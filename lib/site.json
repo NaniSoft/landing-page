@@ -6,7 +6,14 @@
     "picks one, so a renamed or retired pack is a compile error rather than a page",
     "that quietly inherits the ground. The data-system records the page ground and a",
     "product's mark as two different axes: the ground is stable for the life of the",
-    "page, and a product's mark comes from this directory."
+    "page, and a product's mark comes from this directory.",
+    "",
+    "`pack: null` is a real answer and not a missing one. Prism is the design system",
+    "rather than a member of the product set: prism.nanisoft.com renders its document",
+    "with no data-pack at all, which is the neutral base pack, so Prism owns no hue of",
+    "its own. Giving it one here would have been a claim this site cannot check. A mark",
+    "drawn with no pack is the one case ProductMark draws as the full spectrum, which is",
+    "also why no two marks in the set resolve to the same pair of colours without it."
   ],
   "siteId": "www",
   "ground": "sky",
@@ -16,6 +23,6 @@
     { "id": "nexus", "name": "Nexus", "pack": "lavender", "href": "https://nexus.nanisoft.com" },
     { "id": "atlas", "name": "Atlas", "pack": "mint", "href": "https://atlas.nanisoft.com" },
     { "id": "alphalens", "name": "AlphaLens", "pack": "blush", "href": "https://alphalens.nanisoft.com" },
-    { "id": "prism", "name": "Prism", "pack": "peach", "href": "https://prism.nanisoft.com" }
+    { "id": "prism", "name": "Prism", "pack": null, "href": "https://prism.nanisoft.com" }
   ]
 }

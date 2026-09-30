@@ -25,7 +25,7 @@ import {
   TICKER_LABEL,
   WHY,
 } from '@/lib/landing-content';
-import { GROUND_PACK, PRODUCTS as SITE_PRODUCTS } from '@/lib/site';
+import { PRODUCTS as SITE_PRODUCTS } from '@/lib/site';
 
 /**
  * The landing, composed from the design system and nothing else.
@@ -63,7 +63,8 @@ import { GROUND_PACK, PRODUCTS as SITE_PRODUCTS } from '@/lib/site';
  * decision: the pack-boundary law in `@nanisoft/prism-ui/gates` refuses a boundary on
  * anything else, so a mark is the one element on this site that can wear a colour
  * other than the ground's. It is also why this is the most colour the page can honestly
- * have.
+ * have, and why the count is four pastels and a spectrum rather than five pastels: the
+ * fifth member of the set owns no pack.
  *
  * A consumer cannot write a Prism utility class, because the consumer does not run
  * Tailwind, so a utility exists in the emitted stylesheet only if a Prism component
@@ -71,9 +72,17 @@ import { GROUND_PACK, PRODUCTS as SITE_PRODUCTS } from '@/lib/site';
  * else this page needs for itself is a site class in `app/globals.css`.
  */
 
-/** The pack a product's mark is drawn in, from the site's own directory. */
+/**
+ * The pack a product's mark is drawn in, from the site's own directory.
+ *
+ * The `?? GROUND_PACK` this used to carry is gone, and it was a bug waiting to happen:
+ * the directory now holds a member with no pack at all, and a nullish coalesce would
+ * have handed it the ground and painted the design system's mark in the company site's
+ * colour. A member with no pack is drawn as the spectrum, which is the answer, so the
+ * lookup returns null rather than reaching for one.
+ */
 function markPack(productId: string) {
-  return SITE_PRODUCTS.find((entry) => entry.id === productId)?.pack ?? GROUND_PACK;
+  return SITE_PRODUCTS.find((entry) => entry.id === productId)?.pack ?? null;
 }
 
 /** The directory keyed by id, so a mark and the directory cannot disagree about it. */
@@ -90,11 +99,12 @@ export default function Landing(): ReactElement {
           spent on the claim, the line under it, the two actions and the thing that
           makes the claim checkable.
 
-          The right column is the product set, one mark per member, each in its own
-          pack's hue and each at the largest size a mark is drawn at. It is the visual
-          the page was missing and it is also the only legal one: a `data-pack`
-          boundary lands on a mark and nowhere else, so five marks are the most colour
-          this page can have without breaking the design system's law. */}
+          The right column is the product set, one mark per member at the largest size a
+          mark is drawn at. Four are a product in a pastel of its own, this site wears
+          the ground, and Prism is drawn as the spectrum because it owns no pack. It is
+          the visual the page was missing and it is also the only legal one: a
+          `data-pack` boundary lands on a mark and nowhere else, so this column is the
+          most colour the page can have without breaking the design system's law. */}
       <Section data-slot="nanisoft-hero" className="site-band--tall">
         <div className="site-hero">
           <div className="site-hero__copy">

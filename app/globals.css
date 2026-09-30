@@ -32,8 +32,8 @@
  * Every colour below resolves against the page's own ground, which is `sky`. That is a
  * hard limit and it is not this site's to lift: the pack-boundary law puts a pack's hue
  * on a `ProductMark` and nowhere else, so the only colour that can reach a section, a
- * panel or a rule is the ground's own palette. The other four pastels on this site are
- * all on marks, which is why the hero is five rows of marks and not five tinted bands.
+ * panel or a rule is the ground's own palette. The four pastels the products own are all
+ * on marks, which is why the hero is five rows of marks and not five tinted bands.
  *
  * No link below is given a focus indicator: a plain anchor keeps the browser's own,
  * which is the only indicator on an element no Prism component drew.

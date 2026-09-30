@@ -34,12 +34,15 @@ export const HERO = {
  * The five members of the product set, in the order a reader meets them.
  *
  * The hero's visual is this set, drawn at the largest size a mark is drawn at, one mark
- * per member and each in its own pack's hue. That is the whole colour argument on this
+ * per member. Four of them are a product in a pastel of its own; this site wears the
+ * ground; and Prism, which owns no pack at all because prism.nanisoft.com renders with
+ * no `data-pack`, is drawn as the spectrum. That is the whole colour argument on this
  * page, and it is worth saying plainly why it is the only one available: the
  * pack-boundary gate forbids a `data-pack` boundary on anything except a `ProductMark`,
  * so a mark is the one element on this site that can wear a colour other than the
- * ground's. Five marks are therefore the most colour this page can honestly have, and a
- * page that wanted more would have to break the design system's law to get it.
+ * ground's. Four pastels and a sweep are therefore the most colour this page can
+ * honestly have, and a page that wanted more would have to break the design system's
+ * law to get it.
  *
  * **Every role is one line.** The strip is a scannable edge of the page, five marks down
  * one side, and a role that wraps makes the column taller than the thesis beside it and
@@ -50,11 +53,6 @@ export const HERO = {
  * and a role; the name, the pack and the destination all come from the directory, so a
  * mark in the hero and a mark in the header switcher cannot disagree about which product
  * they are or what colour they are.
- *
- * `www` is in the set and wears `sky`, which is the page's own ground. A company site's
- * mark drawn in the colour the page is painted in is the honest mark for the page that is
- * not a product, and it is the same reason the header's brand lockup carries the ground
- * rather than a second pack.
  */
 export const IDENTITY = {
   entries: [

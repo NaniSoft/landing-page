@@ -89,21 +89,42 @@ describe('the landing', () => {
     expect(heading.className).toContain('site-display');
   });
 
-  it('draws the five products in the hero, each in its own pack', () => {
+  it('draws the five products in the hero, four in their own pack and one in the spectrum', () => {
     const container = renderLanding();
     const hero = container.querySelector('[data-slot="nanisoft-hero"]');
     expect(hero, 'the hero band carries no slot the pack-region resolver can name').toBeTruthy();
-    const marks = [...(hero as HTMLElement).querySelectorAll('[data-slot="product-mark"][data-pack]')];
+    const marks = [...(hero as HTMLElement).querySelectorAll('[data-slot="product-mark"]')];
     expect(marks).toHaveLength(IDENTITY.entries.length);
-    const packs = marks.map((mark) => mark.getAttribute('data-pack')).sort();
-    // Every pack in the directory, once, so the hero is the page's only full spectrum.
-    expect(packs).toEqual([...new Set(SITE_PRODUCTS.map((product) => product.pack))].sort());
+
+    // One mark per member of the directory, and every coloured one wears the pack the
+    // directory gives it. The member with no pack wears none, which is what
+    // `ProductMark` draws as the spectrum rather than as a colourless dot.
+    const drawn = marks.map((mark) => mark.getAttribute('data-pack'));
+    expect(drawn.filter(Boolean).sort()).toEqual(
+      SITE_PRODUCTS.map((product) => product.pack).filter(Boolean).sort(),
+    );
+    expect(drawn.filter((pack) => !pack)).toHaveLength(
+      SITE_PRODUCTS.filter((product) => product.pack === null).length,
+    );
+
     for (const entry of IDENTITY.entries) {
-      expect(
-        screen.getAllByText(entry.role).length,
-        `the hero does not say what ${entry.id} is`,
-      ).toBeGreaterThan(0);
+      expect(screen.getAllByText(entry.role).length, `the hero does not say what ${entry.id} is`).toBeGreaterThan(
+        0,
+      );
     }
+  });
+
+  it('leaves the fifth pastel unowned, because Prism has no pack of its own', () => {
+    // prism.nanisoft.com renders its document with no `data-pack`, so Prism is not a
+    // fifth coloured product and `peach` belongs to nothing yet. A mark given `peach`
+    // here would be a claim this repository cannot check, and it would make the
+    // architecture caption's "peach is reserved for what the factory builds next" false
+    // on the same page that prints it.
+    expect(SITE_PRODUCTS.map((product) => product.id)).toContain('prism');
+    expect(SITE_PRODUCTS.find((product) => product.id === 'prism')?.pack).toBeNull();
+    expect(SITE_PRODUCTS.map((product) => product.pack)).not.toContain('peach');
+    expect(GROUND_PACK).toBe('sky');
+    expect(GROUND_PACK).not.toBe('peach');
   });
 
   it('is composed from catalogue items, and every one of them is identifiable in the markup', () => {
