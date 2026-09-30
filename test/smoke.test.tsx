@@ -2,7 +2,18 @@ import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import HomePage from '@/app/page';
-import { ARCHITECTURE, FINAL_CTA, HERO, PHILOSOPHY, PIPELINE, PRODUCTS, TICKER, WHY } from '@/lib/landing-content';
+import {
+  ARCHITECTURE,
+  FINAL_CTA,
+  HERO,
+  IDENTITY,
+  PHILOSOPHY,
+  PIPELINE,
+  PIPELINE_FIGURE,
+  PRODUCTS,
+  TICKER,
+  WHY,
+} from '@/lib/landing-content';
 import { GROUND_PACK, PRODUCTS as SITE_PRODUCTS } from '@/lib/site';
 
 /**
@@ -45,9 +56,9 @@ describe('the landing', () => {
     expect(heading.textContent).toContain(HERO.title);
   });
 
-  it('composes the catalogue in the site order, with no band of its own', () => {
+  it('composes the bands in the site order', () => {
     const container = renderLanding();
-    // The sections a reader meets, in order, named by their own headings.
+    // The bands a reader meets, in order, named by their own headings.
     const headings = [...container.querySelectorAll('h1, h2')].map((heading) => heading.textContent?.trim());
     expect(headings).toEqual([
       HERO.title,
@@ -60,14 +71,52 @@ describe('the landing', () => {
     ]);
   });
 
+  it('prints no em dash and no en dash in anything a reader sees', () => {
+    const container = renderLanding();
+    for (const node of container.querySelectorAll('h1, h2, h3, p, li, span, a')) {
+      const text = node.textContent ?? '';
+      // A parent inherits its children's text, so only the deepest match is reported.
+      if (node.querySelector('h1, h2, h3, p, li, span, a')) continue;
+      expect(text, `a dash reached the page: ${JSON.stringify(text)}`).not.toMatch(/[\u2014\u2013]/);
+    }
+  });
+
+  it('keeps the thesis at a step no section heading uses', () => {
+    renderLanding();
+    const heading = screen.getByRole('heading', { level: 1 });
+    // The catalogue renders every h2 it owns at one hardcoded step, so the class that
+    // carries the display size is the only thing that makes a top of hierarchy exist.
+    expect(heading.className).toContain('site-display');
+  });
+
+  it('draws the five products in the hero, each in its own pack', () => {
+    const container = renderLanding();
+    const hero = container.querySelector('[data-slot="nanisoft-hero"]');
+    expect(hero, 'the hero band carries no slot the pack-region resolver can name').toBeTruthy();
+    const marks = [...(hero as HTMLElement).querySelectorAll('[data-slot="product-mark"][data-pack]')];
+    expect(marks).toHaveLength(IDENTITY.entries.length);
+    const packs = marks.map((mark) => mark.getAttribute('data-pack')).sort();
+    // Every pack in the directory, once, so the hero is the page's only full spectrum.
+    expect(packs).toEqual([...new Set(SITE_PRODUCTS.map((product) => product.pack))].sort());
+    for (const entry of IDENTITY.entries) {
+      expect(
+        screen.getAllByText(entry.role).length,
+        `the hero does not say what ${entry.id} is`,
+      ).toBeGreaterThan(0);
+    }
+  });
+
   it('is composed from catalogue items, and every one of them is identifiable in the markup', () => {
     const container = renderLanding();
     for (const slot of [
       'logo-strip',
-      'note-grid',
+      'instrument-panel',
+      'pulse-graph',
       'product-grid',
       'diagram',
       'product-mark',
+      'heading',
+      'text',
       'cta-link',
     ]) {
       expect(container.querySelectorAll(`[data-slot="${slot}"]`).length, `no element carries data-slot="${slot}"`)
@@ -91,10 +140,6 @@ describe('the landing', () => {
   it('keeps every pipeline stage, its caption, and the strip above it', () => {
     renderLanding();
     for (const item of TICKER) expect(screen.getAllByText(item).length).toBeGreaterThan(0);
-    for (const stage of PIPELINE.stages) {
-      expect(screen.getAllByText(stage.name).length, `no stage named ${stage.name}`).toBeGreaterThan(0);
-      expect(screen.getAllByText(stage.caption).length, `no caption for ${stage.name}`).toBeGreaterThan(0);
-    }
     expect(screen.getAllByText(PIPELINE.caption).length).toBeGreaterThan(0);
   });
 
@@ -114,16 +159,31 @@ describe('the landing', () => {
     }
   });
 
-  it('keeps the three pillars and the five features, each with its line', () => {
+  it('keeps the three pillars, each with its line, and carries no fourth set', () => {
     renderLanding();
+    expect(WHY.pillars).toHaveLength(3);
     for (const pillar of WHY.pillars) {
       expect(screen.getAllByText(pillar.name).length).toBeGreaterThan(0);
       expect(screen.getAllByText(pillar.line).length).toBeGreaterThan(0);
     }
-    for (const feature of WHY.features) {
-      expect(screen.getAllByText(feature.name).length).toBeGreaterThan(0);
-      expect(screen.getAllByText(feature.line).length).toBeGreaterThan(0);
+    // The section used to render eight near-identical points over two bands of the same
+    // shape. A grid that grows one back is the regression this assertion exists for.
+    expect(document.querySelectorAll('[data-slot="feature-grid"]').length).toBe(0);
+  });
+
+  it('keeps the six stages as an ordered list, and puts the running figure beside them', () => {
+    const container = renderLanding();
+    const stages = container.querySelectorAll('.site-pipeline__stage');
+    expect(stages).toHaveLength(PIPELINE.stages.length);
+    for (const stage of PIPELINE.stages) {
+      expect(screen.getAllByText(stage.name).length, `no stage named ${stage.name}`).toBeGreaterThan(0);
+      expect(screen.getAllByText(stage.caption).length, `no caption for ${stage.name}`).toBeGreaterThan(0);
     }
+    // The figure is the pipeline's, not the page's: an ordered list of six stages and a
+    // drawing of one issue making the walk are the same claim in two shapes.
+    const figure = container.querySelector('#pipeline .site-pipeline__figure [data-slot="pulse-graph"]');
+    expect(figure, 'the factory figure is not in the pipeline band').toBeTruthy();
+    expect(figure?.getAttribute('aria-label')).toBe(PIPELINE_FIGURE.aria);
   });
 
   it('draws the schematic with the names and the relations the old graph drew', () => {

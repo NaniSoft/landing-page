@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
       title: 'Blog',
       description:
-        'The NaniSoft company blog — the platform, the design language, and the honest state of everything we ship.',
+        'The NaniSoft company blog: the platform, the design language, and the honest state of everything we ship.',
     };
   }
   const page = blogSource.getPage(slug);
@@ -69,7 +69,7 @@ export default async function BlogPage({ params }: PageProps): Promise<ReactElem
     const posts = published();
     return (
       <div className="site-catalog">
-        <p className="site-eyebrow">nanisoft — blog</p>
+        <p className="site-eyebrow">nanisoft, blog</p>
         <h1 className="site-catalog__title">The company blog</h1>
         <p className="site-catalog__lede">
           The platform, the design language, and the honest state of everything we ship.
@@ -83,7 +83,7 @@ export default async function BlogPage({ params }: PageProps): Promise<ReactElem
               <p className="site-blog-list__description">{post.data.description}</p>
               <p className="site-mono site-blog-list__meta">
                 <time dateTime={post.data.date}>{post.data.date}</time>
-                {post.data.tags.length > 0 && <span> · {post.data.tags.join(' · ')}</span>}
+                {post.data.tags.length > 0 && <span> / {post.data.tags.join(' / ')}</span>}
               </p>
             </li>
           ))}

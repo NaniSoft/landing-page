@@ -5,6 +5,7 @@ import { SiteFooter } from '@nanisoft/prism-ui/blocks/site-footer';
 import { SiteHeader } from '@nanisoft/prism-ui/blocks/site-header';
 
 import HomePage from '@/app/page';
+import { FOOTER_COLUMNS, SITE_NAV } from '@/lib/navigation';
 import map from '@/scripts/pack-map.json';
 import { PRODUCTS, SITE_PRODUCT } from '@/lib/site';
 
@@ -28,11 +29,17 @@ const MARK_SLOT = 'product-mark';
 function wholePage() {
   const { container } = render(
     <>
-      <SiteHeader product={SITE_PRODUCT} products={PRODUCTS} navLabel="Products" productsLabel="Products" />
+      <SiteHeader
+        product={SITE_PRODUCT}
+        products={PRODUCTS}
+        nav={SITE_NAV}
+        navLabel="This site"
+        productsLabel="The family"
+      />
       <main>
         <HomePage />
       </main>
-      <SiteFooter product={SITE_PRODUCT} />
+      <SiteFooter product={SITE_PRODUCT} columns={FOOTER_COLUMNS} />
     </>,
   );
   return container;
@@ -41,30 +48,28 @@ function wholePage() {
 /**
  * Every boundary on the page, with the region it belongs to.
  *
- * The same rule the built-export gate uses, so a region that is named differently
- * here and there is a difference one of the two readers would have to explain: a
- * mark in the switcher, a mark in a brand lockup, and a mark inside a band named by
- * the ordinal that band publishes.
+ * The same four rules `scripts/pack-regions.mjs` uses, so a region named differently
+ * here and there is a difference one of the two readers would have to explain: a mark
+ * in the switcher, a mark in a brand lockup, a mark in the hero band, and a mark in
+ * the product grid. A boundary in none of them is `landing.undeclared`, which is what
+ * the built-export gate reports as an unnamed region, so the two readers fail the same
+ * change for the same reason.
  */
 function boundaries(container: HTMLElement) {
-  return [...container.querySelectorAll('[data-pack]')].map((element) => {
-    const section = element.closest('main section');
-    const ordinal = section
-      ? [...section.querySelectorAll('span, p, div > *')]
-          .map((candidate) => (candidate.textContent ?? '').trim())
-          .find((text) => /^\d{2}$/.test(text))
-      : undefined;
-    return {
-      pack: element.getAttribute('data-pack') ?? '',
-      region: element.closest('[data-slot="product-switcher"]')
-        ? 'header.switcher'
-        : element.closest('header')
-          ? 'header.brand'
-          : element.closest('footer')
-            ? 'footer.brand'
-            : `landing.${ordinal ?? 'unnumbered'}`,
-    };
-  });
+  return [...container.querySelectorAll('[data-pack]')].map((element) => ({
+    pack: element.getAttribute('data-pack') ?? '',
+    region: element.closest('[data-slot="product-switcher"]')
+      ? 'header.switcher'
+      : element.closest('header')
+        ? 'header.brand'
+        : element.closest('footer')
+          ? 'footer.brand'
+          : element.closest('[data-slot="nanisoft-hero"]')
+            ? 'landing.hero'
+            : element.closest('[data-slot="product-grid"]')
+              ? 'landing.products'
+              : 'landing.undeclared',
+  }));
 }
 
 describe('the pack map', () => {
@@ -89,13 +94,22 @@ describe('the pack map', () => {
     }
   });
 
-  it('has exactly two regions carrying a pack that is not the ground', () => {
+  it('has exactly three regions carrying a pack that is not the ground', () => {
     const container = wholePage();
     const second = boundaries(container)
       .filter((boundary) => boundary.pack !== map.ground)
       .map((boundary) => boundary.region);
     expect([...new Set(second)].sort()).toEqual([...map.secondPackRegions].sort());
-    expect(new Set(second).size).toBe(2);
+    expect(new Set(second).size).toBe(3);
+  });
+
+  it('puts no boundary in a band this site has not named, so a new mark is a failing test', () => {
+    const container = wholePage();
+    for (const boundary of boundaries(container)) {
+      expect(boundary.region, 'a boundary sits in a region scripts/pack-regions.mjs cannot name').not.toBe(
+        'landing.undeclared',
+      );
+    }
   });
 
   it('puts every boundary on a mark, and the mark on a fully rounded shape', () => {

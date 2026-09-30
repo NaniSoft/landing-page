@@ -59,6 +59,7 @@ describe('the site has no client code', () => {
       'app/page.tsx',
       'lib/landing-content.ts',
       'lib/mdx-components.ts',
+      'lib/navigation.tsx',
       'lib/site.ts',
       'lib/source.ts',
       'next.config.ts',

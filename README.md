@@ -5,14 +5,15 @@
 Part of the [NaniSoft](https://www.nanisoft.com) web platform — five sites, one design language ([Prism](https://prism.nanisoft.com)).
 
 - **Live**: https://www.nanisoft.com, with the apex https://nanisoft.com — both Cloudflare Custom Domains on the `nanisoft-www` Worker, which serves this static export
-- **Pack**: `sky` is the ground, on the document element, and it does not change. Four other packs are on marks: the header's product switcher carries `lavender`, `mint`, `blush` and `peach`, and the products section carries the three its rows name. That is the whole five-pack layering, and `scripts/pack-map.json` is the map and the pack-boundary gate in `@nanisoft/prism-ui/gates` is the gate, checked in both light and dark mode
+- **Pack**: `sky` is the ground, on the document element, and it does not change. Three regions of a page carry a pack that is not the ground, and all three are rows of marks: the header's product switcher carries all five, the hero's identity column carries all five, and the products section carries the three its rows name. That is the whole five-pack layering, and `scripts/pack-map.json` is the map and the pack-boundary gate in `@nanisoft/prism-ui/gates` is the gate, checked in both light and dark mode
 - **Stack**: Next 16 static export · fumadocs-mdx · pnpm · TypeScript strict · oxlint · Vitest (jsdom + Testing Library) · Cloudflare Workers
 - **Chrome and every section**: [@nanisoft/prism-ui](https://www.npmjs.com/package/@nanisoft/prism-ui) 0.7.0, pinned exactly. It brings the token package at the exact version it was released against, so this repository declares one first-party dependency and cannot be handed a mismatched pair. There is no local component and no client runtime: every page is a server component, so the site ships no JavaScript of its own
 
 ## What ships
 
-- **Landing** (`/`) — "Software that builds software." The thesis as the page's `h1` with two real links under it, then the factory strip, then five numbered sections: **the pipeline** (six stages, issue to release) · **products** (Nexus, Atlas, AlphaLens, each row a mark in that product's own pack and a whole-row link to its live site) · **architecture** (the schematic: Prism feeds Nexus, Nexus builds Atlas and AlphaLens, both point at what the factory builds next) · **why Nanisoft** (three pillars over a five-card grid) · **philosophy** (the manifesto, set quiet and narrow). It closes on a band back to the factory.
+- **Landing** (`/`) — "Software that builds software." The thesis as the page's `h1` at a display step the catalogue has no token for, the factory strip, then six sections: **the pipeline** (the factory figure at full width, then the six stages it draws, in three columns) · **products** (Nexus, Atlas, AlphaLens, each row a mark in that product's own pack and a whole-row link to its live site) · **architecture** (the schematic: Prism feeds Nexus, Nexus builds Atlas and AlphaLens, both point at what the factory builds next) · **why Nanisoft** (three pillars as tinted panels on `--accent` with a `--primary` hairline) · **philosophy** (the manifesto, set quiet and narrow) · the closing band. Eight bands, eight layout families, and no two of them the same shape. The hero's right column is the whole product set as five rows of marks, one per member and each in its own pack's hue.
 - **About** (`/about`) — "The company that builds the builder": Nexus as the Agent Factory, the proof that the rest of nanisoft.com is output rather than case study, the say-what-is-true rule, and a three-row fact list.
+- **Chrome** — `SiteHeader` gets this site's own two routes as a `nav` and the whole product set as the switcher, and `SiteFooter` gets two columns and a legal line, all from `lib/navigation.tsx`. Before this the site published `/about` and `/blog` and linked to neither: the only `<nav>` on any page was the switcher, and the footer was a brand lockup with nothing under it. A route nothing links to renders exactly like a route something does, which is why the `links` gate could not see it: that gate asks whether a link a reader follows arrives somewhere, and a page with no link to it asks nothing.
 - **Blog** (`/blog`) — the four company posts over `content/blog/`, folder-per-post with a required ISO `date`, optional `tags` and `draft` (drafts never export). The index is this site's own composition and this site's own CSS, because the four blog lists in this family are four deliberate designs and the design system deliberately ships none. Each post is the design system's blog post Page, which owns the byline, the date in both its display and its machine form, and the trail to the neighbouring posts.
 - **Not found** — the design system's not-found Page: the code as the page's heading, the sentence under it, and one way out.
 
@@ -26,9 +27,11 @@ app/page.tsx          the landing, composed from catalogue items and nothing els
 app/about/page.tsx    a page header, the prose at the measure, a fact list
 app/not-found.tsx     the not-found Page
 app/blog/…            the blog index (site's own) and the blog post (the catalogue's)
-app/globals.css       130 lines: the blog index, three landing elements, two utility classes
+app/globals.css       476 lines: the blog index, the hero, the pipeline band, the
+                      pillar panels, two utility classes
 lib/site.json         the ground, the default mode, the product directory
 lib/site.ts           those facts, typed by the design system's pack vocabulary
+lib/navigation.tsx    this site's own destinations, for the header and the footer
 lib/landing-content.ts every word of the landing, as data
 scripts/              the pack map, the region resolver, the parity expectations
 prism-gates.json      this site's half of the cross-repository contract: data only
@@ -41,6 +44,13 @@ compiled from the design system's own source, so a utility exists in it only if 
 Prism component uses it. `mb-12` is safe; a utility Prism happens not to use would do
 nothing and say nothing. Anything this site needs for itself goes in
 `app/globals.css` as a site class.
+
+**A site class may not restyle a catalogue item, and this sheet does not.** It
+composes three bands the catalogue does not ship, declares the one display step the
+catalogue has no token for, and sets the reading measure. Its colour comes entirely
+from the page's own ground pack, because a pack boundary may only land on a
+`ProductMark`, which is what makes the hero five rows of marks and not five tinted
+sections. It declares no corner radius at all, so the page has one.
 
 **The site stylesheet owns almost nothing.** It must not declare the page ground, the
 body ink, a focus outline or a hairline colour on a selector with no class in it, and
@@ -55,8 +65,11 @@ it, and it wears the mode of the nearest ancestor carrying `.dark`, which is why
 server-rendered boundary has no mode class of its own. All five light grounds are the
 same white and the five dark grounds span about three steps of near-neutral, so a
 section ground buys almost nothing and costs a shape change. `scripts/pack-map.json`
-says where two regions may carry a second pack and why; the gate checks the count and
-the identifiers in both modes.
+says which regions may carry a pack other than the ground and why, and
+`scripts/pack-regions.mjs` names a region from the structure that carries it rather
+than from a section's own printed ordinal, so deleting a heading cannot rename a pack
+region. Three regions carry a second pack today, all three are rows of marks, and the
+gate checks the count and the identifiers in both modes.
 
 ## Develop
 

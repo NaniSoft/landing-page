@@ -1,35 +1,42 @@
 /*
- * This site's own stylesheet, and it is almost nothing.
+ * This site's own stylesheet. It is small, and the reason it is small is a law
+ * rather than a preference.
  *
- * The old sheet was 318 lines over prism-ui's shipped ground: it restated the page
- * ground, the body ink, a focus ring and a link colour that the design system already
- * owns, defined sixty custom properties the baked variablesheet had defined, and
- * carried a docs-shell class on a site with no documentation route. Of those 318
- * lines, twelve survive, and the reason is worth stating for the three sites that
- * copy this file:
+ * A site stylesheet must not declare, on a selector with no class in it, any of
+ * `background`, `background-color`, `color`, `font-family`, `outline`,
+ * `outline-style` or `border-color`, and must not carry a `:focus` or
+ * `:focus-visible` rule at all. Those are the properties Prism's own base layer
+ * declares, Prism's base is layered and this sheet is not, so a bare-element
+ * declaration here always wins the cascade and silently replaces a rule the
+ * design system chose. The `stylesheet-ownership` gate fails the build on one,
+ * because the alternative is a screenshot of a page that looks plausible with a
+ * black hairline and no focus indicator.
  *
- *   - A site stylesheet must not declare, on a selector with no class in it, any of
- *     `background`, `background-color`, `color`, `font-family`, `outline`,
- *     `outline-style` or `border-color`, and must not carry a `:focus` or
- *     `:focus-visible` rule at all. Those are the properties prism's own base layer
- *     declares, prism's base is layered and this sheet is not, so a bare-element
- *     declaration here always wins the cascade and silently replaces a rule the
- *     design system chose. `scripts/check-stylesheet-ownership.mjs` fails the build
- *     on one, because the alternative is a screenshot of a page that looks plausible
- *     with a black hairline and no focus indicator.
- *   - The sheet is the only place a consumer can express anything the catalogue does
- *     not ship, because the consumer does not run Tailwind: a utility exists in the
- *     emitted stylesheet only if a Prism component uses it. A site class is a
- *     declaration the site owns, which is exactly what these are.
- *   - Colour is a token, never a raw value, and never a `color-mix()` over a
- *     `var()`: a shorthand with one dead operand erases the declaration instead of
- *     repainting it, and a live one computes away under an unlayered rule.
+ * It is also the only place a consumer can express anything the catalogue does not
+ * ship, because the consumer does not run Tailwind: a utility exists in the emitted
+ * stylesheet only if a Prism component uses it. A site class is a declaration the
+ * site owns, which is exactly what these are.
  *
- * What is left is the blog index, which the catalogue deliberately does not ship
- * (four sites, four deliberate blog lists), and the three landing elements this site
- * owns that no catalogue item draws. Nothing here restyles a catalogue item, and no
- * link below is given a focus indicator: a plain anchor keeps the browser's own, which
- * is the only indicator on an element no Prism component drew.
+ * Three rules every declaration below obeys:
+ *
+ *   - **Colour is a token, never a raw value, and never a `color-mix()` over a
+ *     `var()`.** A shorthand with one dead operand erases the declaration instead
+ *     of repainting it, and a live one computes away under an unlayered rule.
+ *   - **Measure is the design system's own token**, so a site width and a Prism
+ *     width are the same width. Only the one reading measure below is a new name.
+ *   - **Radius is never declared.** This sheet adds no corner of its own: the page's
+ *     ground is `sky`, the tightest of the five packs at 0.5rem, and every surface
+ *     Prism draws rounds from that. A site radius would be a second scale on a page
+ *     whose whole argument is that there is one.
+ *
+ * Every colour below resolves against the page's own ground, which is `sky`. That is a
+ * hard limit and it is not this site's to lift: the pack-boundary law puts a pack's hue
+ * on a `ProductMark` and nowhere else, so the only colour that can reach a section, a
+ * panel or a rule is the ground's own palette. The other four pastels on this site are
+ * all on marks, which is why the hero is five rows of marks and not five tinted bands.
+ *
+ * No link below is given a focus indicator: a plain anchor keeps the browser's own,
+ * which is the only indicator on an element no Prism component drew.
  */
 
 /*
@@ -38,18 +45,23 @@
  *
  * prism's emitted sheet declares `--font-sans: Inter, ui-sans-serif, system-ui, ...`
  * and 0.6.0 ships no font file, so the first entry is a name nothing resolves to and
- * every page on the site renders in the platform's UI face. This supplies the file
- * the token already names and repeats prism's own fallback list verbatim behind it,
- * so the design system's intent is unchanged and only its first entry becomes real.
+ * every page on the site renders in the platform's UI face. This supplies the file the
+ * token already names and repeats prism's own fallback list verbatim behind it, so the
+ * design system's intent is unchanged and only its first entry becomes real.
  *
- * It is a custom property rather than a `font-family` on a bare element on purpose:
- * a site stylesheet must not declare `font-family` on a selector with no class in it,
+ * It is a custom property rather than a `font-family` on a bare element on purpose: a
+ * site stylesheet must not declare `font-family` on a selector with no class in it,
  * because prism's base is layered and this sheet is not. A token is not that.
+ *
+ * `--site-measure` is the reading width this site's own text is set at, and it is a
+ * name rather than a value so that a future change to the design system's measure is a
+ * change to one token rather than to every rule that quotes it.
  */
 
 :root {
   --font-sans: var(--font-inter), Inter, ui-sans-serif, system-ui, -apple-system,
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --site-measure: var(--container-measure);
 }
 
 .site-main {
@@ -58,22 +70,328 @@
   min-height: 100dvh;
 }
 
-/* ---------- The landing elements this site owns ---------- */
+/* ---------- Vertical rhythm ---------- */
 
+/*
+ * Two heights on seven bands, and the taller one is named.
+ *
+ * Every band used to be `py-16 sm:py-24`, which is a rhythm that reads as one height
+ * repeated: a reader scrolling the page cannot tell a statement from a list, because
+ * they were the same height under the same heading. Two of the seven are statements,
+ * the thesis and the manifesto, and they get the tall measure. The rest keep the
+ * system's own.
+ *
+ * The values are on the design system's own quarter-rem spacing grid rather than
+ * quoted from it, because the tallest step Prism's utilities reach is
+ * `--spacing-24` at 6rem and a statement wants one step past it. Five and seven
+ * rem are both multiples of the grid, so nothing here is off-scale.
+ */
+.site-band--tall {
+  padding-block: 5rem;
+}
+
+@media (min-width: 40rem) {
+  .site-band--tall {
+    padding-block: 7rem;
+  }
+}
+
+/* ---------- The hero ---------- */
+
+/*
+ * A split: the claim on the left at the measure a thesis wants, the product set on the
+ * right at the width that is left. The copy column is the wider one because a thesis set
+ * at half a page breaks in the wrong place, and the identity column is the narrower one
+ * because five rows of a mark and a line need less than half a page.
+ *
+ * The two columns start at the same line rather than ending at one. Bottom-aligning
+ * them looks deliberate until the identity column is taller than the copy column, and
+ * then it drops the thesis to the bottom of the band and leaves the top of the page
+ * empty, which is the one arrangement that makes a hero read as broken rather than as
+ * asymmetric.
+ */
+.site-hero {
+  display: grid;
+  gap: var(--spacing-12);
+}
+
+@media (min-width: 64rem) {
+  .site-hero {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: var(--spacing-16);
+    align-items: start;
+  }
+}
+
+/*
+ * The display step: the page's largest type, and the only type on this site set larger
+ * than a section heading.
+ *
+ * Every `h1` and `h2` in the catalogue renders at one hardcoded step,
+ * `text-3xl sm:text-4xl`, and the design system's own scale stops at
+ * `--text-4xl`, which is 2.25rem. So before this the page's thesis and its own table
+ * of contents were set at the same size and the page had no top to its hierarchy, and
+ * the fix cannot be a token because there is no token for it.
+ *
+ * This class sits on an element this repository composed, not on a Block's heading, so
+ * it is a decision about the hero rather than an override of the design system's type
+ * scale. `Section` keeps owning every section heading on the page.
+ *
+ * The `clamp` floor is 2.5rem because "Software that builds software." is six words: at
+ * anything below that the line breaks into four on a phone, and a four-line hero is a
+ * font-size error rather than a copy error. The ceiling is 4.25rem, which fits the line
+ * once at 1440px with the identity column beside it. Tracking is tighter than
+ * `--tracking-tight` because that step is calibrated for 2.25rem and the optical
+ * correction grows with the size, not constant across it.
+ */
+.site-display {
+  max-width: 16ch;
+  font-size: clamp(2.5rem, 6.4vw, 4.25rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+@media (min-width: 64rem) {
+  .site-display {
+    line-height: 0.98;
+  }
+}
+
+/* Eleven words, at the design system's own next step up and capped at a lede's measure. */
+.site-hero__lede {
+  max-width: 52ch;
+  margin: var(--spacing-6) 0 0;
+}
+
+@media (min-width: 64rem) {
+  .site-hero__lede {
+    margin-top: var(--spacing-7);
+    font-size: var(--text-xl);
+  }
+}
+
+/*
+ * Two actions, stacked on the narrowest phone and in a row from the first width that
+ * has room for both labels unwrapped. The labels and their metrics are the design
+ * system's own, so the width they need is the Block's to decide; this only decides when
+ * there is room. A label that wrapped to two lines at desktop would be a broken CTA, so
+ * the row appears at 30rem rather than at the point where it looks tidier.
+ */
 .site-hero__actions {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  margin-top: 2.5rem;
+  align-items: stretch;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-9);
+}
+
+@media (min-width: 30rem) {
+  .site-hero__actions {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-4);
+  }
+}
+
+/* ---------- The product set, in the hero ---------- */
+
+/*
+ * Five rows, a hairline between them, each row a link carrying one member's mark and
+ * one line about it.
+ *
+ * A row rather than a five-tile grid on purpose. Each row is one product with one
+ * sentence, and five tiles at this width would give each about two hundred pixels to
+ * hold a twenty-four pixel disc and a line of text, which is a tile with a mark in it
+ * rather than a list of products. The stack also puts the five discs on one vertical
+ * edge, where five different pastels read as five different things instead of as a
+ * colour chart.
+ */
+.site-identity {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+
+.site-identity__row {
+  border-bottom: 1px solid var(--border);
+}
+
+/*
+ * The row is a link, so the whole row is the hit target and the browser's own affordances
+ * work: a status bar shows the destination, a middle-click opens it in a new tab. The
+ * horizontal pad is what lifts the hover wash off the hairline above and below it, and
+ * the vertical pad lives on the mark and the role beneath, so the text is inset by half
+ * a pad from the edge it is aligned to.
+ */
+.site-identity__link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  padding: var(--spacing-3) var(--spacing-3);
+  transition: background-color var(--duration-base) var(--ease-out);
+}
+
+.site-identity__link:hover {
+  background-color: var(--accent);
+}
+
+.site-identity__role {
+  max-width: 46ch;
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  text-wrap: pretty;
+}
+
+/* ---------- The pipeline band ---------- */
+
+/*
+ * The live figure above the six stages, not beside them.
+ *
+ * Beside them was the first arrangement and it was wrong for a measurement: `PulseGraph`
+ * draws six stage names into a 640-unit canvas, and in a 430-pixel column those names
+ * render at about four pixels, which is a drawing nobody can read and a screen-reader
+ * user is the only one who gets the sentence it stands for.
+ *
+ * The width is capped at 46rem rather than left to fill the container. The drawing's
+ * own canvas is 640 by 360 with its content in the middle third, so a full-width panel
+ * is a 1088 by 612 box holding about 230 pixels of drawing and 380 pixels of nothing.
+ * At 46rem the stage names render at roughly fifteen pixels, which is legible, and the
+ * empty canvas costs a third of what it did. The cap is a maximum rather than a width
+ * because at a phone width the figure is the container's width anyway.
+ */
+.site-pipeline {
+  display: grid;
+  gap: var(--spacing-10);
+}
+
+.site-pipeline__figure {
+  max-width: 46rem;
+}
+
+.site-pipeline__stages {
+  display: grid;
+  gap: var(--spacing-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 40rem) {
+  .site-pipeline__stages {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .site-pipeline__stages {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--spacing-10);
+  }
+}
+
+/*
+ * One hairline above each stage rather than below it, which is the design system's own
+ * choice for a set of short points and reads correctly at the top of a column: the
+ * first stage's rule is the column's opening line and there is no stray rule under the
+ * last. No ordinal is drawn, because this is an `<ol>` and a screen reader already
+ * announces "3 of 6"; a printed number beside a number the markup knows is a second
+ * answer to a question the list has already answered.
+ *
+ * The hairline is on the cell rather than between cells, so in three columns it reads
+ * as three lists of two rather than as one list of six with rules that stop and start.
+ */
+.site-pipeline__stage {
+  padding-top: var(--spacing-4);
+  border-top: 1px solid var(--border);
+}
+
+.site-pipeline__name {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+}
+
+.site-pipeline__caption {
+  max-width: 46ch;
+  margin: var(--spacing-1) 0 0;
+  color: var(--muted-foreground);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  text-wrap: pretty;
+}
+
+/* ---------- Why Nanisoft ---------- */
+
+/*
+ * Three tinted panels, one per claim.
+ *
+ * The wash is the pack's own `--accent`, which is the one token in this system meant for
+ * a large area rather than for a signal, and each panel carries a `--primary` hairline
+ * along its top edge so the three read as a set rather than as three unrelated boxes.
+ * That is also the reason this band is not five small tiles: a pastel behind one word is
+ * a signal a reader has to learn, and a pastel behind a paragraph is a surface.
+ *
+ * Exactly three, because three is the number of claims the section makes. This used to
+ * be eight points across two bands of the same shape, and a fourth panel would be a
+ * panel with nothing in it.
+ */
+.site-pillars {
+  display: grid;
+  gap: var(--spacing-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 48rem) {
+  .site-pillars {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.site-pillar {
+  padding: var(--spacing-7);
+  border-top: 2px solid var(--primary);
+  background-color: var(--accent);
+}
+
+/*
+ * The name reads in the brand ink rather than in `--foreground`, which is the design
+ * system's own rule for a word that has to read as the brand. On this wash it clears
+ * 4.5:1 in both modes, measured rather than assumed: `--brand-ink` on `--accent` is
+ * 5.80:1 in light and 7.39:1 in beam-dark. The line under it uses
+ * `--accent-foreground`, the pair Prism declares for exactly this pairing, at 15.05:1
+ * and 8.46:1.
+ */
+.site-pillar__name {
+  margin: 0;
+  color: var(--brand-ink);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+}
+
+.site-pillar__line {
+  max-width: 38ch;
+  margin: var(--spacing-2) 0 0;
+  color: var(--accent-foreground);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  text-wrap: pretty;
 }
 
 .site-caption {
-  max-width: var(--container-measure);
-  margin-top: 1.5rem;
+  max-width: var(--site-measure);
+  margin-top: var(--spacing-6);
   color: var(--muted-foreground);
-  font-size: 0.875rem;
-  line-height: 1.429;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
   text-wrap: pretty;
 }
 
@@ -84,70 +402,70 @@
 /* ---------- The blog index, which is site content by decision ---------- */
 
 .site-eyebrow {
-  margin: 0 0 1.25rem;
+  margin: 0 0 var(--spacing-5);
   color: var(--muted-foreground);
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.16em;
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
 }
 
 .site-mono {
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.04em;
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
 }
 
 .site-catalog {
-  max-width: 72rem;
+  max-width: var(--container-page);
   margin: 0 auto;
-  padding: 4rem 1.5rem 6rem;
+  padding: var(--spacing-16) var(--spacing-6) var(--spacing-24);
 }
 
 .site-catalog__title {
-  margin: 0 0 0.25rem;
+  margin: 0 0 var(--spacing-1);
   font-size: clamp(1.875rem, 3.6vw, 2.75rem);
   font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.2;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
   text-wrap: balance;
 }
 
 .site-catalog__lede {
-  max-width: var(--container-measure);
-  margin: 0 0 1.75rem;
+  max-width: var(--site-measure);
+  margin: 0 0 var(--spacing-7);
   color: var(--muted-foreground);
-  font-size: 1.125rem;
-  line-height: 1.556;
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
   text-wrap: pretty;
 }
 
 .site-blog-list {
   display: grid;
-  gap: 1.75rem;
-  margin: 0.5rem 0 0;
+  gap: var(--spacing-7);
+  margin: var(--spacing-2) 0 0;
   padding: 0;
   list-style: none;
 }
 
 .site-blog-list__title {
   color: var(--brand-ink);
-  font-size: 1.25rem;
+  font-size: var(--text-xl);
   font-weight: 600;
-  letter-spacing: -0.025em;
+  letter-spacing: var(--tracking-tight);
   text-decoration: none;
 }
 
 .site-blog-list__title:hover {
   text-decoration: underline;
-  text-underline-offset: 0.25rem;
+  text-underline-offset: var(--spacing-1);
 }
 
 .site-blog-list__description {
-  max-width: var(--container-measure);
-  margin: 0.375rem 0;
+  max-width: var(--site-measure);
+  margin: var(--spacing-1) 0;
   color: var(--muted-foreground);
-  line-height: 1.556;
+  line-height: var(--leading-relaxed);
   text-wrap: pretty;
 }
 

@@ -6,6 +6,7 @@ import { SiteFooter } from '@nanisoft/prism-ui/blocks/site-footer';
 import { SiteHeader } from '@nanisoft/prism-ui/blocks/site-header';
 import { PrismThemeScript } from '@nanisoft/prism-ui/provider';
 
+import { FOOTER_COLUMNS, FOOTER_LEGAL, SITE_NAV } from '@/lib/navigation';
 import { DEFAULT_MODE, GROUND_PACK, PRODUCTS, SITE_PRODUCT, THEME_ATTRIBUTES } from '@/lib/site';
 
 // The one stylesheet. Every token, every utility and every base rule on this site
@@ -16,7 +17,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: {
-    default: 'NaniSoft — Software that builds software.',
+    default: 'NaniSoft, software that builds software.',
     template: '%s · NaniSoft',
   },
   description: 'Software that builds software.',
@@ -35,11 +36,16 @@ export const metadata: Metadata = {
  * with scripting disabled.
  *
  * The switcher moves between the five members of the company's product set, so all
- * five pastel packs are on every page rather than on one page of one site. There is
- * no `nav`: the old header had none, and adding one is an information-architecture
- * decision this migration is not making. `navLabel` is required by the Block and is
- * the name a switcher takes when a consumer passes no `productsLabel`, so it is the
- * switcher's honest name here.
+ * five pastel packs are on every page rather than on one page of one site. The
+ * navigation beside it is this site's own two routes and the footer's two columns,
+ * both from `lib/navigation.ts`, so the header and the footer cannot disagree about
+ * where this site can be reached: before this, `/about` and `/blog` were published,
+ * indexed and linked from nowhere.
+ *
+ * `navLabel` is the accessible name of the header's own navigation and
+ * `productsLabel` is the name of the switcher. They are different sets of places, so
+ * they get different words: one is where this site goes, the other is where the
+ * family goes.
  */
 // The design system's own first family, and the only file this site loads.
 //
@@ -74,11 +80,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <SiteHeader
           product={SITE_PRODUCT}
           products={PRODUCTS}
-          navLabel="Products"
-          productsLabel="Products"
+          nav={SITE_NAV}
+          navLabel="This site"
+          productsLabel="The family"
         />
         <main className="site-main">{children}</main>
-        <SiteFooter product={SITE_PRODUCT} />
+        <SiteFooter product={SITE_PRODUCT} columns={FOOTER_COLUMNS} legal={FOOTER_LEGAL} />
       </body>
     </html>
   );
