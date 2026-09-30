@@ -19,15 +19,31 @@ import { describe, expect, it } from 'vitest';
  * page still builds, and the reader gets a runtime that resolves colours once at
  * mount and paints them on a dark page in light values.
  *
- * If a future change needs client code on this site, this test is where the argument
+ * **The site bar is the test of whether that is still true, and it is.** The bar is a
+ * search trigger, a menu of the family's five sites, a light and dark control and a
+ * panel for narrow viewports, which is four pieces of reader state and cannot be a
+ * server render. It is `SiteNavbar` from the design system, so the boundary that
+ * carries those four controls is a line in that package and not a line here, and
+ * `components/site-bar.tsx` composes it from props on the server like any other
+ * Block. This file still finds no `'use client'` in this repository, which is the
+ * outcome worth having: the page gained a working search and a mode toggle and the
+ * client code is still somewhere this repository does not own.
+ *
+ * If a future change needs client code *here*, this test is where the argument
  * happens, and the answer is a question rather than a deletion: what does the client
  * need that a server render cannot give it?
  */
 const ROOT = path.resolve(__dirname, '..');
 const SOURCE = /\.(ts|tsx)$/;
 
-/** Directories that hold the site's own source. A list, so a new one is a decision. */
-const ROOTS = ['app', 'lib', 'test'];
+/**
+ * Directories that hold the site's own source. A list, so a new one is a decision.
+ *
+ * `components` joined this list with the site bar: a directory that holds one server
+ * Component is still a directory this repository owns, and a root that is not scanned
+ * is a root where a `'use client'` could be added without this file noticing.
+ */
+const ROOTS = ['app', 'components', 'lib', 'test'];
 
 /** The two configuration files at the root, which are source too. */
 const ROOT_FILES = ['next.config.ts', 'vitest.config.ts'];
@@ -53,10 +69,13 @@ describe('the site has no client code', () => {
     // that matters: a file that is not in the list is a file no law here reaches.
     expect(files.map((file) => path.relative(ROOT, file).split(path.sep).join('/')).sort()).toEqual([
       'app/about/page.tsx',
+      'app/api/search/route.ts',
       'app/blog/[[...slug]]/page.tsx',
       'app/layout.tsx',
       'app/not-found.tsx',
       'app/page.tsx',
+      'components/site-bar.tsx',
+      'lib/bar.ts',
       'lib/landing-content.ts',
       'lib/mdx-components.ts',
       'lib/navigation.tsx',

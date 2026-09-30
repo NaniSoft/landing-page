@@ -16,22 +16,28 @@
  * happened is that a resolver that has nothing to read will read something. A
  * resolver that reads only markup has nothing to fall back on.
  *
- * So a mark in the switcher is the switcher's, a mark in a brand lockup is the
- * lockup's, a mark in the hero band is the hero's, and a mark in the product grid is
- * the product grid's. A band with no rule here returns null rather than a guess,
- * because a region the gate cannot name is a region it cannot hold to
- * `scripts/pack-map.json`: an unnameable boundary is a build failure, which is the
- * answer a new mark in an undeclared band should get.
+ * So a mark in a brand lockup is the lockup's, a mark in the hero band is the hero's,
+ * and a mark in the product grid is the product grid's. A band with no rule here
+ * returns null rather than a guess, because a region the gate cannot name is a region
+ * it cannot hold to `scripts/pack-map.json`: an unnameable boundary is a build
+ * failure, which is the answer a new mark in an undeclared band should get.
+ *
+ * **The rule for the header's product switcher is gone, and the switcher with it.**
+ * The bar is the design system's `SiteNavbar` and the family's five sites are a menu
+ * inside it, so their marks are rendered when a reader opens the menu. This gate reads
+ * the emitted HTML of a static export, and a menu nobody has opened is not in it, so
+ * there is no boundary here to name. The rule was not deleted because the marks moved
+ * somewhere harmless: it was deleted because the marks are no longer on the page a
+ * reader receives without interacting with, which is the only page this gate reads.
  *
  * Read by `pnpm check` and, separately, by `test/pack-map.test.tsx`, which carries the
- * same four rules so the two independent readers of the map cannot drift. Nothing else
+ * same rules so the two independent readers of the map cannot drift. Nothing else
  * imports it: this is a declaration about one page, not a library.
  */
 export function regionOf(element) {
-  if (element.closest('[data-slot="product-switcher"]')) return 'header.switcher'
   if (element.closest('header')) return 'header.brand'
   if (element.closest('footer')) return 'footer.brand'
   if (element.closest('[data-slot="nanisoft-hero"]')) return 'landing.hero'
   if (element.closest('[data-slot="product-grid"]')) return 'landing.products'
-  return null
+  return null;
 }

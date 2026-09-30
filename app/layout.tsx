@@ -3,11 +3,11 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
 import { SiteFooter } from '@nanisoft/prism-ui/blocks/site-footer';
-import { SiteHeader } from '@nanisoft/prism-ui/blocks/site-header';
 import { PrismThemeScript } from '@nanisoft/prism-ui/provider';
 
-import { FOOTER_COLUMNS, FOOTER_LEGAL, SITE_NAV } from '@/lib/navigation';
-import { DEFAULT_MODE, GROUND_PACK, PRODUCTS, SITE_PRODUCT, THEME_ATTRIBUTES } from '@/lib/site';
+import { SiteBar } from '@/components/site-bar';
+import { FOOTER_COLUMNS, FOOTER_LEGAL } from '@/lib/navigation';
+import { DEFAULT_MODE, GROUND_PACK, SITE_PRODUCT, THEME_ATTRIBUTES } from '@/lib/site';
 
 // The one stylesheet. Every token, every utility and every base rule on this site
 // arrives in this one import: the design system compiles its own source into it, and
@@ -61,6 +61,29 @@ export const metadata: Metadata = {
 // most visible change the migration made. The typeface belongs to the design system
 // and lands with it (the open item is that `@nanisoft/prism-ui` should ship one), so
 // a site supplies the file the token already names rather than choosing its own.
+/**
+ * The document: the two theme attributes, one blocking script, the chrome, the page.
+ *
+ * **The bar is the design system's, and its client island is inside the package
+ * rather than in this repository.** `components/site-bar.tsx` composes
+ * `SiteNavbar`, whose lockup and navigation are server Components and whose search
+ * trigger, sites menu and mode control are one client boundary. So this site's own
+ * source still carries no `'use client'` directive at all, and
+ * `test/server-only.test.ts` still asserts exactly that: the reader gets a working
+ * mode toggle and a working search, and the boundary that carries them is a line in
+ * a package rather than a line in this repository.
+ *
+ * **There is no colour chooser on this site, and that is the decision rather than an
+ * omission.** A page's ground is stable for the life of the page, so a control that
+ * let a reader repaint it would be offering them a page that is not this one. The
+ * mode is the axis that is the reader's rather than the page's, and because the
+ * whole family stores it under one key, a reader who chose dark here arrives in
+ * dark on the other four sites.
+ *
+ * The search index is this site's own, emitted as a static file from the same
+ * content tree the routes are generated from, so a post a reader can reach is a post
+ * a search can find.
+ */
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
@@ -77,13 +100,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <PrismThemeScript defaultPack={GROUND_PACK} defaultMode={DEFAULT_MODE} />
       </head>
       <body>
-        <SiteHeader
-          product={SITE_PRODUCT}
-          products={PRODUCTS}
-          nav={SITE_NAV}
-          navLabel="This site"
-          productsLabel="The family"
-        />
+        <SiteBar />
         <main className="site-main">{children}</main>
         <SiteFooter product={SITE_PRODUCT} columns={FOOTER_COLUMNS} legal={FOOTER_LEGAL} />
       </body>

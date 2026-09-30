@@ -16,5 +16,11 @@ next-env.d.ts
 # local scratch - never committed
 .scratch/
 
+# agent tooling, which is a machine's configuration and not this site's source.
+# The design system repository ignores the same directory, and the reason is the
+# same: nothing here is read by the build, by the gates or by a reader, and every
+# file in it is somebody's editor state.
+.opencode/
+
 # misc
 .DS_Store
