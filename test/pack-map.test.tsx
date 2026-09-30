@@ -1,11 +1,7 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { SiteFooter } from '@nanisoft/prism-ui/blocks/site-footer';
-
 import HomePage from '@/app/page';
-import { SiteBar } from '@/components/site-bar';
-import { FOOTER_COLUMNS } from '@/lib/navigation';
 import map from '@/scripts/pack-map.json';
 import { PRODUCTS, SITE_PRODUCT } from '@/lib/site';
 
@@ -26,16 +22,16 @@ import { PRODUCTS, SITE_PRODUCT } from '@/lib/site';
  */
 const MARK_SLOT = 'product-mark';
 
+/**
+ * The page as the site renders it.
+ *
+ * The landing now renders the chrome itself, because each page does and a bar in the
+ * root layout cannot mark the page a reader is on. So this renders the page and nothing
+ * else: wrapping it in a second chrome would draw two bars and two footers, and the two
+ * readers of the map would be reading a page this site does not publish.
+ */
 function wholePage() {
-  const { container } = render(
-    <>
-      <SiteBar />
-      <main>
-        <HomePage />
-      </main>
-      <SiteFooter product={SITE_PRODUCT} columns={FOOTER_COLUMNS} />
-    </>,
-  );
+  const { container } = render(<HomePage />);
   return container;
 }
 
@@ -52,7 +48,7 @@ function wholePage() {
  * **The bar is the one the site renders, not one assembled here.** This file used to
  * compose its own `SiteHeader` with a product switcher, and when the site moved to
  * `SiteNavbar` it kept asserting a switcher the page had stopped publishing, so this
- * reader and the gate were reading two different pages. Rendering `SiteBar` is what
+ * makes the second reader a reader of the same thing as the first.
  * makes the second reader a reader of the same thing as the first.
  *
  * The switcher's rule is gone from both copies, and not because the marks moved

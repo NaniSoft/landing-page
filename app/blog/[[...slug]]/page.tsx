@@ -4,6 +4,7 @@ import type { ReactElement } from 'react';
 import Link from 'next/link';
 import { BlogPostPage } from '@nanisoft/prism-ui/pages/blog-post-page';
 
+import { SiteChrome } from '@/components/site-chrome';
 import { getMdxComponents } from '@/lib/mdx-components';
 import { blogSource } from '@/lib/source';
 
@@ -104,18 +105,20 @@ export default async function BlogPage({ params }: PageProps): Promise<ReactElem
   const MDX = page.data.body;
 
   return (
-    <BlogPostPage
-      title={page.data.title}
-      description={page.data.description}
-      date={page.data.date}
-      dateTime={page.data.date}
-      tags={page.data.tags.map((tag) => ({ label: tag }))}
-      previous={previous ? { title: previous.data.title, href: previous.url } : undefined}
-      next={next ? { title: next.data.title, href: next.url } : undefined}
-      trailLabels={{ previous: 'Previous', next: 'Next' }}
-      trailLabel="More posts"
-    >
-      <MDX components={getMdxComponents()} />
-    </BlogPostPage>
+    <SiteChrome current="/blog">
+      <BlogPostPage
+        title={page.data.title}
+        description={page.data.description}
+        date={page.data.date}
+        dateTime={page.data.date}
+        tags={page.data.tags.map((tag) => ({ label: tag }))}
+        previous={previous ? { title: previous.data.title, href: previous.url } : undefined}
+        next={next ? { title: next.data.title, href: next.url } : undefined}
+        trailLabels={{ previous: 'Previous', next: 'Next' }}
+        trailLabel="More posts"
+      >
+        <MDX components={getMdxComponents()} />
+      </BlogPostPage>
+    </SiteChrome>
   );
 }

@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 
 import { NotFoundPage } from '@nanisoft/prism-ui/pages/not-found-page';
+import { SiteChrome } from '@/components/site-chrome';
 
 /**
  * The not-found screen, from the design system's Page for it.
@@ -13,11 +14,13 @@ import { NotFoundPage } from '@nanisoft/prism-ui/pages/not-found-page';
  */
 export default function NotFound(): ReactElement {
   return (
-    <NotFoundPage
-      code="404"
-      title="This page does not exist (yet)."
-      links={[{ label: 'NaniSoft', href: '/' }]}
-      linksLabel="Ways out"
-    />
+    <SiteChrome>
+      <NotFoundPage
+        code="404"
+        title="This page does not exist (yet)."
+        links={[{ label: 'NaniSoft', href: '/' }]}
+        linksLabel="Ways out"
+      />
+    </SiteChrome>
   );
 }

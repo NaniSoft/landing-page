@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { SiteBar } from '@/components/site-bar';
+import { SiteChrome } from '@/components/site-chrome';
 import { COPY, NAV, SITES } from '@/lib/bar';
 import { DEFAULT_MODE, GROUND_PACK, SITE_PRODUCT } from '@/lib/site';
 
@@ -48,9 +48,25 @@ afterEach(() => {
 /** The name the mode control carries while the page is in this site's own mode. */
 const MODE_LABEL = DEFAULT_MODE === 'dark' ? COPY.toLight : COPY.toDark;
 
+/**
+ * The chrome as a page renders it.
+ *
+ * The bar was in the root layout when this file was written, which is why every test
+ * here rendered a bar with no page around it. Each page now renders
+ * `SiteChrome` against the route it is serving, so the tests render the same thing with
+ * a child in it, and the two that care about the current page pass one.
+ */
+function renderChrome(current?: '/about' | '/blog') {
+  return render(
+    <SiteChrome current={current}>
+      <p>the page</p>
+    </SiteChrome>,
+  );
+}
+
 describe('the site bar', () => {
   it('is the design system Block, and the lockup is the mark the footer also draws', () => {
-    const { container } = render(<SiteBar />);
+    const { container } = renderChrome();
     expect(container.querySelector('[data-slot="site-navbar"]')).toBeTruthy();
     // One mark for the site, in the site's own pack: the bar and the footer cannot
     // name this page in two different colours.
@@ -60,22 +76,28 @@ describe('the site bar', () => {
   });
 
   it("carries this site's own two routes, and names the region they are in", () => {
-    render(<SiteBar />);
-    const nav = screen.getByRole('navigation', { name: COPY.nav });
+    // Scoped to the bar, because the footer's first column is a `nav` of its own and
+    // this site's one name for its own destinations is the same name in both. Two
+    // landmarks with one name is a bar and a footer a reader navigating by landmark
+    // cannot tell apart, and it is the footer's title rather than a missing
+    // `aria-label` that causes it.
+    const { container } = renderChrome();
+    const bar = within(container.querySelector('header') as HTMLElement);
+    const nav = bar.getByRole('navigation', { name: COPY.nav });
     expect([...nav.querySelectorAll('a')].map((a) => a.getAttribute('href'))).toEqual(
       NAV.map((link) => link.href),
     );
   });
 
   it('gives every control a name a reader can hear, and the names are the ones passed in', () => {
-    render(<SiteBar />);
+    renderChrome();
     for (const name of [COPY.search, COPY.sites, MODE_LABEL, COPY.menuOpen]) {
       expect(screen.getByRole('button', { name }), `no control named "${name}"`).toBeTruthy();
     }
   });
 
   it('reaches the whole family from one control, and this site is one of the five', () => {
-    render(<SiteBar />);
+    renderChrome();
     expect(SITES).toHaveLength(5);
     const hrefs = SITES.map((site) => site.href);
     expect(hrefs).toContain('https://nexus.nanisoft.com');
@@ -90,14 +112,14 @@ describe('the site bar', () => {
   });
 
   it('opens search as a dialog over a static index, because this site has no server', () => {
-    render(<SiteBar />);
+    renderChrome();
     const trigger = screen.getByRole('button', { name: COPY.search });
     expect(trigger.getAttribute('aria-haspopup')).toBe('dialog');
     expect(trigger.getAttribute('aria-label')).toBe(COPY.search);
   });
 
   it('has no colour chooser, because a ground is a property of the page', () => {
-    const { container } = render(<SiteBar />);
+    const { container } = renderChrome();
     // A reader who could repaint the ground would be on a page that is not this one,
     // and this site publishes one. The control exists in the Block and is simply not
     // asked for, which is the difference between a decision and an omission: a Block
@@ -107,8 +129,13 @@ describe('the site bar', () => {
   });
 
   it('prints no control name as visible text, because four of the five are icon-only', () => {
-    const { container } = render(<SiteBar />);
-    const words = (container.textContent ?? '').replace(/\s+/g, ' ').trim();
+    const { container } = renderChrome();
+    // Scoped to the bar, which is what this is about. The chrome now includes the
+    // footer, and the footer's second column is titled "The family", so a whole-document
+    // read of the words would find the sites menu's own name printed by a different
+    // component and report a control that is in fact icon-only.
+    const bar = container.querySelector('header') as HTMLElement;
+    const words = (bar.textContent ?? '').replace(/\s+/g, ' ').trim();
     // The search trigger, the sites trigger, the mode control and the mobile trigger
     // are all round icons. Their names live in `aria-label`, so a reader who cannot
     // see the icon is still told what it is, and a reader who can sees a row of four
@@ -122,7 +149,7 @@ describe('the site bar', () => {
   });
 
   it('carries every destination below the row threshold too, so nothing is phone-only', () => {
-    const { container } = render(<SiteBar />);
+    const { container } = renderChrome();
     // The panel is a Sheet and is rendered on demand, so what is asserted here is
     // that the control which opens it exists and is named. The panel's contents are
     // the design system's, and they are the same `NAV` array.
@@ -130,6 +157,25 @@ describe('the site bar', () => {
     expect(screen.getByRole('button', { name: COPY.menuOpen }).getAttribute('aria-haspopup')).toBe(
       'dialog',
     );
+  });
+
+  it('marks the page the reader is on, because the chrome is composed per page', () => {
+    // The bar used to live in the root layout, which is rendered once per route and
+    // handed no pathname, so this was the one bar in the family that could never say
+    // where the reader was. The mark is a prop now and the Block resolves it on the
+    // server, which is why this needs no client effect to hold.
+    const { container } = renderChrome('/about');
+    expect(
+      [...container.querySelectorAll('a[aria-current="page"]')].map((a) => a.getAttribute('href')),
+    ).toEqual(['/about']);
+  });
+
+  it('marks nothing on a page that is not one of the two, and nothing twice', () => {
+    // The landing is the wordmark's own destination, so it is not one of `NAV`, and a
+    // 404 is not a page this site publishes at all. A bar that marked something in
+    // either case would be claiming a destination the reader is not on.
+    const { container } = renderChrome();
+    expect(container.querySelector('a[aria-current="page"]')).toBeNull();
   });
 });
 

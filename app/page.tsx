@@ -25,6 +25,7 @@ import {
   TICKER_LABEL,
   WHY,
 } from '@/lib/landing-content';
+import { SiteChrome } from '@/components/site-chrome';
 import { PRODUCTS as SITE_PRODUCTS } from '@/lib/site';
 
 /**
@@ -90,170 +91,172 @@ const DIRECTORY = new Map(SITE_PRODUCTS.map((product) => [product.id, product]))
 
 export default function Landing(): ReactElement {
   return (
-    <>
-      {/* The thesis, the page's own h1, and the product set it built.
+    <SiteChrome>
+      <>
+        {/* The thesis, the page's own h1, and the product set it built.
 
-          There is no eyebrow. The one this band used to carry read "Nanisoft" in a
-          rounded chip directly above a headline, which is the brand name restated in
-          the position a reader looks first, and a hero's four text slots are better
-          spent on the claim, the line under it, the two actions and the thing that
-          makes the claim checkable.
+            There is no eyebrow. The one this band used to carry read "Nanisoft" in a
+            rounded chip directly above a headline, which is the brand name restated in
+            the position a reader looks first, and a hero's four text slots are better
+            spent on the claim, the line under it, the two actions and the thing that
+            makes the claim checkable.
 
-          The right column is the product set, one mark per member at the largest size a
-          mark is drawn at. Four are a product in a pastel of its own, this site wears
-          the ground, and Prism is drawn as the spectrum because it owns no pack. It is
-          the visual the page was missing and it is also the only legal one: a
-          `data-pack` boundary lands on a mark and nowhere else, so this column is the
-          most colour the page can have without breaking the design system's law. */}
-      <Section data-slot="nanisoft-hero" className="site-band--tall">
-        <div className="site-hero">
-          <div className="site-hero__copy">
-            <Heading as="h1" size="3xl" className="site-display">
-              {HERO.title}
-            </Heading>
-            <Text size="lg" tone="muted" className="site-hero__lede">
-              {HERO.lede}
-            </Text>
-            <div className="site-hero__actions">
-              <CtaLink href={HERO.primaryCta.href} size="lg">
-                {HERO.primaryCta.label}
-              </CtaLink>
-              <CtaLink href={HERO.secondaryCta.href} size="lg" variant="outline">
-                {HERO.secondaryCta.label}
-              </CtaLink>
+            The right column is the product set, one mark per member at the largest size a
+            mark is drawn at. Four are a product in a pastel of its own, this site wears
+            the ground, and Prism is drawn as the spectrum because it owns no pack. It is
+            the visual the page was missing and it is also the only legal one: a
+            `data-pack` boundary lands on a mark and nowhere else, so this column is the
+            most colour the page can have without breaking the design system's law. */}
+        <Section data-slot="nanisoft-hero" className="site-band--tall">
+          <div className="site-hero">
+            <div className="site-hero__copy">
+              <Heading as="h1" size="3xl" className="site-display">
+                {HERO.title}
+              </Heading>
+              <Text size="lg" tone="muted" className="site-hero__lede">
+                {HERO.lede}
+              </Text>
+              <div className="site-hero__actions">
+                <CtaLink href={HERO.primaryCta.href} size="lg">
+                  {HERO.primaryCta.label}
+                </CtaLink>
+                <CtaLink href={HERO.secondaryCta.href} size="lg" variant="outline">
+                  {HERO.secondaryCta.label}
+                </CtaLink>
+              </div>
             </div>
-          </div>
 
-          <ul className="site-identity">
-            {IDENTITY.entries.map((entry) => {
-              const product = DIRECTORY.get(entry.id);
-              if (!product) return null;
-              return (
-                <li key={entry.id} className="site-identity__row">
-                  <a href={product.href} className="site-identity__link">
-                    <ProductMark id={product.id} name={product.name} pack={markPack(entry.id)} size="lg" />
-                    <span className="site-identity__role">{entry.role}</span>
-                  </a>
+            <ul className="site-identity">
+              {IDENTITY.entries.map((entry) => {
+                const product = DIRECTORY.get(entry.id);
+                if (!product) return null;
+                return (
+                  <li key={entry.id} className="site-identity__row">
+                    <a href={product.href} className="site-identity__link">
+                      <ProductMark id={product.id} name={product.name} pack={markPack(entry.id)} size="lg" />
+                      <span className="site-identity__role">{entry.role}</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </Section>
+
+        {/* The transition band between the thesis and the pipeline. */}
+        <LogoStrip01 items={[...TICKER]} label={TICKER_LABEL} />
+
+        {/* The pipeline, and the factory running beside the six stages.
+
+            The figure moved here from the hero, and it is better here: the band is about
+            one issue making the walk from intake to release, and a picture of that walk
+            belongs with the list of what the walk is rather than above the page's only
+            sentence about itself. The list is an ordered list rather than the
+            definition list `NoteGrid01` renders, because six stages of one process are a
+            sequence and a definition list says a thing and its explanation.
+
+            The wrapper carries `id="pipeline"` because the catalogue's Blocks spread no
+            props and a deep link into this page has to keep resolving. The one rule the
+            catalogue gives a consumer is that it owns the element. */}
+        <Section id="pipeline">
+          <SectionHeading as="h2" align="left" title={PIPELINE.label} className="mb-10" />
+          <div className="site-pipeline">
+            <div className="site-pipeline__figure">
+              <InstrumentPanel01
+                label={PIPELINE_FIGURE.panel.label}
+                state="live"
+                stateLabel={PIPELINE_FIGURE.panel.mode}
+                caption={PIPELINE_FIGURE.aria}
+                footnote={PIPELINE_FIGURE.panel.footnote}
+              >
+                <PulseGraph
+                  nodes={PIPELINE_FIGURE.nodes}
+                  relations={PIPELINE_FIGURE.relations}
+                  label={PIPELINE_FIGURE.aria}
+                />
+              </InstrumentPanel01>
+            </div>
+            <ol className="site-pipeline__stages">
+              {PIPELINE.stages.map((stage) => (
+                <li key={stage.name} className="site-pipeline__stage">
+                  <h3 className="site-pipeline__name">{stage.name}</h3>
+                  <p className="site-pipeline__caption">{stage.caption}</p>
                 </li>
-              );
-            })}
-          </ul>
-        </div>
-      </Section>
-
-      {/* The transition band between the thesis and the pipeline. */}
-      <LogoStrip01 items={[...TICKER]} label={TICKER_LABEL} />
-
-      {/* The pipeline, and the factory running beside the six stages.
-
-          The figure moved here from the hero, and it is better here: the band is about
-          one issue making the walk from intake to release, and a picture of that walk
-          belongs with the list of what the walk is rather than above the page's only
-          sentence about itself. The list is an ordered list rather than the
-          definition list `NoteGrid01` renders, because six stages of one process are a
-          sequence and a definition list says a thing and its explanation.
-
-          The wrapper carries `id="pipeline"` because the catalogue's Blocks spread no
-          props and a deep link into this page has to keep resolving. The one rule the
-          catalogue gives a consumer is that it owns the element. */}
-      <Section id="pipeline">
-        <SectionHeading as="h2" align="left" title={PIPELINE.label} className="mb-10" />
-        <div className="site-pipeline">
-          <div className="site-pipeline__figure">
-            <InstrumentPanel01
-              label={PIPELINE_FIGURE.panel.label}
-              state="live"
-              stateLabel={PIPELINE_FIGURE.panel.mode}
-              caption={PIPELINE_FIGURE.aria}
-              footnote={PIPELINE_FIGURE.panel.footnote}
-            >
-              <PulseGraph
-                nodes={PIPELINE_FIGURE.nodes}
-                relations={PIPELINE_FIGURE.relations}
-                label={PIPELINE_FIGURE.aria}
-              />
-            </InstrumentPanel01>
+              ))}
+            </ol>
           </div>
-          <ol className="site-pipeline__stages">
-            {PIPELINE.stages.map((stage) => (
-              <li key={stage.name} className="site-pipeline__stage">
-                <h3 className="site-pipeline__name">{stage.name}</h3>
-                <p className="site-pipeline__caption">{stage.caption}</p>
+          <p className="site-caption">{PIPELINE.caption}</p>
+        </Section>
+
+        {/* The products. One of the two bands that carry a second pack: each row's mark is
+            its product's own boundary, and the mark is the only element in this section
+            that carries one. */}
+        <ProductGrid01
+          title={PRODUCTS.label}
+          products={PRODUCTS.rows.map((product) => ({
+            id: product.id,
+            name: product.name,
+            pack: markPack(product.id),
+            tagline: product.tagline,
+            href: product.url,
+          }))}
+        />
+
+        {/* The architecture. The five-node graph used to be a client component because it
+            resolved five pack inks in JavaScript at mount, which is why a light-mode reader
+            was served dark-mode ink until hydration; the schematic it drew is now a server
+            Component whose every stroke and fill names a semantic token, so the cascade
+            restyles all of them and a boundary above it would too. */}
+        <Section>
+          <SectionHeading as="h2" align="left" title={ARCHITECTURE.label} className="mb-10" />
+          <Diagram
+            label={ARCHITECTURE.aria}
+            nodes={ARCHITECTURE.nodes}
+            relations={ARCHITECTURE.relations}
+          />
+          <p className="site-caption">{ARCHITECTURE.caption}</p>
+        </Section>
+
+        {/* Why Nanisoft, as three tinted panels.
+
+            This was eight points across two consecutive bands of the same shape, and the
+            second five restated the first three at a lower altitude. Three is what the
+            section actually claims. The panels are tinted with the pack's own `accent`
+            and carry a `primary` hairline, which is the design system's own rule that a
+            pastel is a fill for a large area and never a signal, so three large washes
+            read as surface and five small ones would have read as status. */}
+        <Section>
+          <SectionHeading as="h2" align="left" title={WHY.label} className="mb-10" />
+          <ul className="site-pillars">
+            {WHY.pillars.map((pillar) => (
+              <li key={pillar.name} className="site-pillar">
+                <h3 className="site-pillar__name">{pillar.name}</h3>
+                <p className="site-pillar__line">{pillar.line}</p>
               </li>
             ))}
-          </ol>
-        </div>
-        <p className="site-caption">{PIPELINE.caption}</p>
-      </Section>
+          </ul>
+        </Section>
 
-      {/* The products. One of the two bands that carry a second pack: each row's mark is
-          its product's own boundary, and the mark is the only element in this section
-          that carries one. */}
-      <ProductGrid01
-        title={PRODUCTS.label}
-        products={PRODUCTS.rows.map((product) => ({
-          id: product.id,
-          name: product.name,
-          pack: markPack(product.id),
-          tagline: product.tagline,
-          href: product.url,
-        }))}
-      />
+        {/* The manifesto, set at the narrow measure and given the room a statement wants. */}
+        <Section className="site-band--tall">
+          <SectionHeading as="h2" align="left" title={PHILOSOPHY.label} className="mb-10" />
+          <Prose className="site-manifesto" size="lg">
+            <p>{PHILOSOPHY.manifesto}</p>
+          </Prose>
+        </Section>
 
-      {/* The architecture. The five-node graph used to be a client component because it
-          resolved five pack inks in JavaScript at mount, which is why a light-mode reader
-          was served dark-mode ink until hydration; the schematic it drew is now a server
-          Component whose every stroke and fill names a semantic token, so the cascade
-          restyles all of them and a boundary above it would too. */}
-      <Section>
-        <SectionHeading as="h2" align="left" title={ARCHITECTURE.label} className="mb-10" />
-        <Diagram
-          label={ARCHITECTURE.aria}
-          nodes={ARCHITECTURE.nodes}
-          relations={ARCHITECTURE.relations}
+        {/* The closing band. Both actions are anchors, and that is the one rendered change
+            the migration exists to make: the old page passed a destination to a component
+            that rendered a button, so the page's primary action was announced as a command
+            that navigated nothing. The note under it carries the honesty law, because this
+            is the last thing a reader is told before they leave for the factory. */}
+        <Cta01
+          title={FINAL_CTA.title}
+          action={FINAL_CTA.primaryCta}
+          secondaryAction={FINAL_CTA.secondaryCta}
+          note="Nexus is in development. Everything else on nanisoft.com was built by it."
         />
-        <p className="site-caption">{ARCHITECTURE.caption}</p>
-      </Section>
-
-      {/* Why Nanisoft, as three tinted panels.
-
-          This was eight points across two consecutive bands of the same shape, and the
-          second five restated the first three at a lower altitude. Three is what the
-          section actually claims. The panels are tinted with the pack's own `accent`
-          and carry a `primary` hairline, which is the design system's own rule that a
-          pastel is a fill for a large area and never a signal, so three large washes
-          read as surface and five small ones would have read as status. */}
-      <Section>
-        <SectionHeading as="h2" align="left" title={WHY.label} className="mb-10" />
-        <ul className="site-pillars">
-          {WHY.pillars.map((pillar) => (
-            <li key={pillar.name} className="site-pillar">
-              <h3 className="site-pillar__name">{pillar.name}</h3>
-              <p className="site-pillar__line">{pillar.line}</p>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      {/* The manifesto, set at the narrow measure and given the room a statement wants. */}
-      <Section className="site-band--tall">
-        <SectionHeading as="h2" align="left" title={PHILOSOPHY.label} className="mb-10" />
-        <Prose className="site-manifesto" size="lg">
-          <p>{PHILOSOPHY.manifesto}</p>
-        </Prose>
-      </Section>
-
-      {/* The closing band. Both actions are anchors, and that is the one rendered change
-          the migration exists to make: the old page passed a destination to a component
-          that rendered a button, so the page's primary action was announced as a command
-          that navigated nothing. The note under it carries the honesty law, because this
-          is the last thing a reader is told before they leave for the factory. */}
-      <Cta01
-        title={FINAL_CTA.title}
-        action={FINAL_CTA.primaryCta}
-        secondaryAction={FINAL_CTA.secondaryCta}
-        note="Nexus is in development. Everything else on nanisoft.com was built by it."
-      />
-    </>
+      </>
+    </SiteChrome>
   );
 }

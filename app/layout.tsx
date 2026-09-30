@@ -2,12 +2,9 @@ import { Inter } from 'next/font/google';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
-import { SiteFooter } from '@nanisoft/prism-ui/blocks/site-footer';
 import { PrismThemeScript } from '@nanisoft/prism-ui/provider';
 
-import { SiteBar } from '@/components/site-bar';
-import { FOOTER_COLUMNS, FOOTER_LEGAL } from '@/lib/navigation';
-import { DEFAULT_MODE, GROUND_PACK, SITE_PRODUCT, THEME_ATTRIBUTES } from '@/lib/site';
+import { DEFAULT_MODE, GROUND_PACK, THEME_ATTRIBUTES } from '@/lib/site';
 
 // The one stylesheet. Every token, every utility and every base rule on this site
 // arrives in this one import: the design system compiles its own source into it, and
@@ -62,27 +59,22 @@ export const metadata: Metadata = {
 // and lands with it (the open item is that `@nanisoft/prism-ui` should ship one), so
 // a site supplies the file the token already names rather than choosing its own.
 /**
- * The document: the two theme attributes, one blocking script, the chrome, the page.
+ * The document, and nothing else: the two theme attributes, one blocking script, the
+ * page.
  *
- * **The bar is the design system's, and its client island is inside the package
- * rather than in this repository.** `components/site-bar.tsx` composes
- * `SiteNavbar`, whose lockup and navigation are server Components and whose search
- * trigger, sites menu and mode control are one client boundary. So this site's own
- * source still carries no `'use client'` directive at all, and
- * `test/server-only.test.ts` still asserts exactly that: the reader gets a working
- * mode toggle and a working search, and the boundary that carries them is a line in
- * a package rather than a line in this repository.
+ * **The chrome left this file.** It is in `components/site-chrome.tsx` now, and each page
+ * renders it against the page it is serving, because a layout is rendered once per route
+ * and is handed no pathname, so a bar that lives here can never mark the page a reader is
+ * on. That was the last difference between this site's bar and the other four, and it
+ * was a difference about the stack rather than about the design: a server render is handed
+ * the route it is rendering, so the mark is a prop and the Block resolves `aria-current`
+ * on the server.
  *
- * **There is no colour chooser on this site, and that is the decision rather than an
- * omission.** A page's ground is stable for the life of the page, so a control that
- * let a reader repaint it would be offering them a page that is not this one. The
- * mode is the axis that is the reader's rather than the page's, and because the
- * whole family stores it under one key, a reader who chose dark here arrives in
- * dark on the other four sites.
- *
- * The search index is this site's own, emitted as a static file from the same
- * content tree the routes are generated from, so a post a reader can reach is a post
- * a search can find.
+ * Everything this file still owns is the document. The bar's data, its copy and its
+ * markup are in `components/site-chrome.tsx` and `lib/bar.ts`, and this site's own source
+ * still carries no `'use client'` directive at all, which is what lets the bar's search,
+ * sites menu and mode control be a client island inside the pinned package rather than a
+ * boundary drawn here.
  */
 const inter = Inter({
   subsets: ['latin'],
@@ -99,11 +91,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             nothing a reader chose is ever cleared by this site. */}
         <PrismThemeScript defaultPack={GROUND_PACK} defaultMode={DEFAULT_MODE} />
       </head>
-      <body>
-        <SiteBar />
-        <main className="site-main">{children}</main>
-        <SiteFooter product={SITE_PRODUCT} columns={FOOTER_COLUMNS} legal={FOOTER_LEGAL} />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

@@ -74,7 +74,7 @@ describe('the site has no client code', () => {
       'app/layout.tsx',
       'app/not-found.tsx',
       'app/page.tsx',
-      'components/site-bar.tsx',
+      'components/site-chrome.tsx',
       'lib/bar.ts',
       'lib/landing-content.ts',
       'lib/mdx-components.ts',

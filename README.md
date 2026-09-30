@@ -5,15 +5,16 @@
 Part of the [NaniSoft](https://www.nanisoft.com) web platform — five sites, one design language ([Prism](https://prism.nanisoft.com)).
 
 - **Live**: https://www.nanisoft.com, with the apex https://nanisoft.com — both Cloudflare Custom Domains on the `nanisoft-www` Worker, which serves this static export
-- **Pack**: `sky` is the ground, on the document element, and it does not change. Three regions of a page carry a pack that is not the ground, and all three are rows of marks: the header's product switcher, the hero's identity column and the products section. Four products own four pastels, this site wears the ground, and Prism owns none because `prism.nanisoft.com` renders with no `data-pack` at all, so its mark is drawn as the full spectrum. That is the whole layering, `peach` is the one published pack no product claims, and `scripts/pack-map.json` is the map and the pack-boundary gate in `@nanisoft/prism-ui/gates` is the gate, checked in both light and dark mode
+- **Pack**: `sky` is the ground, on the document element, and it does not change. Two regions of a page carry a pack that is not the ground, and both are rows of marks: the hero's identity column and the products section. Four products own four pastels, this site wears the ground, and Prism owns none because `prism.nanisoft.com` renders with no `data-pack` at all, so its mark is drawn as the full spectrum. The bar's family of five is a menu rather than a row of marks, and a closed menu paints nothing, so the third region this map used to declare is gone: a reader at first paint sees one ground and the second packs reach them when they ask to leave. That is the whole layering, `peach` is the one published pack no product claims, and `scripts/pack-map.json` is the map and the pack-boundary gate in `@nanisoft/prism-ui/gates` is the gate, checked in both light and dark mode
 - **Stack**: Next 16 static export · fumadocs-mdx · pnpm · TypeScript strict · oxlint · Vitest (jsdom + Testing Library) · Cloudflare Workers
-- **Chrome and every section**: [@nanisoft/prism-ui](https://www.npmjs.com/package/@nanisoft/prism-ui) 0.7.0, pinned exactly. It brings the token package at the exact version it was released against, so this repository declares one first-party dependency and cannot be handed a mismatched pair. There is no local component and no client runtime: every page is a server component, so the site ships no JavaScript of its own
+- **Chrome and every section**: [@nanisoft/prism-ui](https://www.npmjs.com/package/@nanisoft/prism-ui) 0.13.0, pinned exactly. It brings the token package at the exact version it was released against, so this repository declares one first-party dependency and cannot be handed a mismatched pair. This repository authors no client module: every page is a server component, so the only JavaScript this site ships is the bar's own controls, and those are client components inside the pinned package rather than a boundary drawn here
 
 ## What ships
 
 - **Landing** (`/`) — "Software that builds software." The thesis as the page's `h1` at a display step the catalogue has no token for, the factory strip, then six sections: **the pipeline** (the factory figure at full width, then the six stages it draws, in three columns) · **products** (Nexus, Atlas, AlphaLens, each row a mark in that product's own pack and a whole-row link to its live site) · **architecture** (the schematic: Prism feeds Nexus, Nexus builds Atlas and AlphaLens, both point at what the factory builds next) · **why Nanisoft** (three pillars as tinted panels on `--accent` with a `--primary` hairline) · **philosophy** (the manifesto, set quiet and narrow) · the closing band. Eight bands, eight layout families, and no two of them the same shape. The hero's right column is the whole product set as five rows of marks, one per member: four in a pastel of its own, this site in the ground, and Prism in the spectrum.
 - **About** (`/about`) — "The company that builds the builder": Nexus as the Agent Factory, the proof that the rest of nanisoft.com is output rather than case study, the say-what-is-true rule, and a three-row fact list.
-- **Chrome** — `SiteHeader` gets this site's own two routes as a `nav` and the whole product set as the switcher, and `SiteFooter` gets two columns and a legal line, all from `lib/navigation.tsx`. Before this the site published `/about` and `/blog` and linked to neither: the only `<nav>` on any page was the switcher, and the footer was a brand lockup with nothing under it. A route nothing links to renders exactly like a route something does, which is why the `links` gate could not see it: that gate asks whether a link a reader follows arrives somewhere, and a page with no link to it asks nothing.
+- **Chrome** — `components/site-chrome.tsx` composes the design system's `SiteNavbar` with this site's own two routes as a `nav` and the whole family as a sites menu, and `SiteFooter` with two columns and a legal line. Each page renders that chrome against the route it is serving, so the bar can mark the page a reader is on. Before this the site published `/about` and `/blog` and linked to neither: the only `<nav>` on any page was the switcher, and the footer was a brand lockup with nothing under it. A route nothing links to renders exactly like a route something does, which is why the `links` gate could not see it: that gate asks whether a link a reader follows arrives somewhere, and a page with no link to it asks nothing.
+- **Search** (`/api/search`) — seven entries as one JSON array, prerendered because the export has no server: this site's own three pages and the four posts, with the prose read from the MDX beside each route so a post a reader can reach is a post a search can find. The bar's search control fetches it when it opens and filters in the browser.
 - **Blog** (`/blog`) — the four company posts over `content/blog/`, folder-per-post with a required ISO `date`, optional `tags` and `draft` (drafts never export). The index is this site's own composition and this site's own CSS, because the four blog lists in this family are four deliberate designs and the design system deliberately ships none. Each post is the design system's blog post Page, which owns the byline, the date in both its display and its machine form, and the trail to the neighbouring posts.
 - **Not found** — the design system's not-found Page: the code as the page's heading, the sentence under it, and one way out.
 
@@ -22,16 +23,19 @@ There is no docs section here, by design. `lib/source.ts` declares only the blog
 ## How it is put together
 
 ```
-app/layout.tsx        the document: two theme attributes, the boot script, the chrome
+app/layout.tsx        the document: two theme attributes, the boot script, the page
 app/page.tsx          the landing, composed from catalogue items and nothing else
 app/about/page.tsx    a page header, the prose at the measure, a fact list
 app/not-found.tsx     the not-found Page
 app/blog/…            the blog index (site's own) and the blog post (the catalogue's)
+app/api/search/route.ts  the search index, prerendered because the export has no server
 app/globals.css       476 lines: the blog index, the hero, the pipeline band, the
                       pillar panels, two utility classes
+components/site-chrome.tsx  the bar, the main, the footer, and the current page
 lib/site.json         the ground, the default mode, the product directory
 lib/site.ts           those facts, typed by the design system's pack vocabulary
-lib/navigation.tsx    this site's own destinations, for the header and the footer
+lib/bar.ts            the bar's own data and every word it prints
+lib/navigation.tsx    this site's own destinations, for the footer
 lib/landing-content.ts every word of the landing, as data
 scripts/              the pack map, the region resolver, the parity expectations
 prism-gates.json      this site's half of the cross-repository contract: data only

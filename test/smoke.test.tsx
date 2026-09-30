@@ -58,8 +58,13 @@ describe('the landing', () => {
 
   it('composes the bands in the site order', () => {
     const container = renderLanding();
-    // The bands a reader meets, in order, named by their own headings.
-    const headings = [...container.querySelectorAll('h1, h2')].map((heading) => heading.textContent?.trim());
+    // The bands a reader meets, in order, named by their own headings. Scoped to
+    // `<main>`: the chrome moved out of the root layout so the bar could mark the page a
+    // reader is on, and this page therefore renders the footer, whose two column titles
+    // are headings too. The scoping is the fix rather than two more entries in the list,
+    // because the list is about the landing's own outline.
+    const main = container.querySelector('main') as HTMLElement;
+    const headings = [...main.querySelectorAll('h1, h2')].map((heading) => heading.textContent?.trim());
     expect(headings).toEqual([
       HERO.title,
       PIPELINE.label,
