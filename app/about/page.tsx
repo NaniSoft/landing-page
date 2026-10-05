@@ -65,10 +65,10 @@ export default function AboutPage(): ReactElement {
           </p>
 
           <p>
-            The proof is everything else on nanisoft.com. Four sites: this one,{' '}
+            The proof is everything else on nanisoft.com. Five sites: this one,{' '}
             <a href="https://nexus.nanisoft.com">Nexus</a>,{' '}
-            <a href="https://atlas.nanisoft.com">Atlas</a> and{' '}
-            <a href="https://alphalens.nanisoft.com">AlphaLens</a>, plus{' '}
+            <a href="https://atlas.nanisoft.com">Atlas</a>,{' '}
+            <a href="https://alphalens.nanisoft.com">AlphaLens</a> and{' '}
             <a href="https://prism.nanisoft.com">Prism</a>, the design system they all wear. Every
             one of them was built by coding agents under a person&rsquo;s direction: a human setting
             the standard, agents doing the building, test suites gating every change. That loop is

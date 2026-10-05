@@ -186,7 +186,7 @@ export const ARCHITECTURE = {
 } as const;
 
 /**
- * Why Nanisoft, as three points.
+ * Why Nanisoft, as three points, each in the container its claim wants.
  *
  * This used to be eight: three pillars over a five-card grid, every one of them a bold
  * noun followed by a sentence, on two consecutive bands. Eight near-identical objects
@@ -195,19 +195,30 @@ export const ARCHITECTURE = {
  * makes, and the five-card grid is gone rather than moved: what it carried that the
  * pillars do not is already on this page, as the pipeline, the schematic and the
  * products.
+ *
+ * **`shape` is in the data because the container is part of the claim, not part of the
+ * layout.** The band was the same box three times, and the copy under it argues three
+ * different things: a band, a ledger and a framed cell are three silhouettes, and the
+ * pack-boundary law leaves colour unavailable, so shape is the only axis this section has
+ * left. It is named here rather than derived from the panel's position in this array
+ * because a shape decided by position is an ordinal wearing a layout, and this band has
+ * already had a decorative ordinal deleted from it for exactly that reason.
  */
 export const WHY = {
   label: 'Why Nanisoft',
   pillars: [
     {
+      shape: 'band',
       name: 'Autonomy',
       line: 'The factory runs the repeatable ninety percent, scaffolding, tests and merges, and asks only where judgment is required.',
     },
     {
+      shape: 'ledger',
       name: 'Intelligence',
       line: 'Planning happens before code. Architecture and task graphs are written, reviewed, then executed.',
     },
     {
+      shape: 'framed',
       name: 'Scale',
       line: 'One factory, many projects. Round-robin orchestration keeps every repository moving.',
     },

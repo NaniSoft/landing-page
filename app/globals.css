@@ -24,10 +24,14 @@
  *     of repainting it, and a live one computes away under an unlayered rule.
  *   - **Measure is the design system's own token**, so a site width and a Prism
  *     width are the same width. Only the one reading measure below is a new name.
- *   - **Radius is never declared.** This sheet adds no corner of its own: the page's
- *     ground is `sky`, the tightest of the five packs at 0.5rem, and every surface
- *     Prism draws rounds from that. A site radius would be a second scale on a page
- *     whose whole argument is that there is one.
+ *   - **Radius is never declared, only spent.** This sheet adds no corner of its own:
+ *     the page's ground is `sky`, the tightest of the five packs at 0.5rem, and every
+ *     surface Prism draws rounds from that. A site radius would be a second scale on a
+ *     page whose whole argument is that there is one. The one corner declared below is
+ *     `calc(var(--radius) * 0.8)`, which is not a site value: it is the pack's own
+ *     `--radius` at the factor Prism's own `rounded-md` uses, spelled out because a
+ *     consumer cannot write that utility and cannot name a token that does not exist.
+ *     Read it as "the same corner the CTA beside it has", not as a decision.
  *
  * Every colour below resolves against the page's own ground, which is `sky`. That is a
  * hard limit and it is not this site's to lift: the pack-boundary law puts a pack's hue
@@ -40,18 +44,16 @@
  */
 
 /*
- * The one thing this sheet declares that is not a site class: the design system's
- * first family, supplied.
+ * The one thing this sheet declares at the root is a name, not a value.
  *
- * prism's emitted sheet declares `--font-sans: Inter, ui-sans-serif, system-ui, ...`
- * and 0.6.0 ships no font file, so the first entry is a name nothing resolves to and
- * every page on the site renders in the platform's UI face. This supplies the file the
- * token already names and repeats prism's own fallback list verbatim behind it, so the
- * design system's intent is unchanged and only its first entry becomes real.
- *
- * It is a custom property rather than a `font-family` on a bare element on purpose: a
- * site stylesheet must not declare `font-family` on a selector with no class in it,
- * because prism's base is layered and this sheet is not. A token is not that.
+ * It used to re-declare `--font-sans` with this site's own Inter read first, back
+ * when the pinned package shipped no face to back the family name. That supply
+ * outlived its reason: the package now ships the face beside the token, and an
+ * unlayered `:root` declaration here outranks the design system's own, so one
+ * undefined `var()` read in this block was enough to take the whole font token
+ * down with it and leave every page in the platform's UI face. The override is
+ * gone rather than repaired. The design system names the family and ships it;
+ * this sheet has nothing to add.
  *
  * `--site-measure` is the reading width this site's own text is set at, and it is a
  * name rather than a value so that a future change to the design system's measure is a
@@ -59,15 +61,46 @@
  */
 
 :root {
-  --font-sans: var(--font-inter), Inter, ui-sans-serif, system-ui, -apple-system,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --site-measure: var(--container-measure);
 }
 
-.site-main {
-  /* Keeps the footer below the fold on a short page. Layout, so it is a class rule
-     and not a bare-element one, and it competes with nothing prism declares. */
+/*
+ * The document is a column, so a page with nothing to fill it still puts the footer at
+ * the bottom of the screen rather than under it.
+ *
+ * The rule that used to be here was `min-height: 100dvh` on `main`, and it is the defect
+ * stated as its own intent. Padding `main` to a whole viewport does not put the footer at
+ * the bottom of the viewport; it puts the footer one viewport lower, so on `/404` at 1440
+ * by 900 the bar at 57px and `main` at 900px put the footer's top edge at 957px and a
+ * reader had to scroll a dead-end page to reach the site map. The same rule is what left
+ * 200 to 290px of dead space between the end of `/about` and the top of the footer, and a
+ * gap under the last line of a page is not space, it is the footer having been pushed down
+ * by something that was not there.
+ *
+ * Three children in a column at least one viewport tall, with the middle one taking the
+ * slack, is the arrangement that actually does it: the footer is at the bottom when the
+ * page is short and under the content when it is not.
+ *
+ * `body` is Prism's own element and this sheet is unlayered while Prism's base layer is
+ * layered, so this bare-element rule wins the cascade at any specificity rather than
+ * depending on import order. The properties are the reason the `stylesheet-ownership`
+ * gate does not refuse it: it forbids a bare-element declaration of the seven properties
+ * its base layer declares, and `display`, `flex-direction` and `min-height` are none of
+ * them. This is layout, and layout is not a surface the design system draws on `body`.
+ */
+body {
+  display: flex;
+  flex-direction: column;
   min-height: 100dvh;
+}
+
+/*
+ * `main` grows into whatever the bar and the footer do not use, and never shrinks: a page
+ * taller than the viewport has to keep its own height rather than be compressed to fit the
+ * column, which is what `flex-basis: 0` would allow it to do.
+ */
+.site-main {
+  flex: 1 0 auto;
 }
 
 /* ---------- Vertical rhythm ---------- */
@@ -137,12 +170,23 @@
  * it is a decision about the hero rather than an override of the design system's type
  * scale. `Section` keeps owning every section heading on the page.
  *
- * The `clamp` floor is 2.5rem because "Software that builds software." is six words: at
- * anything below that the line breaks into four on a phone, and a four-line hero is a
- * font-size error rather than a copy error. The ceiling is 4.25rem, which fits the line
- * once at 1440px with the identity column beside it. Tracking is tighter than
- * `--tracking-tight` because that step is calibrated for 2.25rem and the optical
- * correction grows with the size, not constant across it.
+ * The `clamp` floor is 2.5rem because 6.4vw on a phone is about 25px, and the page's one
+ * claim is the one piece of type on the site that may not be set small in order to fit:
+ * below the floor the thesis stops being the largest thing on the page, which is the only
+ * job this class has. The ceiling is 4.25rem, just under twice the largest step the
+ * design system's own scale declares, and past that a heading stops reading as the top of
+ * a hierarchy and starts reading as a poster.
+ *
+ * The measure is a cap on the line rather than a target for it, and the thesis is longer
+ * than the cap: `max-width: 16ch` is about three fifths of a 28-character string, so
+ * "Software that builds software." sets on two lines at every viewport, and `text-wrap:
+ * balance` is what evens the rag between them. Two lines is the shape this page wants.
+ * A thesis running the full width of the hero's copy column at 4.25rem is one line of
+ * type that happens to have a list beside it, and the two-line rag is what reads as a
+ * claim being made rather than a heading being displayed.
+ *
+ * Tracking is tighter than `--tracking-tight` because that step is calibrated for 2.25rem
+ * and the optical correction grows with the size, not constant across it.
  */
 .site-display {
   max-width: 16ch;
@@ -225,13 +269,24 @@
  * horizontal pad is what lifts the hover wash off the hairline above and below it, and
  * the vertical pad lives on the mark and the role beneath, so the text is inset by half
  * a pad from the edge it is aligned to.
+ *
+ * **The wash is instant, and that is the design system's decision rather than a missing
+ * one.** Prism states its reduced-motion policy as a single unlayered rule,
+ * `@media (prefers-reduced-motion: reduce)` setting `transition: none` on the universal
+ * selector, so the `transition` this selector used to carry measured `0.16s` on all five
+ * rows with the preference set: an unlayered class rule outranks a layered universal one at
+ * any specificity, which is the same fact this sheet's own header states about the base
+ * layer. Re-declaring it inside a `prefers-reduced-motion: no-preference` block would put
+ * the decision back in a consumer sheet, and re-deciding reduced motion below the package
+ * is the one move Prism's own motion gate refuses inside the package, where it can see
+ * every rule at once. A hover that changes a background colour with no transition is the
+ * design system's own answer for every hover in it.
  */
 .site-identity__link {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-1);
   padding: var(--spacing-3) var(--spacing-3);
-  transition: background-color var(--duration-base) var(--ease-out);
 }
 
 .site-identity__link:hover {
@@ -263,9 +318,22 @@
  * At 46rem the stage names render at roughly fifteen pixels, which is legible, and the
  * empty canvas costs a third of what it did. The cap is a maximum rather than a width
  * because at a phone width the figure is the container's width anyway.
+ *
+ * **The cap is not what a phone needs, and one explicit track is.** `PulseGraph` gives
+ * its drawing a `min-width` of forty rem so the six stage names never overlap, and the
+ * `InstrumentPanel` around it holds that width in a horizontal scroller of its own. The
+ * scroller is inside the panel; it is not a statement about the page. With no explicit
+ * column here the band's single implicit track is sized to the item's minimum, the
+ * figure's `max-width` of 46rem is 736px against a 342px container and therefore never
+ * binds, and that minimum became the track: measured at 390 by 844 the document was
+ * 698px wide, every stage caption ran off the right edge, and the page scrolled 308px
+ * sideways to read a paragraph. A grid track of `minmax(0, 1fr)` takes the container's
+ * width and lets the panel keep the scroller it already had, so the drawing is reached
+ * by scrolling inside the figure rather than by scrolling the page.
  */
 .site-pipeline {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--spacing-10);
 }
 
@@ -329,36 +397,220 @@
 /* ---------- Why Nanisoft ---------- */
 
 /*
- * Three tinted panels, one per claim.
+ * Three claims in three containers, not three copies of one.
  *
- * The wash is the pack's own `--accent`, which is the one token in this system meant for
- * a large area rather than for a signal, and each panel carries a `--primary` hairline
- * along its top edge so the three read as a set rather than as three unrelated boxes.
- * That is also the reason this band is not five small tiles: a pastel behind one word is
- * a signal a reader has to learn, and a pastel behind a paragraph is a surface.
+ * This was one box three times. Every panel resolved to the same `--accent` wash with the
+ * same `--primary` hairline along its top edge and the same padding, so the band argued
+ * three different things while it looked like one thing three times. The hairline was
+ * recorded here as the thing that would make the three read as a set, and a rule every
+ * one of them carries is a rule that separates none of them: at render the three were
+ * copies of a shape, and the copy underneath is what the section is for.
  *
- * Exactly three, because three is the number of claims the section makes. This used to
- * be eight points across two bands of the same shape, and a fourth panel would be a
- * panel with nothing in it.
+ * **Colour is not available as the answer, which is why this is a shape answer.** A pack
+ * boundary lands on a `ProductMark` and nowhere else, the ground is one pack, and the only
+ * hue that can reach a panel is that pack's own: `--accent` on all three, or a `data-pack`
+ * this repository is not allowed to write. So the difference is structural, and the
+ * structural difference available is the container: a band, a ledger and a framed cell are
+ * three silhouettes rather than one silhouette three times.
+ *
+ * The wash stays on all three and stays behind the whole paragraph, because that is what
+ * keeps a tint a surface: a pastel behind one word is a signal a reader has to learn, and
+ * a pastel behind a paragraph is a surface. What changes is the frame, the arrangement
+ * inside it, the type step and the width in the grid. Every one of those is a site class
+ * because the consumer does not run Tailwind, so a utility exists in the emitted sheet
+ * only where a Prism component already uses one, and no Prism component draws any of these
+ * three.
+ *
+ * The shape is named by the claim, off `WHY.pillars`, and read from `data-shape`. It is
+ * not derived from the panel's position in the list: a shape decided by position is an
+ * ordinal wearing a layout, and this band has already had a decorative ordinal deleted
+ * from it for that reason. There is no icon, no number and no badge here either.
+ *
+ * Exactly three, because three is the number of claims the section makes. This used to be
+ * eight points across two bands of the same shape, and a fourth panel would be a panel
+ * with nothing in it.
  */
 .site-pillars {
   display: grid;
+  /* One explicit column below the breakpoint, so the band's `grid-column: 1 / -1` is a
+     span of that one column rather than a range over a grid with no explicit track. */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--spacing-4);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-@media (min-width: 48rem) {
+/*
+ * Two tracks, and the second one is the framed cell's own requirement rather than a share
+ * of the row.
+ *
+ * **The number of tracks is the three shapes' arithmetic, not the container's.** Six was the
+ * number that happened to divide this container at 1440 — `6 × 168px + 5 × 16px = 1088px`,
+ * the container exactly — and no shape asked for six. Asked, each of the three answers for
+ * itself. The band wants the whole row and already says so with `grid-column: 1 / -1`. The
+ * ledger is two columns of its own and cannot hold a 38-character line in less than
+ * 29.9rem. The framed cell is a closed box whose body copy is capped at 38 characters, so
+ * the narrowest box that renders that cap is the cap plus the box's own frame: 38
+ * characters is 335.6px at `--text-sm`, because `ch` is the advance of `0` in the face this
+ * package ships (1292 of 2048 units per em, so 8.832px at 14px), and `--spacing-7` twice
+ * over plus the 1px borders is 58px. 335.6 + 58 is 393.6px, which is 24.6rem, and the track
+ * below is the tenth of a rem above it because a box that exists to hold a cap should not be
+ * a hundredth of a pixel narrower than the cap. The ledger's own minimum is 478.6px — the
+ * same 335.6, plus its 40px of pad, plus the 16px gap, plus its 87px term — so the row needs
+ * 478.6 + 395.2 + 16, which is 889.8px of container and a 954px viewport, and `lg` is the
+ * first breakpoint above that.
+ *
+ * The second track is that fixed 24.7rem and the ledger takes `1fr`, because the surplus is
+ * worth nothing to the framed cell and everything to the ledger: the framed cell's line
+ * stops at its own 38-character cap however wide the box gets, while the ledger's
+ * definition carries no cap and reads at 46 characters at 1024 and 60 at 1440. A ratio
+ * spends the surplus on both, which is a way of giving the panel that cannot use it half of
+ * what the panel that can use it needs.
+ */
+@media (min-width: 64rem) {
   .site-pillars {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr) 24.7rem;
   }
 }
 
 .site-pillar {
   padding: var(--spacing-7);
-  border-top: 2px solid var(--primary);
+  border-radius: calc(var(--radius) * 0.8);
   background-color: var(--accent);
+}
+
+/*
+ * The band: the whole row, and the only panel that reads across rather than down.
+ *
+ * Autonomy is the claim the section is named for, its line is the longest of the three,
+ * and it is the one of the three that is a division rather than a sequence, so it gets
+ * the width of the band and a name beside its line rather than above it. The `--primary`
+ * hairline above it and the roomier pad are what make it read as a band, and both are
+ * things the other two withhold or close. Its line steps up to the body size so the panel
+ * holds a sentence rather than a caption, which is also what stops a wash the full width
+ * of the container from being a mostly empty one.
+ *
+ * **The `64ch` cap stays, and now it has a job rather than a rationale.** The band spans
+ * the container, so at 1440 its line has 836px of column, which is 83 characters: past the
+ * far end of the band running text is set at. Capping at 64 characters is what holds the
+ * longest line on this page inside it, and the 222px of column to the right of the cap is
+ * the price of that. Letting it fill would read as a paragraph set to the width of the
+ * window, which is the thing the wash and the rule above it are arguing against.
+ */
+.site-pillar[data-shape='band'] {
+  grid-column: 1 / -1;
+  padding: var(--spacing-8);
+  border-top: 2px solid var(--primary);
+}
+
+@media (min-width: 48rem) {
+  /* The name sits beside the line, which is why this needs `display: grid` and not only
+     the tracks. Without it the declaration below was computed and never applied: the
+     panel stayed a block, the name sat above the sentence it names, and 433px of wash
+     ran to the right of a 646px line inside a 1088px panel. A `grid-template-columns` on
+     an element that is not a grid is not an arrangement, it is a comment in CSS. */
+  .site-pillar[data-shape='band'] {
+    display: grid;
+    grid-template-columns: minmax(0, 10rem) minmax(0, 1fr);
+    align-items: start;
+    column-gap: var(--spacing-7);
+  }
+
+  /* The block's `margin-top` on the line is what separated the name from the sentence
+     when they were stacked. Beside each other the tracks already separate them, and the
+     margin would push the line eight pixels below the word it names. */
+  .site-pillar[data-shape='band'] .site-pillar__line {
+    margin-top: 0;
+  }
+}
+
+.site-pillar[data-shape='band'] .site-pillar__name {
+  font-size: var(--text-xl);
+}
+
+.site-pillar[data-shape='band'] .site-pillar__line {
+  max-width: 64ch;
+  font-size: var(--text-base);
+}
+
+/*
+ * The ledger: a term and its definition, divided by a hairline rather than by an edge.
+ *
+ * "Planning happens before code" is a statement and a consequence, which is what a
+ * definition list is for, so this panel is drawn as one: a narrow column for the name, the
+ * rest for the line, and a hairline between them in the pair Prism declares for text on
+ * this wash. It carries no rule above it at all, so the band above and the framed cell
+ * beside it both read as framed and this one reads as a row, and it takes the tightest pad
+ * of the three, which is what makes it the densest thing in the band.
+ *
+ * The term track is `auto` and the definition takes what is left, which is what a
+ * definition list is: the term is exactly as wide as the term. It was a fraction, and a
+ * fraction is the wrong tool here, because it has to be small enough to survive 390 — where
+ * the whole panel is 342px — and 1:1.7 at 390 takes 106px of the 302px the panel has inside
+ * its pad, which leaves this panel's line 180px on a phone. Sized to the term instead, the
+ * term is 87px ("Intelligence" at `--text-base`, measured in the face this package ships)
+ * at every width and the definition is what remains: 534px at 1440, where the same
+ * fraction in the same panel would have given 392px.
+ *
+ * **And below 30rem the two columns are not a definition list that fits, they are a
+ * definition list squeezed.** A term that is exactly as wide as the term costs 87px plus
+ * a 16px gap whatever the container is, so on a 390px phone it took 103px of the 302px
+ * inside the pad and left the sentence 201px wide: 22.8 characters at `--text-sm`, the
+ * tightest measure in the whole band and twenty below a line of English that is merely
+ * narrow rather than broken. The arrangement therefore starts where the remainder is
+ * worth having: at 30rem the panel is 432px, the definition is 289px and 32.6 characters,
+ * and every width above that gives it more. Below 30rem the panel is one column and the
+ * term sits above the hairline, which is the same panel with the same rule in it and a
+ * line a reader can finish.
+ */
+.site-pillar[data-shape='ledger'] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: var(--spacing-4);
+  padding: var(--spacing-5);
+}
+
+@media (min-width: 30rem) {
+  .site-pillar[data-shape='ledger'] {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+}
+
+.site-pillar[data-shape='ledger'] .site-pillar__name {
+  font-size: var(--text-base);
+}
+
+.site-pillar[data-shape='ledger'] .site-pillar__line {
+  max-width: none;
+  margin-top: 0;
+  padding-top: var(--spacing-3);
+  border-top: 1px solid var(--accent-foreground);
+}
+
+/*
+ * The framed cell: the only panel closed on all four sides.
+ *
+ * "One factory, many projects" is the claim about how far the thing reaches, and the one
+ * that reaches further than its two neighbours is the one drawn as a box rather than as an
+ * edge, so the `--primary` hairline above it is joined by a hairline down both sides and
+ * along the bottom.
+ *
+ * **The frame is `--accent-foreground`, because `--border` is not a frame on this wash.**
+ * Measured on the rendered page, `--border` on `--accent` is 1.01:1 in beam-dark
+ * (`#3e4347` on `#004671`) and 1.22:1 in light (`#dadee2` on `#deefff`), which is not a
+ * visible edge in either mode and is a long way under the 3:1 that a boundary carrying
+ * meaning has to clear. The panel was therefore a narrower copy of the band: same 2px
+ * `--primary` rule along the top, same wash, nothing closing it. The rule this shape is
+ * named for was drawn and could not be seen. `--accent-foreground` is the pair Prism
+ * declares for text on this wash and the one the ledger's divider beside it already uses,
+ * so the two shapes that draw a rule draw it in the same ink; it measures 15.05:1 in
+ * light and 8.46:1 in beam-dark.
+ */
+.site-pillar[data-shape='framed'] {
+  border: 1px solid var(--accent-foreground);
+  border-top: 2px solid var(--primary);
 }
 
 /*

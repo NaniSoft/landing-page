@@ -55,8 +55,8 @@ import { PRODUCTS as SITE_PRODUCTS } from '@/lib/site';
  *
  * Everything else is a Block, unmodified. The layout families on this page are eight
  * and no two of them are the same shape: a split hero, a strip, a figure beside a list,
- * hairline product rows, a schematic, a tinted panel grid, a narrow measure of prose,
- * and a filled closing band.
+ * hairline product rows, a schematic, three claims in three shapes, a narrow measure of
+ * prose, and a filled closing band.
  *
  * **One region carries a second pack in the hero, one in the products band, and both
  * are in `scripts/pack-map.json`.** Every one of those boundaries lands on a
@@ -217,19 +217,27 @@ export default function Landing(): ReactElement {
           <p className="site-caption">{ARCHITECTURE.caption}</p>
         </Section>
 
-        {/* Why Nanisoft, as three tinted panels.
+        {/* Why Nanisoft, as three claims in three containers.
 
             This was eight points across two consecutive bands of the same shape, and the
             second five restated the first three at a lower altitude. Three is what the
-            section actually claims. The panels are tinted with the pack's own `accent`
-            and carry a `primary` hairline, which is the design system's own rule that a
-            pastel is a fill for a large area and never a signal, so three large washes
-            read as surface and five small ones would have read as status. */}
+            section actually claims.
+
+            It was then three of the same box, which was the same defect one step down: one
+            wash, one rule, one padding, so the band argued three things while it looked
+            like one. Colour cannot answer that here, because a pack boundary lands on a
+            `ProductMark` and nowhere else, so `shape` comes off the claim and off the
+            sheet and gives each of the three its own container: a band, a ledger and a
+            framed cell. All three keep the pack's own `--accent`, because a pastel behind a
+            paragraph is a surface and a pastel behind one word is a signal, so the wash
+            stays behind the whole sentence and only the frame and the arrangement change.
+            No ordinal, no icon and no badge: this band carried a decorative number once
+            and it went. */}
         <Section>
           <SectionHeading as="h2" align="left" title={WHY.label} className="mb-10" />
           <ul className="site-pillars">
             {WHY.pillars.map((pillar) => (
-              <li key={pillar.name} className="site-pillar">
+              <li key={pillar.name} className="site-pillar" data-shape={pillar.shape}>
                 <h3 className="site-pillar__name">{pillar.name}</h3>
                 <p className="site-pillar__line">{pillar.line}</p>
               </li>

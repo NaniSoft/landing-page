@@ -1,4 +1,3 @@
-import { Inter } from 'next/font/google';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
@@ -44,23 +43,25 @@ export const metadata: Metadata = {
  * they get different words: one is where this site goes, the other is where the
  * family goes.
  */
-// The design system's own first family, and the only file this site loads.
+// The interface face is the design system's, and this file loads nothing.
 //
-// `--font-sans` in prism's emitted sheet reads `Inter, ui-sans-serif, system-ui, ...`.
-// Naming a family is not shipping it: 0.6.0 carries no font file, so a site that
-// loads nothing renders in the platform's UI face, which is the one face a design
-// system never means by its first choice. The fallback list prism declares is kept
-// verbatim behind this one, so nothing about the design system's intent changes; the
-// only difference is that its first entry now exists.
-//
-// The migration dropped this site's Archivo and JetBrains Mono and let the display
-// type fall back to the platform face. That was not in the ticket, and it is the
-// most visible change the migration made. The typeface belongs to the design system
-// and lands with it (the open item is that `@nanisoft/prism-ui` should ship one), so
-// a site supplies the file the token already names rather than choosing its own.
+// `@nanisoft/prism-ui/styles.css` ships the four `@font-face` rules and the binaries
+// behind them beside the `--font-sans` token that names Inter, so importing the one
+// stylesheet is importing the face. This site used to supply its own Inter through
+// `next/font/google` back when the pinned package shipped none, and the supply
+// outlived its reason: at the pinned 0.13.0 the second copy was a second answer to
+// the family name the library already resolves, and the `--font-sans` override it
+// needed was one broken `var()` read away from taking the whole token down with it.
+// Both are gone. The design system's law stands: nothing downstream loads Inter.
 /**
  * The document, and nothing else: the two theme attributes, one blocking script, the
  * page.
+ *
+ * **The attributes are the only thing spread on `<html>`, and nothing else names a
+ * `className` beside them.** `themeAttributes()` returns the mode as `className`, so
+ * any other `className` prop on this element silently replaces the mode class or is
+ * silently replaced by it; this site lost its font to exactly that race once. The
+ * element carries the spread and nothing else.
  *
  * **The chrome left this file.** It is in `components/site-chrome.tsx` now, and each page
  * renders it against the page it is serving, because a layout is rendered once per route
@@ -76,15 +77,9 @@ export const metadata: Metadata = {
  * sites menu and mode control be a client island inside the pinned package rather than a
  * boundary drawn here.
  */
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
-
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={inter.variable} {...THEME_ATTRIBUTES} suppressHydrationWarning>
+    <html lang="en" {...THEME_ATTRIBUTES} suppressHydrationWarning>
       <head>
         {/* Before paint, on the same attributes the server rendered: a stored choice
             is applied and a stored value that no longer parses is left in place, so

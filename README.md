@@ -11,7 +11,7 @@ Part of the [NaniSoft](https://www.nanisoft.com) web platform — five sites, on
 
 ## What ships
 
-- **Landing** (`/`) — "Software that builds software." The thesis as the page's `h1` at a display step the catalogue has no token for, the factory strip, then six sections: **the pipeline** (the factory figure at full width, then the six stages it draws, in three columns) · **products** (Nexus, Atlas, AlphaLens, each row a mark in that product's own pack and a whole-row link to its live site) · **architecture** (the schematic: Prism feeds Nexus, Nexus builds Atlas and AlphaLens, both point at what the factory builds next) · **why Nanisoft** (three pillars as tinted panels on `--accent` with a `--primary` hairline) · **philosophy** (the manifesto, set quiet and narrow) · the closing band. Eight bands, eight layout families, and no two of them the same shape. The hero's right column is the whole product set as five rows of marks, one per member: four in a pastel of its own, this site in the ground, and Prism in the spectrum.
+- **Landing** (`/`) — "Software that builds software." The thesis as the page's `h1` at a display step the catalogue has no token for, the factory strip, then six sections: **the pipeline** (the factory figure at full width, then the six stages it draws, in three columns) · **products** (Nexus, Atlas, AlphaLens, each row a mark in that product's own pack and a whole-row link to its live site) · **architecture** (the schematic: Prism feeds Nexus, Nexus builds Atlas and AlphaLens, both point at what the factory builds next) · **why Nanisoft** (three claims in three containers, each a wash on the pack's own `--accent`: a band, a ledger and a framed cell, because a pack boundary may only land on a mark and so shape is the only axis this section has left) · **philosophy** (the manifesto, set quiet and narrow) · the closing band. Eight bands, eight layout families, and no two of them the same shape. The hero's right column is the whole product set as five rows of marks, one per member: four in a pastel of its own, this site in the ground, and Prism in the spectrum.
 - **About** (`/about`) — "The company that builds the builder": Nexus as the Agent Factory, the proof that the rest of nanisoft.com is output rather than case study, the say-what-is-true rule, and a three-row fact list.
 - **Chrome** — `components/site-chrome.tsx` composes the design system's `SiteNavbar` with this site's own two routes as a `nav` and the whole family as a sites menu, and `SiteFooter` with two columns and a legal line. Each page renders that chrome against the route it is serving, so the bar can mark the page a reader is on. Before this the site published `/about` and `/blog` and linked to neither: the only `<nav>` on any page was the switcher, and the footer was a brand lockup with nothing under it. A route nothing links to renders exactly like a route something does, which is why the `links` gate could not see it: that gate asks whether a link a reader follows arrives somewhere, and a page with no link to it asks nothing.
 - **Search** (`/api/search`) — seven entries as one JSON array, prerendered because the export has no server: this site's own three pages and the four posts, with the prose read from the MDX beside each route so a post a reader can reach is a post a search can find. The bar's search control fetches it when it opens and filters in the browser.
@@ -29,14 +29,16 @@ app/about/page.tsx    a page header, the prose at the measure, a fact list
 app/not-found.tsx     the not-found Page
 app/blog/…            the blog index (site's own) and the blog post (the catalogue's)
 app/api/search/route.ts  the search index, prerendered because the export has no server
-app/globals.css       476 lines: the blog index, the hero, the pipeline band, the
-                      pillar panels, two utility classes
+app/globals.css       580 lines: the document column, the blog index, the hero, the
+                      pipeline band, the three pillar containers, two utility classes
 components/site-chrome.tsx  the bar, the main, the footer, and the current page
+components/post-date.tsx    a post's date as one element carrying two strings
 lib/site.json         the ground, the default mode, the product directory
 lib/site.ts           those facts, typed by the design system's pack vocabulary
 lib/bar.ts            the bar's own data and every word it prints
 lib/navigation.tsx    this site's own destinations, for the footer
 lib/landing-content.ts every word of the landing, as data
+lib/post-date.ts      a post's date, as the reading a reader sees and the value a machine does
 scripts/              the pack map, the region resolver, the parity expectations
 prism-gates.json      this site's half of the cross-repository contract: data only
 ```

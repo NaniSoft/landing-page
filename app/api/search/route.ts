@@ -1,6 +1,19 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
+import {
+  ARCHITECTURE,
+  FINAL_CTA,
+  HERO,
+  IDENTITY,
+  PHILOSOPHY,
+  PIPELINE,
+  PIPELINE_FIGURE,
+  PRODUCTS,
+  TICKER,
+  TICKER_LABEL,
+  WHY,
+} from '@/lib/landing-content';
 import { blogSource } from '@/lib/source';
 
 /**
@@ -41,6 +54,42 @@ interface IndexEntry {
   content?: string;
 }
 
+/**
+ * The landing's own copy, flattened to the words a reader can see on it.
+ *
+ * Read from `lib/landing-content.ts` rather than restated by hand, because a
+ * hand-written summary drifts: the summary this entry used to carry named the four
+ * products and stopped, so a word the landing visibly says, "pipeline" among them,
+ * was one a reader could see and search could not find. Every string below is on the
+ * page; only the destinations and the figure's coordinates are left out.
+ */
+function landingCopy(): string {
+  return [
+    HERO.title,
+    HERO.lede,
+    HERO.primaryCta.label,
+    HERO.secondaryCta.label,
+    TICKER_LABEL,
+    ...TICKER,
+    ...IDENTITY.entries.map((entry) => entry.role),
+    PIPELINE.label,
+    PIPELINE.caption,
+    ...PIPELINE.stages.map((stage) => `${stage.name} ${stage.caption}`),
+    PIPELINE_FIGURE.panel.footnote,
+    PRODUCTS.label,
+    ...PRODUCTS.rows.map((row) => `${row.name} ${row.tagline}`),
+    ARCHITECTURE.label,
+    ARCHITECTURE.caption,
+    WHY.label,
+    ...WHY.pillars.map((pillar) => `${pillar.name} ${pillar.line}`),
+    PHILOSOPHY.label,
+    PHILOSOPHY.manifesto,
+    FINAL_CTA.title,
+    FINAL_CTA.primaryCta.label,
+    FINAL_CTA.secondaryCta.label,
+  ].join(' ');
+}
+
 /** The three pages this site writes as React rather than as MDX. */
 const OWN_PAGES: readonly IndexEntry[] = [
   {
@@ -48,8 +97,7 @@ const OWN_PAGES: readonly IndexEntry[] = [
     title: 'NaniSoft',
     url: '/',
     description: 'Software that builds software.',
-    content:
-      'Nexus, the Agent Factory. Atlas, the Digital Twin Platform. AlphaLens, quantitative trading research for the Indian market. Prism, the design language every one of them is built in.',
+    content: landingCopy(),
   },
   {
     id: '/about',

@@ -5,7 +5,9 @@ import Link from 'next/link';
 import { BlogPostPage } from '@nanisoft/prism-ui/pages/blog-post-page';
 
 import { SiteChrome } from '@/components/site-chrome';
+import { PostDate } from '@/components/post-date';
 import { getMdxComponents } from '@/lib/mdx-components';
+import { displayDate, isoDate } from '@/lib/post-date';
 import { blogSource } from '@/lib/source';
 
 // Optional catch-all: `/blog` renders the reverse-chronological index,
@@ -48,10 +50,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
  * The index stays this site's own content, and the post becomes the design system's
  * Page for one.
  *
+ * The index renders inside the chrome like every other route. It used to return its
+ * own div bare, which read as a decision about ownership and shipped as a page with
+ * no bar, no footer and no landmark: a reader arriving at the index from a search
+ * result had no way back to the rest of the site but the browser's back button.
+ *
  * The index is a deliberate design rather than a default: the four blog lists in this
  * family are four designs, and the design system deliberately ships no index. So the
  * four dates, the four titles and the tag runs are still composed here, in this
  * repository's own stylesheet, and only the post screen moved.
+ *
+ * **The date is two strings and both screens were printing one of them.** The index put
+ * the frontmatter's own `2026-09-26` inside its `time` element, so the machine value was
+ * on the element and in the reader's eye, and the post Page was handed that same value as
+ * its display date and its `dateTime`. The design system's Page now refuses that pair at
+ * render, on the grounds that a Page rendering a date has no business making a reader
+ * parse ISO, so the two are formatted here from one place and passed separately. The
+ * index's element is this site's own component rather than markup, because the loader is
+ * a compile-time macro and a `time` the index prints cannot otherwise be rendered under a
+ * test; `components/post-date.tsx` carries the reason.
  *
  * The post moved because the frontmatter of a post is a contract, and a contract
  * belongs to something that can be checked. `BlogPostPage` takes the title, the
@@ -69,27 +86,29 @@ export default async function BlogPage({ params }: PageProps): Promise<ReactElem
   if (!slug) {
     const posts = published();
     return (
-      <div className="site-catalog">
-        <p className="site-eyebrow">nanisoft, blog</p>
-        <h1 className="site-catalog__title">The company blog</h1>
-        <p className="site-catalog__lede">
-          The platform, the design language, and the honest state of everything we ship.
-        </p>
-        <ul className="site-blog-list">
-          {posts.map((post) => (
-            <li key={post.url}>
-              <Link href={post.url} className="site-blog-list__title">
-                {post.data.title}
-              </Link>
-              <p className="site-blog-list__description">{post.data.description}</p>
-              <p className="site-mono site-blog-list__meta">
-                <time dateTime={post.data.date}>{post.data.date}</time>
-                {post.data.tags.length > 0 && <span> / {post.data.tags.join(' / ')}</span>}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <SiteChrome current="/blog">
+        <div className="site-catalog">
+          <p className="site-eyebrow">nanisoft, blog</p>
+          <h1 className="site-catalog__title">The company blog</h1>
+          <p className="site-catalog__lede">
+            The platform, the design language, and the honest state of everything we ship.
+          </p>
+          <ul className="site-blog-list">
+            {posts.map((post) => (
+              <li key={post.url}>
+                <Link href={post.url} className="site-blog-list__title">
+                  {post.data.title}
+                </Link>
+                <p className="site-blog-list__description">{post.data.description}</p>
+                <p className="site-mono site-blog-list__meta">
+                  <PostDate value={post.data.date} />
+                  {post.data.tags.length > 0 && <span> / {post.data.tags.join(' / ')}</span>}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </SiteChrome>
     );
   }
 
@@ -109,8 +128,8 @@ export default async function BlogPage({ params }: PageProps): Promise<ReactElem
       <BlogPostPage
         title={page.data.title}
         description={page.data.description}
-        date={page.data.date}
-        dateTime={page.data.date}
+        date={displayDate(page.data.date)}
+        dateTime={isoDate(page.data.date)}
         tags={page.data.tags.map((tag) => ({ label: tag }))}
         previous={previous ? { title: previous.data.title, href: previous.url } : undefined}
         next={next ? { title: next.data.title, href: next.url } : undefined}
