@@ -148,6 +148,48 @@ body {
   gap: var(--spacing-12);
 }
 
+/* ---------- the mark, as the page draws it ---------- */
+
+/*
+ * The company mark is a site-authored drawing in currentColor, so it follows
+ * the ink it sits beside through the cascade. The refraction is the pack's own
+ * primary and the prism body is the brand ink, both read as variables rather
+ * than resolved values: the one thing the mark says is that one input becomes
+ * a spectrum, and the colours saying it have to follow the theme like every
+ * other fill on the page.
+ */
+.site-logo {
+  display: block;
+  flex: none;
+  color: var(--foreground);
+}
+
+.site-logo__refraction {
+  stroke: var(--primary);
+}
+
+.site-logo__prism {
+  fill: var(--brand-ink);
+}
+
+/*
+ * The hero's brand lockup: the mark and the word it belongs to, at the top of
+ * the copy column. A lockup is furniture, not an eyebrow, so it carries a rule
+ * and a weight of its own rather than the chip treatment a label gets.
+ */
+.site-brandlockup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-6);
+}
+
+.site-brandlockup__name {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.02em;
+}
+
 @media (min-width: 64rem) {
   .site-hero {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);

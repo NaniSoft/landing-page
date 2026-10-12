@@ -33,6 +33,22 @@ const GOLD = '#edc47d'
 const SPECTRUM =
   'linear-gradient(90deg, #ec88a0 0%, #bc97e7 25%, #73bf88 50%, #6cb2eb 75%, #e4965e 100%)'
 
+/**
+ * The company mark, as the card draws it: the beam and its refraction, painted
+ * in the card's own literals and embedded as a data URI, because the renderer
+ * paints a bitmap and cannot resolve cascade classes.
+ */
+const MARK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="150" height="150" fill="none">
+  <g stroke-linecap="round">
+    <path d="M4 16 L13 16" stroke="#eaedf0" stroke-width="2.5"/>
+    <path d="M15 14 L28 8" stroke="#9bd1ff" stroke-width="2.5"/>
+    <path d="M15 16 L28 16" stroke="#9bd1ff" stroke-width="2.5"/>
+    <path d="M15 18 L28 24" stroke="#9bd1ff" stroke-width="2.5"/>
+    <path d="M13 12 L15 20 L13 20 Z" fill="#c2e2ff" stroke="none"/>
+  </g>
+</svg>`
+const MARK_URI = `data:image/svg+xml;base64,${Buffer.from(MARK_SVG).toString('base64')}`
+
 export default function OpengraphImage() {
   return new ImageResponse(
     (
@@ -50,8 +66,11 @@ export default function OpengraphImage() {
         }}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-          <div style={{ display: 'flex', fontSize: 26, letterSpacing: 2, color: SKY }}>
-            THE AI-NATIVE SOFTWARE COMPANY
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div style={{ display: 'flex', fontSize: 26, letterSpacing: 2, color: SKY }}>
+              THE AI-NATIVE SOFTWARE COMPANY
+            </div>
+            <img src={MARK_URI} width={120} height={120} />
           </div>
           <div
             style={{

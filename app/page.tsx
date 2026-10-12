@@ -27,6 +27,7 @@ import {
   WHY,
 } from '@/lib/landing-content';
 import { JsonLd } from '@/components/json-ld';
+import { NaniSoftLogo } from '@/components/logo';
 import { SiteChrome } from '@/components/site-chrome';
 import { PRODUCTS as SITE_PRODUCTS } from '@/lib/site';
 
@@ -157,11 +158,12 @@ export default function Landing(): ReactElement {
       <>
         {/* The thesis, the page's own h1, and the product set it built.
 
-            There is no eyebrow. The one this band used to carry read "Nanisoft" in a
-            rounded chip directly above a headline, which is the brand name restated in
-            the position a reader looks first, and a hero's four text slots are better
-            spent on the claim, the line under it, the two actions and the thing that
-            makes the claim checkable.
+            The band opens with the brand lockup: the mark and the word it belongs
+            to, which is furniture rather than an eyebrow. The chip this band used
+            to carry was the brand name restated as a label in the position a
+            reader looks first; the lockup is the brand itself, drawn as a mark
+            with a rule and a weight of its own, and a reader who arrives from a
+            search result or a shared card meets the sign above the door.
 
             The right column is the product set, one mark per member at the largest size a
             mark is drawn at. Four are a product in a pastel of its own, this site wears
@@ -172,6 +174,10 @@ export default function Landing(): ReactElement {
         <Section data-slot="nanisoft-hero" className="site-band--tall">
           <div className="site-hero">
             <div className="site-hero__copy">
+              <div className="site-brandlockup">
+                <NaniSoftLogo size={40} />
+                <span className="site-brandlockup__name">NaniSoft</span>
+              </div>
               <Heading as="h1" size="3xl" className="site-display">
                 {HERO.title}
               </Heading>
