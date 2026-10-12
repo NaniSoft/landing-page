@@ -40,23 +40,39 @@
     "build."
   ],
   "ground": "sky",
-  "secondPackRegions": ["landing.hero", "landing.products"],
+  "secondPackRegions": [
+    "landing.hero",
+    "landing.products"
+  ],
   "regions": {
     "header.brand": {
       "why": "The header's brand lockup is this site, and this site's pack is the page's pack, so its boundary is the ground rather than a second pack.",
-      "packs": ["sky"]
+      "packs": [
+        "sky"
+      ]
     },
     "footer.brand": {
       "why": "The same lockup, in the footer. A ground is stable for the life of a page, and a footer that wore a different hue from the page it closes would be a second claim about the same thing.",
-      "packs": ["sky"]
+      "packs": [
+        "sky"
+      ]
     },
     "landing.hero": {
       "why": "The hero's identity column is the whole product set at the largest size a mark is drawn at, one mark per member. It is the one claim on this page a reader can check rather than take: four products in four pastels, this site in the ground, and the design system in the spectrum it is. Every boundary is a ProductMark, which is a fully rounded disc, so the boundary moves nothing about any shape.",
-      "packs": ["sky", "lavender", "mint", "blush"]
+      "packs": [
+        "sky",
+        "cyan",
+        "mint",
+        "gold"
+      ]
     },
     "landing.products": {
       "why": "A product row's mark is that product's own hue, and it is the one claim in this section a reader makes a decision from: which product is this, and does its colour mean anything. The mark is a fully rounded disc, so the boundary moves nothing about its shape. The region is named by the Block that draws it rather than by an ordinal the band used to print, so deleting the section numbers cannot rename a pack region.",
-      "packs": ["lavender", "mint", "blush"]
+      "packs": [
+        "cyan",
+        "mint",
+        "gold"
+      ]
     }
   }
 }

@@ -24,7 +24,7 @@
 import type { DiagramNode, DiagramRelation } from '@nanisoft/prism-ui/components/diagram';
 
 export const HERO = {
-  title: 'Software that builds software.',
+  title: 'Building the platforms that build the future.',
   lede: 'One factory built every product we ship. This is how.',
   primaryCta: { label: 'Meet Nexus', href: 'https://nexus.nanisoft.com' },
   secondaryCta: { label: 'Walk the pipeline', href: '#pipeline' },
@@ -65,10 +65,10 @@ export const IDENTITY = {
 } as const;
 
 export const TICKER = [
-  'issue #142 → planning',
-  'pr #87 → tests passing',
-  'board → 3 awaiting review',
-  'build 12:04 → deployed',
+  'issue #142 in planning',
+  'pr #87 passing tests',
+  'board holds 3 awaiting review',
+  'build 12:04 deployed',
 ] as const;
 
 export const PIPELINE = {

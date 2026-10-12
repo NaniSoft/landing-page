@@ -11,12 +11,33 @@ import { DEFAULT_MODE, GROUND_PACK, THEME_ATTRIBUTES } from '@/lib/site';
 import '@nanisoft/prism-ui/styles.css';
 import './globals.css';
 
+/**
+ * What the document says about the site, once.
+ *
+ * `metadataBase` resolves every relative canonical and every card image against the
+ * one origin this site is answerable for, and this site answers for two hostnames,
+ * so without it each address existed twice and claimed neither. The card set names
+ * the large Twitter card because the share card this site ships is a full-size
+ * image, and a summary card asking for a thumbnail next to no thumbnail is a card
+ * a platform renders as an empty box.
+ */
 export const metadata: Metadata = {
+  metadataBase: new URL('https://nanisoft.com'),
   title: {
     default: 'NaniSoft, software that builds software.',
     template: '%s · NaniSoft',
   },
-  description: 'Software that builds software.',
+  description:
+    'NaniSoft is the AI-native software company whose products are built by its own Agent Factory: Nexus builds Atlas, AlphaLens and Prism, and every one of them ships.',
+  applicationName: 'NaniSoft',
+  openGraph: {
+    type: 'website',
+    siteName: 'NaniSoft',
+    locale: 'en',
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
 };
 
 /**

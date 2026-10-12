@@ -26,13 +26,14 @@
  * reader is in.
  */
 import type { SiteFooterColumn } from '@nanisoft/prism-ui/blocks/site-footer';
-import type { SiteHeaderLink } from '@nanisoft/prism-ui/blocks/site-header';
 
-/** The site's own pages, in the order a reader should meet them. */
-export const SITE_NAV: readonly SiteHeaderLink[] = [
-  { label: 'About', href: '/about' },
-  { label: 'Blog', href: '/blog' },
-];
+/**
+ * The header's own navigation is not declared here. `lib/bar.ts` holds it, because
+ * the bar reads that module for every other sentence it renders, and a second list
+ * of the same two routes beside it was exactly the drift it looks like: this file
+ * used to carry its own `SITE_NAV`, nothing imported it, and the day the bar renamed
+ * a route this list would have disagreed with the header for free.
+ */
 
 /**
  * The footer's two groups, and the honest split between them.

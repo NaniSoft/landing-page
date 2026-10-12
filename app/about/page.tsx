@@ -9,6 +9,7 @@ import { SiteChrome } from '@/components/site-chrome';
 
 export const metadata: Metadata = {
   title: 'About',
+    alternates: { canonical: '/about' },
   description:
     'NaniSoft builds the factory that builds software: Nexus, the Agent Factory, and the products it ships, Atlas, AlphaLens and Prism.',
 };
@@ -27,7 +28,7 @@ const FACTS = [
   {
     label: 'Design',
     value:
-      'One language across everything. Spectral Refraction: hairline structure, pastel packs, beam-dark, motion that never bounces.',
+      'One language across everything. Prism: hairline structure, pastel packs, a dark mode for every one of them, and motion that never bounces.',
   },
 ] as const;
 

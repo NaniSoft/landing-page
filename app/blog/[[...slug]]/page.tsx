@@ -37,13 +37,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!slug) {
     return {
       title: 'Blog',
+      alternates: { canonical: '/blog' },
       description:
         'The NaniSoft company blog: the platform, the design language, and the honest state of everything we ship.',
     };
   }
   const page = blogSource.getPage(slug);
   if (!page) return {};
-  return { title: page.data.title, description: page.data.description };
+  return {
+    title: page.data.title,
+    description: page.data.description,
+    alternates: { canonical: page.url },
+  };
 }
 
 /**

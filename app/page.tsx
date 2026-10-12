@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import type { ReactElement } from 'react';
 
 import { CtaLink } from '@nanisoft/prism-ui/components/cta-link';
@@ -25,8 +26,68 @@ import {
   TICKER_LABEL,
   WHY,
 } from '@/lib/landing-content';
+import { JsonLd } from '@/components/json-ld';
 import { SiteChrome } from '@/components/site-chrome';
 import { PRODUCTS as SITE_PRODUCTS } from '@/lib/site';
+
+const SITE_URL = 'https://nanisoft.com';
+
+const DESCRIPTION =
+  'NaniSoft is the AI-native software company whose products are built by its own Agent ' +
+  'Factory: Nexus builds Atlas, AlphaLens and Prism, and every one of them ships.';
+
+/**
+ * The landing's own metadata.
+ *
+ * The home page is the company's front door and it shipped none of its own: the
+ * document's defaults named the site, and a site-wide default cannot carry a
+ * canonical, because a canonical is a claim about one address. This page resolves
+ * at apex and www and now claims one of them.
+ */
+export const metadata: Metadata = {
+  title: { absolute: 'NaniSoft, software that builds software.' },
+  description: DESCRIPTION,
+  alternates: { canonical: '/' },
+  openGraph: {
+    type: 'website',
+    url: '/',
+    siteName: 'NaniSoft',
+    locale: 'en',
+    title: 'NaniSoft, software that builds software.',
+    description: DESCRIPTION,
+  },
+};
+
+/**
+ * Structured data for the company's front door.
+ *
+ * An Organization node, because the company is the thing this site is the home of,
+ * and a WebSite node so the four product subdomains resolve against a named parent.
+ * The four products appear as the text of the page rather than as schema offers:
+ * none of them carries a price or a listing, and structured data inventing commerce
+ * would be the one claim on the page a reader cannot check against the page.
+ */
+const JSON_LD = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${SITE_URL}/#organization`,
+      name: 'NaniSoft',
+      url: SITE_URL,
+      description: DESCRIPTION,
+      slogan: 'Software that builds software.',
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE_URL}/#website`,
+      name: 'NaniSoft',
+      url: SITE_URL,
+      inLanguage: 'en',
+      publisher: { '@id': `${SITE_URL}/#organization` },
+    },
+  ],
+};
 
 /**
  * The landing, composed from the design system and nothing else.
@@ -92,6 +153,7 @@ const DIRECTORY = new Map(SITE_PRODUCTS.map((product) => [product.id, product]))
 export default function Landing(): ReactElement {
   return (
     <SiteChrome>
+      <JsonLd data={JSON_LD} />
       <>
         {/* The thesis, the page's own h1, and the product set it built.
 
