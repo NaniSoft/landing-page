@@ -152,11 +152,11 @@ body {
 
 /*
  * The company mark is a site-authored drawing in currentColor, so it follows
- * the ink it sits beside through the cascade. The refraction is the pack's own
- * primary and the prism body is the brand ink, both read as variables rather
- * than resolved values: the one thing the mark says is that one input becomes
- * a spectrum, and the colours saying it have to follow the theme like every
- * other fill on the page.
+ * the ink it sits beside through the cascade. The three rays are the theme's
+ * own chart hues, read as variables rather than resolved values: the one thing
+ * the mark says is that the family's three products converge into one ink, and
+ * the hues converging have to follow the theme like every other fill on the
+ * page.
  */
 .site-logo {
   display: block;
@@ -164,12 +164,16 @@ body {
   color: var(--foreground);
 }
 
-.site-logo__refraction {
-  stroke: var(--primary);
+.site-logo__ray-1 {
+  stroke: var(--chart-1);
 }
 
-.site-logo__prism {
-  fill: var(--brand-ink);
+.site-logo__ray-2 {
+  stroke: var(--chart-2);
+}
+
+.site-logo__ray-3 {
+  stroke: var(--chart-3);
 }
 
 /*

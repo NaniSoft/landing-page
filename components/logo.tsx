@@ -1,13 +1,15 @@
 import type { ReactElement } from 'react';
 
 /**
- * The company mark: a beam entering a prism and leaving refracted.
+ * The company mark: the products converge into the ink the company signs with.
  *
- * The favicon's own drawing, drawn for the page: the incoming beam is
- * `currentColor`, so the mark follows the ink it sits beside, and the
- * refraction is the pack's primary through token classes, because the one
- * thing the mark says is that one input becomes a spectrum. A logo that named
- * a hex would be the one element on the page a theme could not reach.
+ * The favicon's own drawing, drawn for the page: the three rays are the theme's
+ * own chart hues through token classes, this theme's cast of the family's three
+ * products, and the node and the beam are `currentColor`, because the one thing
+ * the mark says is that many hues become one ink, and the ink they become is
+ * the ink it sits beside. Prism's mark casts the same fan outward; the two are
+ * mirror marks on one grid. A logo that named a hex would be the one element on
+ * the page a theme could not reach.
  */
 export function NaniSoftLogo({ size = 24 }: { size?: number }): ReactElement {
   return (
@@ -20,12 +22,12 @@ export function NaniSoftLogo({ size = 24 }: { size?: number }): ReactElement {
       aria-label="NaniSoft"
       className="site-logo"
     >
-      <g strokeLinecap="round">
-        <path d="M4 16 L13 16" stroke="currentColor" strokeWidth="2.5" />
-        <path d="M15 14 L28 8" className="site-logo__refraction" strokeWidth="2.5" />
-        <path d="M15 16 L28 16" className="site-logo__refraction" strokeWidth="2.5" />
-        <path d="M15 18 L28 24" className="site-logo__refraction" strokeWidth="2.5" />
-        <path d="M13 12 L15 20 L13 20 Z" className="site-logo__prism" stroke="none" />
+      <g strokeLinecap="round" strokeWidth="2.5">
+        <path d="M4 8 L17 14" className="site-logo__ray-1" />
+        <path d="M4 16 L17 16" className="site-logo__ray-2" />
+        <path d="M4 24 L17 18" className="site-logo__ray-3" />
+        <path d="M21 16 L28 16" stroke="currentColor" />
+        <path d="M17 16 L21 11.5 L21 20.5 Z" fill="currentColor" stroke="none" />
       </g>
     </svg>
   );

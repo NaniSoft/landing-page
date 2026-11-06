@@ -1,12 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Prism mark: a white beam entering a prism, refracted into the blue inks.
-       The beam is neutral and the refraction is the brand. -->
+  <!-- NaniSoft mark: the company gathers. This file used to carry the design
+       system's mark, the beam Prism refracts; the company now has its own.
+       The three rays are the products in their own pack hues, Nexus cyan,
+       Atlas mint, AlphaLens gold, converging into the one ink the company
+       signs with. Prism's mark casts the same fan outward, so the two are
+       mirror marks on one grid. The chip is the navy every product's mark
+       signs in, and the rays are the packs' dark primaries, because a favicon
+       is an image and holds values, not tokens. -->
   <rect width="32" height="32" rx="4" fill="#0B1220" />
-  <g stroke-linecap="round">
-    <path d="M4 16 L13 16" stroke="#E8EEF9" stroke-width="2.5" />
-    <path d="M15 14 L28 8" stroke="#2563EB" stroke-width="2.5" />
-    <path d="M15 16 L28 16" stroke="#3B82F6" stroke-width="2.5" />
-    <path d="M15 18 L28 24" stroke="#2563EB" stroke-width="2.5" />
-    <path d="M13 12 L15 20 L13 20 Z" fill="#93B2FF" stroke="none" />
+  <g fill="none" stroke-linecap="round" stroke-width="2.5">
+    <path d="M4 8 L17 14" stroke="#7FDAF0" />
+    <path d="M4 16 L17 16" stroke="#9DDCAD" />
+    <path d="M4 24 L17 18" stroke="#EDC47D" />
+    <path d="M21 16 L28 16" stroke="#E8EEF9" />
   </g>
+  <path d="M17 16 L21 11.5 L21 20.5 Z" fill="#E8EEF9" />
 </svg>
