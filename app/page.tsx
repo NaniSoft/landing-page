@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
 import type { ReactElement } from 'react';
 
+import { AuroraWash } from '@nanisoft/prism-ui/components/aurora-wash';
 import { CtaLink } from '@nanisoft/prism-ui/components/cta-link';
 import { Diagram } from '@nanisoft/prism-ui/components/diagram';
+import { ParticleField } from '@nanisoft/prism-ui/components/particle-field';
 import { PulseGraph } from '@nanisoft/prism-ui/components/pulse-graph';
+import { Reveal } from '@nanisoft/prism-ui/components/reveal';
 import { Section, SectionHeading } from '@nanisoft/prism-ui/components/section';
 import { Heading, Text } from '@nanisoft/prism-ui/components/typography';
 import { Cta01 } from '@nanisoft/prism-ui/blocks/cta-01';
@@ -166,11 +169,20 @@ export default function Landing(): ReactElement {
             second logo forty pixels below it was the same word twice in the one
             place a reader looks first. The thesis is the first thing in the copy
             column now. */}
-        <Section data-slot="nanisoft-hero" size="tall">
+        {/* The hero's ground: light through the surface and a medium moving
+            through it, both the design system's own and both complete at rest.
+            The clip is the band's, so the wash and the field read as the page's
+            own weather rather than as a picture behind it. */}
+        <Section data-slot="nanisoft-hero" size="tall" className="relative overflow-hidden">
+          <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+            <AuroraWash />
+            <ParticleField count={44} />
+          </div>
           <div className="site-hero">
             <div className="site-hero__copy">
               <Heading as="h1" size="3xl" className="site-display">
-                {HERO.title}
+                {HERO.title.slice(0, HERO.title.indexOf(HERO.spectrum)).trim()}{' '}
+                <span className="prism-text-spectrum">{HERO.spectrum}</span>
               </Heading>
               <Text size="lg" tone="muted" className="site-hero__lede">
                 {HERO.lede}
@@ -204,6 +216,9 @@ export default function Landing(): ReactElement {
             The wrapper carries `id="pipeline"` because the catalogue's Blocks spread no
             props and a deep link into this page has to keep resolving. The one rule the
             catalogue gives a consumer is that it owns the element. */}
+        {/* The bands a reader scrolls to arrive on the design system's own
+            reveal; the hero, the strip and the closing ask stay still. */}
+        <Reveal>
         <Section id="pipeline">
           <SectionHeading as="h2" align="left" title={PIPELINE.label} className="mb-10" />
           <div className="site-pipeline">
@@ -233,10 +248,12 @@ export default function Landing(): ReactElement {
           </div>
           <p className="site-caption">{PIPELINE.caption}</p>
         </Section>
+        </Reveal>
 
         {/* The products. One of the two bands that carry a second pack: each row's mark is
             its product's own boundary, and the mark is the only element in this section
             that carries one. */}
+        <Reveal delay={1}>
         <ProductGrid01
           title={PRODUCTS.label}
           products={PRODUCTS.rows.map((product) => ({
@@ -247,12 +264,14 @@ export default function Landing(): ReactElement {
             href: product.url,
           }))}
         />
+        </Reveal>
 
         {/* The architecture. The five-node graph used to be a client component because it
             resolved five pack inks in JavaScript at mount, which is why a light-mode reader
             was served dark-mode ink until hydration; the schematic it drew is now a server
             Component whose every stroke and fill names a semantic token, so the cascade
             restyles all of them and a boundary above it would too. */}
+        <Reveal>
         <Section>
           <SectionHeading as="h2" align="left" title={ARCHITECTURE.label} className="mb-10" />
           <Diagram
@@ -262,6 +281,7 @@ export default function Landing(): ReactElement {
           />
           <p className="site-caption">{ARCHITECTURE.caption}</p>
         </Section>
+        </Reveal>
 
         {/* Why Nanisoft, as three claims in three containers.
 
@@ -279,6 +299,7 @@ export default function Landing(): ReactElement {
             stays behind the whole sentence and only the frame and the arrangement change.
             No ordinal, no icon and no badge: this band carried a decorative number once
             and it went. */}
+        <Reveal delay={1}>
         <Section>
           <SectionHeading as="h2" align="left" title={WHY.label} className="mb-10" />
           <ul className="site-pillars">
@@ -290,6 +311,7 @@ export default function Landing(): ReactElement {
             ))}
           </ul>
         </Section>
+        </Reveal>
 
         {/* The manifesto, as the page's one editorial stop.
 
@@ -299,6 +321,7 @@ export default function Landing(): ReactElement {
             the floor, six stations, one packet, and the products that come off
             the end. The copy is on the muted surface rather than on the drawing,
             so contrast is the design system's and not a guess about a picture. */}
+        <Reveal>
         <MediaBand01
           headingLevel="h2"
           size="tall"
@@ -309,6 +332,7 @@ export default function Landing(): ReactElement {
           media={<EditorialFactory />}
           caption="A schematic of the floor, not a photograph. Six stations, one packet, and the products that come off the end."
         />
+        </Reveal>
 
         {/* The closing band. Both actions are anchors, and that is the one rendered change
             the migration exists to make: the old page passed a destination to a component

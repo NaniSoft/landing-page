@@ -148,9 +148,15 @@ describe('the landing', () => {
       expect(container.querySelectorAll(`[data-slot="${slot}"]`).length, `no element carries data-slot="${slot}"`)
         .toBeGreaterThan(0);
     }
-    // The two decorative canvases are deleted, not disabled.
-    expect(container.querySelector('canvas')).toBeNull();
-    expect(document.querySelector('canvas')).toBeNull();
+    // The two decorative canvases this repository authored are deleted, not
+    // disabled. The one canvas on the page now is the design system's own
+    // living field behind the hero: its floor is server-rendered markup the
+    // loop only ever moves, so the claim the old canvas made is back as a
+    // package contract rather than as this page's client code.
+    for (const canvas of [...document.querySelectorAll('canvas')]) {
+      expect(canvas.getAttribute('data-slot')).toBe('particle-field-canvas');
+    }
+    expect(document.querySelector('[data-slot="particle-field-floor"]')).toBeTruthy();
   });
 
   it('links both calls to action as real links', () => {

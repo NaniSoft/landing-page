@@ -25,6 +25,12 @@ import type { DiagramNode, DiagramRelation } from '@nanisoft/prism-ui/components
 
 export const HERO = {
   title: 'Software that builds software.',
+  /**
+   * The tail of the title, carried in the design system's spectrum ink. Kept
+   * beside the title rather than derived from it so the two can never disagree:
+   * the page composes the emphasis and this file owns the words.
+   */
+  spectrum: 'builds software.',
   lede: 'One factory built every product we ship. This is how.',
   primaryCta: { label: 'Meet Nexus', href: 'https://nexus.nanisoft.com' },
   secondaryCta: { label: 'Walk the pipeline', href: '#pipeline' },
