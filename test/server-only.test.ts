@@ -77,6 +77,8 @@ describe('the site has no client code', () => {
       'app/page.tsx',
       'app/robots.ts',
       'app/sitemap.ts',
+      'components/editorial-factory.tsx',
+      'components/family-constellation.tsx',
       'components/family-marks.tsx',
       'components/json-ld.tsx',
       'components/logo.tsx',

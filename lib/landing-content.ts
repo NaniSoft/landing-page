@@ -24,7 +24,7 @@
 import type { DiagramNode, DiagramRelation } from '@nanisoft/prism-ui/components/diagram';
 
 export const HERO = {
-  title: 'Building the platforms that build the future.',
+  title: 'Software that builds software.',
   lede: 'One factory built every product we ship. This is how.',
   primaryCta: { label: 'Meet Nexus', href: 'https://nexus.nanisoft.com' },
   secondaryCta: { label: 'Walk the pipeline', href: '#pipeline' },
@@ -65,10 +65,10 @@ export const IDENTITY = {
 } as const;
 
 export const TICKER = [
-  'issue #142 in planning',
-  'pr #87 passing tests',
-  'board holds 3 awaiting review',
-  'build 12:04 deployed',
+  'Five sites live',
+  'One design language',
+  'No component overrides',
+  'Nexus in development',
 ] as const;
 
 export const PIPELINE = {
@@ -226,15 +226,15 @@ export const WHY = {
 } as const;
 
 export const PHILOSOPHY = {
-  label: 'Philosophy',
+  label: 'What we believe.',
   manifesto:
     'Every product NaniSoft ships is built by Nexus. Atlas, AlphaLens and Prism are not case studies, they are output. If the factory cannot build it, we do not ship it.',
 } as const;
 
 export const FINAL_CTA = {
   title: 'Start at the factory.',
-  primaryCta: { label: 'Meet Nexus', href: 'https://nexus.nanisoft.com' },
-  secondaryCta: { label: 'Tour the design system', href: 'https://prism.nanisoft.com' },
+  primaryCta: { label: 'Tour the design system', href: 'https://prism.nanisoft.com' },
+  secondaryCta: { label: 'Read the blog', href: '/blog' },
 } as const;
 
 /**
@@ -244,4 +244,4 @@ export const FINAL_CTA = {
  * a heading about a heading is noise. "the factory floor" is this repository's own
  * name for the band, from the landing's own header comment before the migration.
  */
-export const TICKER_LABEL = 'the factory floor';
+export const TICKER_LABEL = 'The family today';

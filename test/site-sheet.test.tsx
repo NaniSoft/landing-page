@@ -230,7 +230,9 @@ describe('the reduced-motion policy', () => {
     // The rule this one deleted also carried the wash, and the wash is worth keeping: it
     // is the only thing that tells a pointer which of the five rows it is on. Dropping the
     // transition is not a way of saying the hover does not matter.
-    const wash = rules().find((rule) => rule.selector === ".site-identity__link:hover");
+    const wash = rules().find((rule) =>
+      rule.selector.includes('.site-constellation__link:hover'),
+    );
     expect(declared(wash, 'background-color')).toBe('var(--accent)');
   });
 });

@@ -103,32 +103,6 @@ body {
   flex: 1 0 auto;
 }
 
-/* ---------- Vertical rhythm ---------- */
-
-/*
- * Two heights on seven bands, and the taller one is named.
- *
- * Every band used to be `py-16 sm:py-24`, which is a rhythm that reads as one height
- * repeated: a reader scrolling the page cannot tell a statement from a list, because
- * they were the same height under the same heading. Two of the seven are statements,
- * the thesis and the manifesto, and they get the tall measure. The rest keep the
- * system's own.
- *
- * The values are on the design system's own quarter-rem spacing grid rather than
- * quoted from it, because the tallest step Prism's utilities reach is
- * `--spacing-24` at 6rem and a statement wants one step past it. Five and seven
- * rem are both multiples of the grid, so nothing here is off-scale.
- */
-.site-band--tall {
-  padding-block: 5rem;
-}
-
-@media (min-width: 40rem) {
-  .site-band--tall {
-    padding-block: 7rem;
-  }
-}
-
 /* ---------- The hero ---------- */
 
 /*
@@ -216,24 +190,6 @@ body {
   color: var(--muted-foreground);
   font-size: var(--text-sm);
   line-height: var(--leading-normal);
-}
-
-/*
- * The hero's brand lockup: the mark and the word it belongs to, at the top of
- * the copy column. A lockup is furniture, not an eyebrow, so it carries a rule
- * and a weight of its own rather than the chip treatment a label gets.
- */
-.site-brandlockup {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-3);
-  margin-bottom: var(--spacing-6);
-}
-
-.site-brandlockup__name {
-  font-size: var(--text-xl);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: -0.02em;
 }
 
 @media (min-width: 64rem) {
@@ -327,67 +283,161 @@ body {
   }
 }
 
-/* ---------- The product set, in the hero ---------- */
+/* ---------- The family constellation ---------- */
 
 /*
- * Five rows, a hairline between them, each row a link carrying one member's mark and
- * one line about it.
+ * The company at the centre, the four products on the orbits around it.
  *
- * A row rather than a five-tile grid on purpose. Each row is one product with one
- * sentence, and five tiles at this width would give each about two hundred pixels to
- * hold a twenty-four pixel disc and a line of text, which is a tile with a mark in it
- * rather than a list of products. The stack also puts the five discs on one vertical
- * edge, where five different pastels read as five different things instead of as a
- * colour chart.
+ * The figure is a square, because the orbit is a circle and a circle fitted into
+ * a column that is wider than it is tall is an ellipse that reads as a mistake.
+ * `max-width` keeps it from eating the copy column at a wide viewport.
  */
-.site-identity {
+.site-constellation {
+  position: relative;
+  width: 100%;
+  max-width: 34rem;
+  margin-inline: auto;
+  aspect-ratio: 1;
+}
+
+.site-constellation__orbit {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--border);
+}
+
+.site-constellation__centre {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-1);
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: calc(var(--radius) * 0.8);
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.site-constellation__set {
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--border);
 }
 
-.site-identity__row {
-  border-bottom: 1px solid var(--border);
+.site-constellation__node {
+  position: absolute;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+}
+
+.site-constellation__node[data-orbit='top'] {
+  left: 50%;
+  top: 15%;
+}
+
+.site-constellation__node[data-orbit='right'] {
+  left: 85%;
+  top: 50%;
+}
+
+.site-constellation__node[data-orbit='bottom'] {
+  left: 50%;
+  top: 85%;
+}
+
+.site-constellation__node[data-orbit='left'] {
+  left: 15%;
+  top: 50%;
 }
 
 /*
- * The row is a link, so the whole row is the hit target and the browser's own affordances
- * work: a status bar shows the destination, a middle-click opens it in a new tab. The
- * horizontal pad is what lifts the hover wash off the hairline above and below it, and
- * the vertical pad lives on the mark and the role beneath, so the text is inset by half
- * a pad from the edge it is aligned to.
- *
- * **The wash is instant, and that is the design system's decision rather than a missing
- * one.** Prism states its reduced-motion policy as a single unlayered rule,
- * `@media (prefers-reduced-motion: reduce)` setting `transition: none` on the universal
- * selector, so the `transition` this selector used to carry measured `0.16s` on all five
- * rows with the preference set: an unlayered class rule outranks a layered universal one at
- * any specificity, which is the same fact this sheet's own header states about the base
- * layer. Re-declaring it inside a `prefers-reduced-motion: no-preference` block would put
- * the decision back in a consumer sheet, and re-deciding reduced motion below the package
- * is the one move Prism's own motion gate refuses inside the package, where it can see
- * every rule at once. A hover that changes a background colour with no transition is the
- * design system's own answer for every hover in it.
+ * The link is the hit target and the browser's own affordances work: a status bar
+ * shows the destination and a middle-click opens it in a new tab. The wash is
+ * instant, which is Prism's own reduced-motion answer: an unlayered class rule
+ * outranks the package's layered universal rule, so a transition here would move
+ * under a preference that asked it not to.
  */
-.site-identity__link {
+.site-constellation__link {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: var(--spacing-1);
-  padding: var(--spacing-3) var(--spacing-3);
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: calc(var(--radius) * 0.8);
+  text-align: center;
 }
 
-.site-identity__link:hover {
+.site-constellation__link:hover,
+.site-constellation__centre:hover {
   background-color: var(--accent);
 }
 
-.site-identity__role {
-  max-width: 46ch;
-  margin: 0;
+.site-constellation__role {
+  max-width: 12rem;
   color: var(--muted-foreground);
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   line-height: var(--leading-normal);
   text-wrap: pretty;
+}
+
+/*
+ * Below the wide breakpoint the orbit is not a smaller orbit, it is a list. A
+ * five-node circle at a phone's width is a set of labels overlapping the lines
+ * that are supposed to explain them, so the centre comes first and the four
+ * satellites follow it in reading order.
+ */
+@media (max-width: 63.9375rem) {
+  .site-constellation {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+    max-width: none;
+    aspect-ratio: auto;
+  }
+
+  .site-constellation__orbit {
+    display: none;
+  }
+
+  .site-constellation__centre,
+  .site-constellation__node {
+    position: static;
+    transform: none;
+  }
+
+  .site-constellation__centre {
+    align-items: flex-start;
+    padding: 0 0 var(--spacing-4);
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    text-align: left;
+  }
+
+  .site-constellation__set {
+    display: grid;
+    gap: var(--spacing-3);
+  }
+
+  .site-constellation__node {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: var(--spacing-3);
+  }
+
+  .site-constellation__node:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .site-constellation__link {
+    align-items: flex-start;
+    padding: 0;
+    text-align: left;
+  }
 }
 
 /* ---------- The pipeline band ---------- */
@@ -733,10 +783,6 @@ body {
   font-size: var(--text-sm);
   line-height: var(--leading-normal);
   text-wrap: pretty;
-}
-
-.site-manifesto {
-  max-width: var(--container-measure-narrow);
 }
 
 /* ---------- The blog index, which is site content by decision ---------- */

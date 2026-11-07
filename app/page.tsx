@@ -3,21 +3,19 @@ import type { ReactElement } from 'react';
 
 import { CtaLink } from '@nanisoft/prism-ui/components/cta-link';
 import { Diagram } from '@nanisoft/prism-ui/components/diagram';
-import { ProductMark } from '@nanisoft/prism-ui/components/product-mark';
-import { Prose } from '@nanisoft/prism-ui/components/prose';
 import { PulseGraph } from '@nanisoft/prism-ui/components/pulse-graph';
 import { Section, SectionHeading } from '@nanisoft/prism-ui/components/section';
 import { Heading, Text } from '@nanisoft/prism-ui/components/typography';
 import { Cta01 } from '@nanisoft/prism-ui/blocks/cta-01';
 import { InstrumentPanel01 } from '@nanisoft/prism-ui/blocks/instrument-panel-01';
 import { LogoStrip01 } from '@nanisoft/prism-ui/blocks/logo-strip-01';
+import { MediaBand01 } from '@nanisoft/prism-ui/blocks/media-band-01';
 import { ProductGrid01 } from '@nanisoft/prism-ui/blocks/product-grid-01';
 
 import {
   ARCHITECTURE,
   FINAL_CTA,
   HERO,
-  IDENTITY,
   PHILOSOPHY,
   PIPELINE,
   PIPELINE_FIGURE,
@@ -26,9 +24,9 @@ import {
   TICKER_LABEL,
   WHY,
 } from '@/lib/landing-content';
+import { EditorialFactory } from '@/components/editorial-factory';
+import { FamilyConstellation } from '@/components/family-constellation';
 import { JsonLd } from '@/components/json-ld';
-import { NaniSoftLogo } from '@/components/logo';
-import { AlphaLensMark, AtlasMark, NexusMark, PrismMark } from '@/components/family-marks';
 import { SiteChrome } from '@/components/site-chrome';
 import { PRODUCTS as SITE_PRODUCTS } from '@/lib/site';
 
@@ -149,54 +147,28 @@ function markPack(productId: string) {
   return SITE_PRODUCTS.find((entry) => entry.id === productId)?.pack ?? null;
 }
 
-/** The directory keyed by id, so a mark and the directory cannot disagree about it. */
-const DIRECTORY = new Map(SITE_PRODUCTS.map((product) => [product.id, product]));
-
-/**
- * Each member's own drawing, keyed the way the directory is keyed.
- *
- * The hero lists the family, and a list of members is a list of signs: every
- * row draws the mark the member's own site draws, under the pack boundary the
- * directory holds for it, so the accent a reader sees here is the accent they
- * arrive at. The drawings are this site's copies of the family's marks, held
- * in one file beside the note that says where each one is owned.
- */
-const DRAWINGS: Record<string, ReactElement> = {
-  www: <NaniSoftLogo className="site-product-mark" />,
-  nexus: <NexusMark className="site-product-mark" />,
-  atlas: <AtlasMark className="site-product-mark" />,
-  alphalens: <AlphaLensMark className="site-product-mark" />,
-  prism: <PrismMark className="site-product-mark" />,
-};
-
 export default function Landing(): ReactElement {
   return (
     <SiteChrome>
       <JsonLd data={JSON_LD} />
       <>
-        {/* The thesis, the page's own h1, and the product set it built.
+        {/* The thesis, the page's own h1, and the family it built.
 
-            The band opens with the brand lockup: the mark and the word it belongs
-            to, which is furniture rather than an eyebrow. The chip this band used
-            to carry was the brand name restated as a label in the position a
-            reader looks first; the lockup is the brand itself, drawn as a mark
-            with a rule and a weight of its own, and a reader who arrives from a
-            search result or a shared card meets the sign above the door.
+            The right column is the family as one figure: the company at the
+            centre, the four products and the design system on the orbits around
+            it. It is a constellation rather than a list because the page's claim
+            is a family, and a list of five rows says "set" where a figure says
+            "system". The marks are the family's own drawings, each in its own
+            pack, and they are the only element on this page the pack-boundary
+            law allows a second pack on.
 
-            The right column is the product set, one mark per member at the largest size a
-            mark is drawn at, and each member wears its own drawing now rather than the
-            disc a hue is drawn as: the loop, the twin, the lens, the refraction, and the
-            convergence mark this site signs with. The pack boundary still lands on the
-            mark and nowhere else, so each drawing's accent is its own pack's primary,
-            and this column remains the most colour the page can have without breaking
-            the design system's law. */}
-        <Section data-slot="nanisoft-hero" className="site-band--tall">
+            The brand lockup is gone. The nav already carries the mark, and a
+            second logo forty pixels below it was the same word twice in the one
+            place a reader looks first. The thesis is the first thing in the copy
+            column now. */}
+        <Section data-slot="nanisoft-hero" size="tall">
           <div className="site-hero">
             <div className="site-hero__copy">
-              <div className="site-brandlockup">
-                <NaniSoftLogo size={40} />
-                <span className="site-brandlockup__name">NaniSoft</span>
-              </div>
               <Heading as="h1" size="3xl" className="site-display">
                 {HERO.title}
               </Heading>
@@ -213,26 +185,7 @@ export default function Landing(): ReactElement {
               </div>
             </div>
 
-            <ul className="site-identity">
-              {IDENTITY.entries.map((entry) => {
-                const product = DIRECTORY.get(entry.id);
-                if (!product) return null;
-                return (
-                  <li key={entry.id} className="site-identity__row">
-                      <a href={product.href} className="site-identity__link">
-                        <ProductMark
-                          id={product.id}
-                          name={product.name}
-                          pack={markPack(entry.id)}
-                          mark={DRAWINGS[entry.id]}
-                          size="lg"
-                        />
-                        <span className="site-identity__role">{entry.role}</span>
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
+            <FamilyConstellation />
           </div>
         </Section>
 
@@ -338,13 +291,24 @@ export default function Landing(): ReactElement {
           </ul>
         </Section>
 
-        {/* The manifesto, set at the narrow measure and given the room a statement wants. */}
-        <Section className="site-band--tall">
-          <SectionHeading as="h2" align="left" title={PHILOSOPHY.label} className="mb-10" />
-          <Prose className="site-manifesto" size="lg">
-            <p>{PHILOSOPHY.manifesto}</p>
-          </Prose>
-        </Section>
+        {/* The manifesto, as the page's one editorial stop.
+
+            It used to be a heading over a narrow column of prose, which is the
+            right shape for a document and the wrong one for the page's only
+            statement. `MediaBand01` gives the statement a figure: a schematic of
+            the floor, six stations, one packet, and the products that come off
+            the end. The copy is on the muted surface rather than on the drawing,
+            so contrast is the design system's and not a guess about a picture. */}
+        <MediaBand01
+          headingLevel="h2"
+          size="tall"
+          tone="muted"
+          align="media-left"
+          title={PHILOSOPHY.label}
+          description={PHILOSOPHY.manifesto}
+          media={<EditorialFactory />}
+          caption="A schematic of the floor, not a photograph. Six stations, one packet, and the products that come off the end."
+        />
 
         {/* The closing band. Both actions are anchors, and that is the one rendered change
             the migration exists to make: the old page passed a destination to a component
