@@ -148,15 +148,11 @@ describe('the landing', () => {
       expect(container.querySelectorAll(`[data-slot="${slot}"]`).length, `no element carries data-slot="${slot}"`)
         .toBeGreaterThan(0);
     }
-    // The two decorative canvases this repository authored are deleted, not
-    // disabled. The one canvas on the page now is the design system's own
-    // living field behind the hero: its floor is server-rendered markup the
-    // loop only ever moves, so the claim the old canvas made is back as a
-    // package contract rather than as this page's client code.
-    for (const canvas of [...document.querySelectorAll('canvas')]) {
-      expect(canvas.getAttribute('data-slot')).toBe('particle-field-canvas');
-    }
-    expect(document.querySelector('[data-slot="particle-field-floor"]')).toBeTruthy();
+    // The page's own living medium is the tsParticles field, which this runner
+    // mocks away (its engine draws a canvas the jsdom environment cannot
+    // provide). With it mocked, the page authors no canvas of its own, so the
+    // old page's resolved-colour canvases stay gone rather than hidden.
+    expect(document.querySelectorAll('canvas').length).toBe(0);
   });
 
   it('links both calls to action as real links', () => {

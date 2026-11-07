@@ -106,7 +106,7 @@ const OWN_PAGES: readonly IndexEntry[] = [
     description:
       'NaniSoft builds the factory that builds software: Nexus, the Agent Factory, and the products it ships.',
     content:
-      'Nexus, the Agent Factory: orchestration, worker containers, and a human feedback loop. Atlas, digital twins. AlphaLens, market research for the Indian market. Prism, the shared design language. One language across everything: hairline structure, pastel packs, beam-dark, motion that never bounces.',
+      'Nexus, the Agent Factory: orchestration, worker containers, and a human feedback loop. Atlas, digital twins. AlphaLens, market research for the Indian market. Prism, the shared design language. One language across everything: hairline structure, pastel packs, a dark mode for every one of them, and motion that never bounces.',
   },
   {
     id: '/blog',

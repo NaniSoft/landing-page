@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 
 import { SiteFooter } from '@nanisoft/prism-ui/blocks/site-footer';
 import { SiteNavbar } from '@nanisoft/prism-ui/blocks/site-navbar';
+import { AlphaLensMark, AtlasMark, NexusMark, PrismMark } from '@nanisoft/prism-ui/components/product-marks';
 
 import { COPY, NAV, SITES } from '@/lib/bar';
 import { FOOTER_COLUMNS, FOOTER_LEGAL } from '@/lib/navigation';
@@ -63,6 +64,26 @@ export type SiteSection = '/about' | '/blog';
  */
 const PRODUCT = { ...SITE_PRODUCT, mark: <NaniSoftLogo className="site-product-mark" /> };
 
+/**
+ * The family's marks, as the bar's sites menu draws them.
+ *
+ * The directory in `lib/site.json` carries each product's id, name, pack and
+ * destination, and not its drawing: a JSON file cannot hold a React node. The
+ * drawings live here beside the mark this bar already draws for its own product,
+ * so the menu shows each member's own logo rather than the two-colour disc, and a
+ * reader recognises a destination by its sign before they read its name.
+ */
+const SITE_MARKS: Record<string, ReactNode> = {
+  www: <NaniSoftLogo className="site-product-mark" />,
+  nexus: <NexusMark className="site-product-mark" />,
+  atlas: <AtlasMark className="site-product-mark" />,
+  alphalens: <AlphaLensMark className="site-product-mark" />,
+  prism: <PrismMark className="site-product-mark" />,
+};
+
+/** The family, with each member's drawn mark attached to its directory entry. */
+const SITES_WITH_MARKS = SITES.map((site) => ({ ...site, mark: SITE_MARKS[site.id] }));
+
 export function SiteChrome({
   current,
   children,
@@ -82,7 +103,7 @@ export function SiteChrome({
         nav={NAV.map((link) => ({ ...link, current: current === link.href }))}
         sitesLabel={COPY.sites}
         currentSiteId={SITE_PRODUCT.id}
-        sites={SITES}
+        sites={SITES_WITH_MARKS}
         search={{
           indexUrl: '/api/search',
           label: COPY.search,
@@ -104,11 +125,15 @@ export function SiteChrome({
         about={
           // The one sentence a reader who reached the bottom has not been told
           // yet, and it is the site's own description of itself, so the foot
-          // and the metadata cannot disagree about what the company is.
-          <p className="site-footer-about">
-            NaniSoft is the AI-native software company whose products are built by its
-            own Agent Factory.
-          </p>
+          // and the metadata cannot disagree about what the company is. The
+          // tagline above it is the page's claim, in the ink of the brand.
+          <div className="site-footer-about">
+            <p className="site-footer-tagline">Software that builds software.</p>
+            <p>
+              NaniSoft is the AI-native software company whose products are built by its
+              own Agent Factory.
+            </p>
+          </div>
         }
         columns={FOOTER_COLUMNS}
         legal={FOOTER_LEGAL}

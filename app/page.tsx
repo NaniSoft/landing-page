@@ -4,10 +4,12 @@ import type { ReactElement } from 'react';
 import { AuroraWash } from '@nanisoft/prism-ui/components/aurora-wash';
 import { CtaLink } from '@nanisoft/prism-ui/components/cta-link';
 import { Diagram } from '@nanisoft/prism-ui/components/diagram';
-import { ParticleField } from '@nanisoft/prism-ui/components/particle-field';
+import { HeaderTransparency } from '@nanisoft/prism-ui/components/header-transparency';
+import { AlphaLensMark, AtlasMark, NexusMark } from '@nanisoft/prism-ui/components/product-marks';
 import { PulseGraph } from '@nanisoft/prism-ui/components/pulse-graph';
 import { Reveal } from '@nanisoft/prism-ui/components/reveal';
 import { Section, SectionHeading } from '@nanisoft/prism-ui/components/section';
+import { TsparticlesField } from '@nanisoft/prism-ui/components/tsparticles-field';
 import { Heading, Text } from '@nanisoft/prism-ui/components/typography';
 import { Cta01 } from '@nanisoft/prism-ui/blocks/cta-01';
 import { InstrumentPanel01 } from '@nanisoft/prism-ui/blocks/instrument-panel-01';
@@ -150,11 +152,55 @@ function markPack(productId: string) {
   return SITE_PRODUCTS.find((entry) => entry.id === productId)?.pack ?? null;
 }
 
+/**
+ * The three products' own marks, for the products band.
+ *
+ * The row already carried each product's pack, which `ProductMark` drew as a
+ * two-colour disc. The band now draws the product's own logo instead, so a
+ * reader meets the same sign they would meet on the product's own site, in the
+ * band, in the header menu and in the hero, rather than a disc in one place and
+ * a drawing in another.
+ */
+const PRODUCT_MARKS: Record<string, ReactElement> = {
+  nexus: <NexusMark className="site-product-mark" />,
+  atlas: <AtlasMark className="site-product-mark" />,
+  alphalens: <AlphaLensMark className="site-product-mark" />,
+};
+
+/**
+ * A section heading split for the spectrum ink.
+ *
+ * The hero carries its claim's tail in the design system's spectrum ink, and a
+ * section heading that shares the page with it carries its own tail the same
+ * way, so the page has one colourful type treatment rather than one at the top
+ * and none below. The leading text is the label with the tail removed, and the
+ * tail is the part the copy file names as the heading's own `spectrum`.
+ */
+function heading(label: string, spectrum: string) {
+  const leading = label.replace(spectrum, '').replace(/\s+$/, '');
+  return (
+    <>
+      {leading}{' '}
+      <span className="prism-text-spectrum">{spectrum}</span>
+    </>
+  );
+}
+
 export default function Landing(): ReactElement {
   return (
     <SiteChrome>
       <JsonLd data={JSON_LD} />
+      <HeaderTransparency />
       <>
+        {/* The page's one continuous ground: light and a moving medium, fixed
+            behind every section so the whole page reads as one surface rather
+            than as a hero and a set of separate bands. It is `aria-hidden`
+            because a medium is not information. */}
+        <div aria-hidden className="site-atmosphere">
+          <AuroraWash />
+          <TsparticlesField />
+        </div>
+
         {/* The thesis, the page's own h1, and the family it built.
 
             The right column is the family as one figure: the company at the
@@ -173,11 +219,7 @@ export default function Landing(): ReactElement {
             through it, both the design system's own and both complete at rest.
             The clip is the band's, so the wash and the field read as the page's
             own weather rather than as a picture behind it. */}
-        <Section data-slot="nanisoft-hero" size="tall" className="relative overflow-hidden">
-          <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-            <AuroraWash />
-            <ParticleField count={44} />
-          </div>
+        <Section data-slot="nanisoft-hero" size="tall">
           <div className="site-hero">
             <div className="site-hero__copy">
               <Heading as="h1" size="3xl" className="site-display">
@@ -220,7 +262,7 @@ export default function Landing(): ReactElement {
             reveal; the hero, the strip and the closing ask stay still. */}
         <Reveal>
         <Section id="pipeline">
-          <SectionHeading as="h2" align="left" title={PIPELINE.label} className="mb-10" />
+          <SectionHeading as="h2" align="left" title={heading(PIPELINE.label, PIPELINE.spectrum)} className="mb-10" />
           <div className="site-pipeline">
             <div className="site-pipeline__figure">
               <InstrumentPanel01
@@ -255,11 +297,12 @@ export default function Landing(): ReactElement {
             that carries one. */}
         <Reveal delay={1}>
         <ProductGrid01
-          title={PRODUCTS.label}
+          title={heading(PRODUCTS.label, PRODUCTS.spectrum)}
           products={PRODUCTS.rows.map((product) => ({
             id: product.id,
             name: product.name,
             pack: markPack(product.id),
+            mark: PRODUCT_MARKS[product.id],
             tagline: product.tagline,
             href: product.url,
           }))}
@@ -273,7 +316,7 @@ export default function Landing(): ReactElement {
             restyles all of them and a boundary above it would too. */}
         <Reveal>
         <Section>
-          <SectionHeading as="h2" align="left" title={ARCHITECTURE.label} className="mb-10" />
+          <SectionHeading as="h2" align="left" title={heading(ARCHITECTURE.label, ARCHITECTURE.spectrum)} className="mb-10" />
           <Diagram
             label={ARCHITECTURE.aria}
             nodes={ARCHITECTURE.nodes}
@@ -301,7 +344,7 @@ export default function Landing(): ReactElement {
             and it went. */}
         <Reveal delay={1}>
         <Section>
-          <SectionHeading as="h2" align="left" title={WHY.label} className="mb-10" />
+          <SectionHeading as="h2" align="left" title={heading(WHY.label, WHY.spectrum)} className="mb-10" />
           <ul className="site-pillars">
             {WHY.pillars.map((pillar) => (
               <li key={pillar.name} className="site-pillar" data-shape={pillar.shape}>
@@ -324,10 +367,11 @@ export default function Landing(): ReactElement {
         <Reveal>
         <MediaBand01
           headingLevel="h2"
+          className="site-media-band"
           size="tall"
           tone="muted"
           align="media-left"
-          title={PHILOSOPHY.label}
+          title={heading(PHILOSOPHY.label, PHILOSOPHY.spectrum)}
           description={PHILOSOPHY.manifesto}
           media={<EditorialFactory />}
           caption="A schematic of the floor, not a photograph. Six stations, one packet, and the products that come off the end."

@@ -1,6 +1,5 @@
 import { ProductMark } from '@nanisoft/prism-ui/components/product-mark'
-
-import { AlphaLensMark, AtlasMark, NexusMark, PrismMark } from '@/components/family-marks'
+import { AlphaLensMark, AtlasMark, NexusMark, PrismMark } from '@nanisoft/prism-ui/components/product-marks'
 import { NaniSoftLogo } from '@/components/logo'
 import { IDENTITY } from '@/lib/landing-content'
 import { PRODUCTS as DIRECTORY } from '@/lib/site'

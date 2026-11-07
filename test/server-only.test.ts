@@ -79,7 +79,6 @@ describe('the site has no client code', () => {
       'app/sitemap.ts',
       'components/editorial-factory.tsx',
       'components/family-constellation.tsx',
-      'components/family-marks.tsx',
       'components/json-ld.tsx',
       'components/logo.tsx',
       'components/post-date.tsx',
@@ -107,6 +106,7 @@ describe('the site has no client code', () => {
     // same tree; this test is here for the other half, which is the file list above. A
     // test that repeats the law's wording is a second copy of the law, and the failure
     // this programme exists to end is four copies of a sentence.
+    //
     const pattern = /getPropertyValue|getComputedStyle/;
     const offenders = files.filter((file) => pattern.test(readFileSync(file, 'utf8')));
     expect(offenders, `a runtime token read in ${offenders.join(', ')}`).toEqual([]);

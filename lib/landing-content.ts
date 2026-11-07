@@ -79,6 +79,8 @@ export const TICKER = [
 
 export const PIPELINE = {
   label: 'The pipeline: issue to release',
+  /** The tail of the heading, carried in the spectrum ink like the hero's. */
+  spectrum: 'issue to release',
   caption: 'One packet on the line is one issue becoming a reviewed change.',
   stages: [
     { name: 'Idea', caption: 'A GitHub issue arrives. That is the whole intake form.' },
@@ -129,6 +131,8 @@ export const PIPELINE_FIGURE = {
 
 export const PRODUCTS = {
   label: 'Products: all built by Nexus',
+  /** The tail of the heading, carried in the spectrum ink like the hero's. */
+  spectrum: 'all built by Nexus',
   rows: [
     {
       id: 'nexus',
@@ -184,6 +188,8 @@ const ARCHITECTURE_RELATIONS: DiagramRelation[] = [
 
 export const ARCHITECTURE = {
   label: 'Architecture: one engine, everything on it',
+  /** The tail of the heading, carried in the spectrum ink like the hero's. */
+  spectrum: 'one engine, everything on it',
   caption:
     'Prism is the language they all wear. Nexus is the engine that builds them. Peach is reserved for what the factory builds next.',
   aria: 'NaniSoft architecture: Prism, the shared language, feeds Nexus; Nexus builds Atlas and AlphaLens; both point at future products.',
@@ -212,6 +218,8 @@ export const ARCHITECTURE = {
  */
 export const WHY = {
   label: 'Why Nanisoft',
+  /** The brand name, carried in the spectrum ink like the hero's. */
+  spectrum: 'Nanisoft',
   pillars: [
     {
       shape: 'band',
@@ -233,6 +241,8 @@ export const WHY = {
 
 export const PHILOSOPHY = {
   label: 'What we believe.',
+  /** The verb, carried in the spectrum ink like the hero's. */
+  spectrum: 'believe.',
   manifesto:
     'Every product NaniSoft ships is built by Nexus. Atlas, AlphaLens and Prism are not case studies, they are output. If the factory cannot build it, we do not ship it.',
 } as const;
