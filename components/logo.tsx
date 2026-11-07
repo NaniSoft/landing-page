@@ -11,7 +11,13 @@ import type { ReactElement } from 'react';
  * mirror marks on one grid. A logo that named a hex would be the one element on
  * the page a theme could not reach.
  */
-export function NaniSoftLogo({ size = 24 }: { size?: number }): ReactElement {
+export function NaniSoftLogo({
+  size = 24,
+  className,
+}: {
+  size?: number;
+  className?: string;
+}): ReactElement {
   return (
     <svg
       viewBox="0 0 32 32"
@@ -20,7 +26,7 @@ export function NaniSoftLogo({ size = 24 }: { size?: number }): ReactElement {
       fill="none"
       role="img"
       aria-label="NaniSoft"
-      className="site-logo"
+      className={className ? `site-logo ${className}` : 'site-logo'}
     >
       <g strokeLinecap="round" strokeWidth="2.5">
         <path d="M4 8 L17 14" className="site-logo__ray-1" />

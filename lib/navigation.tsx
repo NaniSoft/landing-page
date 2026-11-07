@@ -72,13 +72,13 @@ export const FOOTER_COLUMNS: readonly SiteFooterColumn[] = [
  *
  * Prism's footer takes a `legal` slot precisely because a year is a fact about one
  * product on one day and a Block that held it would be a Block that went stale in
- * January. So this slot carries no copyright year: it carries the two sentences that
+ * January. So the copyright carries no year, and the rest is the two sentences that
  * are true on every page and that a reader who reached the bottom of a company landing
- * has not been told yet, which product set exists and that the factory builds it. A
- * copyright line belongs here too and is the consumer's to add.
+ * has not been told yet, which product set exists and that the factory builds it.
  */
 export const FOOTER_LEGAL = (
   <>
+    <p>© NaniSoft.</p>
     <p>NaniSoft builds five sites and one design language.</p>
     <p>Every product on nanisoft.com is built by Nexus, the Agent Factory.</p>
   </>

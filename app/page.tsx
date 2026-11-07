@@ -28,6 +28,7 @@ import {
 } from '@/lib/landing-content';
 import { JsonLd } from '@/components/json-ld';
 import { NaniSoftLogo } from '@/components/logo';
+import { AlphaLensMark, AtlasMark, NexusMark, PrismMark } from '@/components/family-marks';
 import { SiteChrome } from '@/components/site-chrome';
 import { PRODUCTS as SITE_PRODUCTS } from '@/lib/site';
 
@@ -122,7 +123,7 @@ const JSON_LD = {
  *
  * **One region carries a second pack in the hero, one in the products band, and both
  * are in `scripts/pack-map.json`.** Every one of those boundaries lands on a
- * `ProductMark`, which is a fully rounded disc, and nowhere else. That is not a site
+ * `ProductMark`, and nowhere else. That is not a site
  * decision: the pack-boundary law in `@nanisoft/prism-ui/gates` refuses a boundary on
  * anything else, so a mark is the one element on this site that can wear a colour
  * other than the ground's. It is also why this is the most colour the page can honestly
@@ -151,6 +152,23 @@ function markPack(productId: string) {
 /** The directory keyed by id, so a mark and the directory cannot disagree about it. */
 const DIRECTORY = new Map(SITE_PRODUCTS.map((product) => [product.id, product]));
 
+/**
+ * Each member's own drawing, keyed the way the directory is keyed.
+ *
+ * The hero lists the family, and a list of members is a list of signs: every
+ * row draws the mark the member's own site draws, under the pack boundary the
+ * directory holds for it, so the accent a reader sees here is the accent they
+ * arrive at. The drawings are this site's copies of the family's marks, held
+ * in one file beside the note that says where each one is owned.
+ */
+const DRAWINGS: Record<string, ReactElement> = {
+  www: <NaniSoftLogo className="site-product-mark" />,
+  nexus: <NexusMark className="site-product-mark" />,
+  atlas: <AtlasMark className="site-product-mark" />,
+  alphalens: <AlphaLensMark className="site-product-mark" />,
+  prism: <PrismMark className="site-product-mark" />,
+};
+
 export default function Landing(): ReactElement {
   return (
     <SiteChrome>
@@ -166,11 +184,12 @@ export default function Landing(): ReactElement {
             search result or a shared card meets the sign above the door.
 
             The right column is the product set, one mark per member at the largest size a
-            mark is drawn at. Four are a product in a pastel of its own, this site wears
-            the ground, and Prism is drawn as the spectrum because it owns no pack. It is
-            the visual the page was missing and it is also the only legal one: a
-            `data-pack` boundary lands on a mark and nowhere else, so this column is the
-            most colour the page can have without breaking the design system's law. */}
+            mark is drawn at, and each member wears its own drawing now rather than the
+            disc a hue is drawn as: the loop, the twin, the lens, the refraction, and the
+            convergence mark this site signs with. The pack boundary still lands on the
+            mark and nowhere else, so each drawing's accent is its own pack's primary,
+            and this column remains the most colour the page can have without breaking
+            the design system's law. */}
         <Section data-slot="nanisoft-hero" className="site-band--tall">
           <div className="site-hero">
             <div className="site-hero__copy">
@@ -200,9 +219,15 @@ export default function Landing(): ReactElement {
                 if (!product) return null;
                 return (
                   <li key={entry.id} className="site-identity__row">
-                    <a href={product.href} className="site-identity__link">
-                      <ProductMark id={product.id} name={product.name} pack={markPack(entry.id)} size="lg" />
-                      <span className="site-identity__role">{entry.role}</span>
+                      <a href={product.href} className="site-identity__link">
+                        <ProductMark
+                          id={product.id}
+                          name={product.name}
+                          pack={markPack(entry.id)}
+                          mark={DRAWINGS[entry.id]}
+                          size="lg"
+                        />
+                        <span className="site-identity__role">{entry.role}</span>
                     </a>
                   </li>
                 );

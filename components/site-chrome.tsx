@@ -6,6 +6,7 @@ import { SiteNavbar } from '@nanisoft/prism-ui/blocks/site-navbar';
 import { COPY, NAV, SITES } from '@/lib/bar';
 import { FOOTER_COLUMNS, FOOTER_LEGAL } from '@/lib/navigation';
 import { DEFAULT_MODE, GROUND_PACK, SITE_PRODUCT } from '@/lib/site';
+import { NaniSoftLogo } from '@/components/logo';
 
 /**
  * The chrome, in one place, and the reason it is not in the root layout.
@@ -53,6 +54,15 @@ import { DEFAULT_MODE, GROUND_PACK, SITE_PRODUCT } from '@/lib/site';
  */
 export type SiteSection = '/about' | '/blog';
 
+/*
+ * The product, as the chrome draws it: the same three facts the bar and the
+ * footer have always read, plus the drawing. The mark is the company's own
+ * convergence mark, and it is the sign in the row, in the mobile panel and at
+ * the foot of the page from this one fact, so a reader meets one sign three
+ * times rather than a disc twice and a drawing once.
+ */
+const PRODUCT = { ...SITE_PRODUCT, mark: <NaniSoftLogo className="site-product-mark" /> };
+
 export function SiteChrome({
   current,
   children,
@@ -64,7 +74,7 @@ export function SiteChrome({
   return (
     <>
       <SiteNavbar
-        product={SITE_PRODUCT}
+        product={PRODUCT}
         defaultPack={GROUND_PACK}
         defaultMode={DEFAULT_MODE}
         navLabel={COPY.nav}
@@ -89,7 +99,20 @@ export function SiteChrome({
         mode={{ lightLabel: COPY.toDark, darkLabel: COPY.toLight }}
       />
       <main className="site-main">{children}</main>
-      <SiteFooter product={SITE_PRODUCT} columns={FOOTER_COLUMNS} legal={FOOTER_LEGAL} />
+      <SiteFooter
+        product={PRODUCT}
+        about={
+          // The one sentence a reader who reached the bottom has not been told
+          // yet, and it is the site's own description of itself, so the foot
+          // and the metadata cannot disagree about what the company is.
+          <p className="site-footer-about">
+            NaniSoft is the AI-native software company whose products are built by its
+            own Agent Factory.
+          </p>
+        }
+        columns={FOOTER_COLUMNS}
+        legal={FOOTER_LEGAL}
+      />
     </>
   );
 }

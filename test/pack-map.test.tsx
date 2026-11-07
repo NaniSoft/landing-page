@@ -119,9 +119,13 @@ describe('the pack map', () => {
     for (const boundary of container.querySelectorAll('[data-pack]')) {
       expect(boundary.getAttribute('data-slot'), 'a boundary sits on something that is not a mark').toBe(MARK_SLOT);
       // The shape the boundary may not change: the disc is fully rounded, and the
-      // element carrying the boundary has no radius utility of its own.
+      // element carrying the boundary has no radius utility of its own. A member
+      // whose identity is a drawing rather than a hue has a drawn slot instead of
+      // a disc, and the drawing fills the slot the disc would have filled.
       const disc = boundary.querySelector('[data-slot="product-mark-disc"]');
-      expect(disc?.getAttribute('class')).toContain('rounded-full');
+      const drawn = boundary.querySelector('[data-slot="product-mark-drawn"]');
+      expect(disc ?? drawn, 'a mark with no drawn slot and no disc').toBeTruthy();
+      if (disc) expect(disc.getAttribute('class')).toContain('rounded-full');
       expect(boundary.getAttribute('class') ?? '').not.toMatch(/\brounded-(?!full\b)/);
     }
   });

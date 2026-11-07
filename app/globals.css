@@ -177,6 +177,48 @@ body {
 }
 
 /*
+ * The family's accents, for the drawings the hero lists. Each member's mark
+ * reads the pack its own boundary carries, so these are the same three rules
+ * every member site holds for its own mark, and the accent a reader sees in
+ * this list is the accent they arrive at.
+ */
+.site-logo__accent {
+  fill: var(--primary);
+}
+
+.site-logo__accent-stroke {
+  stroke: var(--primary);
+}
+
+.site-logo__point {
+  fill: var(--brand-ink);
+}
+
+/*
+ * The drawing inside the mark's slot. `ProductMark` draws a member's own logo
+ * in the sized slot the disc occupied, so the drawing is one node that fills
+ * its box and arrives at every drawn size: sixteen pixels in a bar, twenty-four
+ * in the hero's list and at the foot of a page.
+ */
+.site-product-mark {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/*
+ * The footer's word under the mark. The Block renders `about` with no colour of
+ * its own, because muted text is this site's decision about its own copy.
+ */
+.site-footer-about {
+  max-width: 46ch;
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+/*
  * The hero's brand lockup: the mark and the word it belongs to, at the top of
  * the copy column. A lockup is furniture, not an eyebrow, so it carries a rule
  * and a weight of its own rather than the chip treatment a label gets.
