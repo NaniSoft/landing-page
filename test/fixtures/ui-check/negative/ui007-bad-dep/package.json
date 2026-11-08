@@ -1,0 +1,8 @@
+{
+  "name": "fixture",
+  "private": true,
+  "dependencies": {
+    "tailwindcss": "^4.0.0",
+    "@nanisoft/prism-ui": "1.7.0"
+  }
+}

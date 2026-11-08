@@ -1,0 +1,84 @@
+{
+  "$comment": [
+    "Zero-custom-UI governance config for `pnpm ui:check`. This is data, not law:",
+    "the gate codes and their meaning live in scripts/ui-check.mjs and",
+    "docs/UI_GOVERNANCE.md. An exception is only valid with id, gate, file/pattern,",
+    "reason, owner, expires (ISO date), and limited scope. Expired or ownerless",
+    "exceptions fail UI008-style validation (reported as UI-EXCEPTION).",
+    "The one permitted styling entry point is @nanisoft/prism-ui/styles.css,",
+    "imported once in app/layout.tsx. app/globals.css is the single governed",
+    "site sheet (Mission 3 exception EX-001) and may only use DS tokens."
+  ],
+  "designSystem": "@nanisoft/prism-ui",
+  "designSystemVersion": "1.7.0",
+  "permittedStylesheet": "app/globals.css",
+  "permittedStylesheetImport": "@nanisoft/prism-ui/styles.css",
+  "sourceRoots": [
+    "app",
+    "components",
+    "lib",
+    "content"
+  ],
+  "assetManifest": "scripts/asset-manifest.json",
+  "dsAssetManifest": "node_modules/@nanisoft/prism-ui/dist/assets/manifest.json",
+  "allowedImports": [
+    "@nanisoft/prism-ui",
+    "next",
+    "react",
+    "react-dom",
+    "fumadocs-core",
+    "fumadocs-mdx",
+    "zod",
+    "node:",
+    "@/"
+  ],
+  "bannedImportSubstrings": [
+    "lucide-react",
+    "@mui/",
+    "chakra",
+    "antd",
+    "@ant-design",
+    "bootstrap",
+    "styled-components",
+    "@emotion/",
+    "jss",
+    "tailwindcss",
+    "sass",
+    "less",
+    "stylus"
+  ],
+  "bannedDirectDependencies": [
+    "tailwindcss",
+    "styled-components",
+    "@emotion/react",
+    "@emotion/styled",
+    "bootstrap",
+    "sass",
+    "node-sass",
+    "less",
+    "stylus",
+    "jss",
+    "postcss"
+  ],
+  "allowedBreakpointsRem": [
+    30,
+    40,
+    48,
+    63.9375,
+    64
+  ],
+  "allowedCssVariables": [
+    "--site-measure"
+  ],
+  "allowedFormats": [
+    "png",
+    "webp",
+    "avif",
+    "svg",
+    "ico",
+    "woff2",
+    "mp4",
+    "webm"
+  ],
+  "exceptions": []
+}

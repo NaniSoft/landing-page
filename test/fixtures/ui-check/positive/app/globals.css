@@ -1,0 +1,2 @@
+.site-good { color: var(--foreground); font-family: var(--font-sans); background-color: var(--background); }
+@media (min-width: 64rem) { .site-good { display: flex; } }

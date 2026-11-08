@@ -7,7 +7,7 @@ Part of the [NaniSoft](https://www.nanisoft.com) web platform — five sites, on
 - **Live**: https://www.nanisoft.com, with the apex https://nanisoft.com — both Cloudflare Custom Domains on the `nanisoft-www` Worker, which serves this static export
 - **Pack**: `sky` is the ground, on the document element, and it does not change. Two regions of a page carry a pack that is not the ground, and both are rows of marks: the hero's identity column and the products section. Four products own four pastels, this site wears the ground, and Prism owns none because `prism.nanisoft.com` renders with no `data-pack` at all, so its mark is drawn as the full spectrum. The bar's family of five is a menu rather than a row of marks, and a closed menu paints nothing, so the third region this map used to declare is gone: a reader at first paint sees one ground and the second packs reach them when they ask to leave. That is the whole layering, `peach` is the one published pack no product claims, and `scripts/pack-map.json` is the map and the pack-boundary gate in `@nanisoft/prism-ui/gates` is the gate, checked in both light and dark mode
 - **Stack**: Next 16 static export · fumadocs-mdx · pnpm · TypeScript strict · oxlint · Vitest (jsdom + Testing Library) · Cloudflare Workers
-- **Chrome and every section**: [@nanisoft/prism-ui](https://www.npmjs.com/package/@nanisoft/prism-ui) 1.2.0, pinned exactly. It brings the token package at the exact version it was released against, so this repository declares one first-party dependency and cannot be handed a mismatched pair. This repository authors no client module: every page is a server component, so the only JavaScript this site ships is the bar's own controls, and those are client components inside the pinned package rather than a boundary drawn here
+- **Chrome and every section**: [@nanisoft/prism-ui](https://www.npmjs.com/package/@nanisoft/prism-ui) 1.7.1, pinned exactly. It brings the token package at the exact version it was released against, so this repository declares one first-party dependency and cannot be handed a mismatched pair. This repository authors no client module: every page is a server component, so the only JavaScript this site ships is the bar's own controls, and those are client components inside the pinned package rather than a boundary drawn here
 
 ## What ships
 
@@ -86,6 +86,8 @@ pnpm build        # static export to out/
 pnpm lint         # oxlint
 pnpm typecheck    # next typegen && tsc --noEmit
 pnpm test         # vitest
+pnpm ui:check     # UI/asset governance gates (UI001–UI012, ASSET001–ASSET014); see docs/UI_GOVERNANCE.md
+pnpm ui:runtime   # production artifact gates on out/; run after pnpm build
 pnpm check        # the consumer gate kit; run after pnpm build
 ```
 

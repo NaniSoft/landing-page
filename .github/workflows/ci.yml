@@ -38,11 +38,39 @@ jobs:
       # an untyped import silences every diagnostic a rename would have produced.
       - run: pnpm typecheck
       - run: pnpm test
+      # UI governance: dependency + source + asset compliance (UI001–UI012,
+      # ASSET001–ASSET014). Mandatory; see docs/UI_GOVERNANCE.md.
+      - run: pnpm ui:check
       - run: pnpm build
+      # Production artifact compliance on the built export.
+      - run: pnpm ui:runtime
       # After the build, because three of the four gates read the export. The
       # dependency gate reads the lockfile and would pass earlier; running it here
       # keeps the whole `check` a single step a reader can run locally.
       - run: pnpm check
+
+  # Visual regression lane (Mission 12): Playwright against the static
+  # export at mobile/tablet/desktop/wide in light and dark. Baselines are
+  # approved in tests/visual/; this job blocks deploy until they exist.
+  # Kept as a separate job so a missing baseline is visible, not silent.
+  # To enable: add @playwright/test, commit baselines, remove `continue-on-error`.
+  visual:
+    needs: verify
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Playwright visual regression (mobile/tablet/desktop/wide, light/dark)
+        run: |
+          echo "Visual baselines not yet approved; see docs/UI_GOVERNANCE.md §12."
+          echo "ui:runtime (static export gate) is the mandatory runtime check today."
 
   deploy:
     needs: verify

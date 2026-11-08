@@ -1,0 +1,2 @@
+:root { --my-colour: red; }
+.bad { color: var(--my-colour); }

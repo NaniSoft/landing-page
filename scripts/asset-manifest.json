@@ -1,0 +1,71 @@
+{
+  "$comment": [
+    "Application-owned content assets, registered for ASSET004. Centrally owned",
+    "assets (fonts, product marks, DS components) come from @nanisoft/prism-ui",
+    "and its manifest (@nanisoft/prism-ui/assets/manifest.json); this file lists",
+    "only what this repository authors. Every entry names its file or component,",
+    "its variant/role, its intrinsic size where raster, and its budget. An entry",
+    "with `exception` is a governed svg-component: registered, sanitized by",
+    "ASSET007, and theme-aware through tokens/currentColor rather than fixed hex.",
+    "User-uploaded / external images are not committed here; they must use DSImage",
+    "with variant + width/height and pass validateRasterSize (ASSET013)."
+  ],
+  "version": 1,
+  "assets": [
+    {
+      "id": "logo-nanisoft",
+      "path": "components/logo.tsx",
+      "category": "logo",
+      "format": "svg-component",
+      "allowedVariants": ["logo"],
+      "themeAware": true,
+      "budgetKiB": 50,
+      "role": "brand-logo",
+      "license": "NaniSoft proprietary",
+      "alt": "NaniSoft",
+      "exception": "Brand convergence mark. DSLogo takes an image src; this mark is a theme-aware svg-component (chart tokens + currentColor) so a pack/mode cascade repaints it. Registered here per Mission 9 for complex SVG assets; sanitized by ASSET007 (no script/foreignObject/handlers)."
+    },
+    {
+      "id": "illustration-editorial-factory",
+      "path": "components/editorial-factory.tsx",
+      "category": "illustration",
+      "format": "svg-component",
+      "allowedVariants": ["illustration"],
+      "themeAware": true,
+      "budgetKiB": 50,
+      "role": "complex-diagram",
+      "license": "NaniSoft proprietary",
+      "alt": "",
+      "exception": "Editorial schematic (1200x675 viewBox, asset-defined ratio). Decorative (aria-hidden); MediaBand01 caption carries meaning. Migrating to DSIllustration needs the drawing emitted as a static .svg file upstream; requested as DS capability, see docs/UI_GOVERNANCE.md."
+    },
+    {
+      "id": "diagram-family-constellation",
+      "path": "components/family-constellation.tsx",
+      "category": "illustration",
+      "format": "svg-component",
+      "allowedVariants": ["illustration"],
+      "themeAware": true,
+      "budgetKiB": 50,
+      "role": "complex-diagram",
+      "license": "NaniSoft proprietary",
+      "alt": "",
+      "exception": "Interactive constellation: orbit SVG plus five ProductMark links. Not a static image; it is domain composition of DS ProductMark components. The orbit SVG is the registered complex-diagram asset; links/marks are DS components, not raw media."
+    },
+    {
+      "id": "og-image-nanisoft",
+      "path": "app/opengraph-image.tsx",
+      "category": "image",
+      "format": "png",
+      "intrinsicWidth": 1200,
+      "intrinsicHeight": 630,
+      "aspectRatio": "40 / 21",
+      "allowedVariants": ["banner"],
+      "themeAware": false,
+      "budgetKiB": 300,
+      "role": "content",
+      "license": "NaniSoft proprietary",
+      "alt": "NaniSoft, software that builds software.",
+      "exception": "next/og ImageResponse bitmap (1200x630). No cascade, no DS styles, no tokens at paint time; fixed hex are the dark-sky theme values written as literals, and inline style is the og renderer's only layout API. Not DOM media; excluded from DSImage/ASSET001 by path in ui-check.config.json."
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "$comment": [
+    "Zero-custom-UI governance config for `pnpm ui:check`. This is data, not law:",
+    "the gate codes and their meaning live in scripts/ui-check.mjs and",
+    "docs/UI_GOVERNANCE.md. An exception is only valid with id, gate, file/pattern,",
+    "reason, owner, expires (ISO date), and limited scope. Expired or ownerless",
+    "exceptions fail UI008-style validation (reported as UI-EXCEPTION).",
+    "The one permitted styling entry point is @nanisoft/prism-ui/styles.css,",
+    "imported once in app/layout.tsx. app/globals.css is the single governed",
+    "site sheet (Mission 3 exception EX-001) and may only use DS tokens."
+  ],
+  "designSystem": "@nanisoft/prism-ui",
+  "designSystemVersion": "1.7.1",
+  "permittedStylesheet": "app/globals.css",
+  "permittedStylesheetImport": "@nanisoft/prism-ui/styles.css",
+  "sourceRoots": ["app", "components", "lib", "content"],
+  "assetManifest": "scripts/asset-manifest.json",
+  "dsAssetManifest": "node_modules/@nanisoft/prism-ui/dist/assets/manifest.json",
+  "allowedImports": [
+    "@nanisoft/prism-ui",
+    "next",
+    "react",
+    "react-dom",
+    "fumadocs-core",
+    "fumadocs-mdx",
+    "zod",
+    "node:",
+    "@/"
+  ],
+  "bannedImportSubstrings": [
+    "lucide-react",
+    "@mui/",
+    "chakra",
+    "antd",
+    "@ant-design",
+    "bootstrap",
+    "styled-components",
+    "@emotion/",
+    "jss",
+    "tailwindcss",
+    "sass",
+    "less",
+    "stylus"
+  ],
+  "bannedDirectDependencies": [
+    "tailwindcss",
+    "styled-components",
+    "@emotion/react",
+    "@emotion/styled",
+    "bootstrap",
+    "sass",
+    "node-sass",
+    "less",
+    "stylus",
+    "jss",
+    "postcss"
+  ],
+  "allowedBreakpointsRem": [30, 40, 48, 63.9375, 64],
+  "allowedCssVariables": ["--site-measure"],
+  "allowedFormats": ["png", "webp", "avif", "svg", "ico", "woff2", "mp4", "webm"],
+  "exceptions": [
+    {
+      "id": "EX-001",
+      "gate": "UI001",
+      "file": "app/globals.css",
+      "reason": "Governed site sheet: consumer cannot write Prism utilities (no Tailwind in consumer), so bands the catalogue does not ship (hero, pipeline, pillars, blog index) are site classes using only DS tokens. Enforced by prism-gates stylesheet-ownership + token-read and by ui:check UI003/UI006/UI009/UI011. Removal requires DS to ship these layout primitives; requested, see docs/UI_GOVERNANCE.md.",
+      "owner": "frontend-platform",
+      "expires": "2027-05-08",
+      "scope": "app/globals.css only; no other stylesheet may be added"
+    },
+    {
+      "id": "EX-002",
+      "gate": "UI002",
+      "file": "app/opengraph-image.tsx",
+      "reason": "next/og ImageResponse paints a bitmap; inline style is its only layout API and there is no cascade/DOM stylesheet. Fixed hex are dark-sky theme literals for the card.",
+      "owner": "frontend-platform",
+      "expires": "2027-05-08",
+      "scope": "app/opengraph-image.tsx only"
+    },
+    {
+      "id": "EX-003",
+      "gate": "UI002",
+      "file": "components/editorial-factory.tsx",
+      "reason": "Sets --ambient-travel-distance (812px) for the DS prism-ambient-travel animation on one SVG rect. Animation distance is asset-defined, not a colour/typography token.",
+      "owner": "frontend-platform",
+      "expires": "2027-05-08",
+      "scope": "single CSS custom property on the packet rect"
+    },
+    {
+      "id": "EX-004",
+      "gate": "UI002",
+      "file": "components/family-constellation.tsx",
+      "reason": "SVG transformOrigin 200px 200px so the DS prism-ambient-pulse scales around the constellation centre. SVG geometry, not page styling.",
+      "owner": "frontend-platform",
+      "expires": "2027-05-08",
+      "scope": "single transformOrigin on the orbit circle"
+    },
+    {
+      "id": "EX-005",
+      "gate": "UI003",
+      "file": "app/opengraph-image.tsx",
+      "reason": "Bitmap card in dark-sky theme values as literals; no token cascade exists in og renderer. See asset-manifest og-image-nanisoft.",
+      "owner": "frontend-platform",
+      "expires": "2027-05-08",
+      "scope": "app/opengraph-image.tsx only"
+    },
+    {
+      "id": "EX-006",
+      "gate": "UI006",
+      "file": "app/globals.css",
+      "reason": "--site-measure aliases DS --container-measure so a future DS measure change is one token. Declared as a name, not a value.",
+      "owner": "frontend-platform",
+      "expires": "2027-05-08",
+      "scope": "--site-measure only"
+    },
+    {
+      "id": "EX-007",
+      "gate": "UI008",
+      "file": "app/page.tsx",
+      "reason": "Heading size=3xl with site-display (display step catalogue has no token for), SectionHeading with mb-10 (DS utility Prism itself uses), MediaBand01 with site-media-band, ProductMark marks with site-product-mark (fill drawn slot). All composition, not visual overrides of DS internals.",
+      "owner": "frontend-platform",
+      "expires": "2027-05-08",
+      "scope": "app/page.tsx className on DS components listed in ui-check.mjs allowlist"
+    },
+    {
+      "id": "EX-008",
+      "gate": "UI011",
+      "file": "app/globals.css",
+      "reason": "Breakpoints 30rem (CTA row / ledger single-column), 40rem (sm), 48rem (md), 63.9375rem/64rem (lg-1px/lg) are DS breakpoint scale. 30rem is the one non-scale width, needed so CTA labels never wrap at desktop.",
+      "owner": "frontend-platform",
+      "expires": "2027-05-08",
+      "scope": "app/globals.css @media only, values in allowedBreakpointsRem"
+    },
+    {
+      "id": "EX-009",
+      "gate": "ASSET001",
+      "file": "app/opengraph-image.tsx",
+      "reason": "Raw <img> inside ImageResponse for the embedded mark data-URI; og renderer has no DSImage. Not DOM page media.",
+      "owner": "frontend-platform",
+      "expires": "2027-05-08",
+      "scope": "app/opengraph-image.tsx only"
+    },
+    {
+      "id": "EX-010",
+      "gate": "ASSET008",
+      "file": "components/logo.tsx",
+      "reason": "Registered svg-component brand logo (asset-manifest logo-nanisoft). DSLogo requires image src; theme-aware svg-component preserves pack/mode cascade.",
+      "owner": "frontend-platform",
+      "expires": "2027-05-08",
+      "scope": "components/logo.tsx only"
+    },
+    {
+      "id": "EX-011",
+      "gate": "ASSET008",
+      "file": "components/editorial-factory.tsx",
+      "reason": "Registered svg-component illustration (asset-manifest illustration-editorial-factory). DSIllustration requires static src file; extraction requested upstream.",
+      "owner": "frontend-platform",
+      "expires": "2027-05-08",
+      "scope": "components/editorial-factory.tsx only"
+    },
+    {
+      "id": "EX-012",
+      "gate": "ASSET008",
+      "file": "components/family-constellation.tsx",
+      "reason": "Registered complex-diagram (asset-manifest diagram-family-constellation): orbit SVG composing DS ProductMark links. Not a UI icon.",
+      "owner": "frontend-platform",
+      "expires": "2027-05-08",
+      "scope": "components/family-constellation.tsx orbit svg only"
+    },
+    {
+      "id": "EX-013",
+      "gate": "ASSET002",
+      "file": "app/opengraph-image.tsx",
+      "reason": "Og mark <img> width/height 120 are intrinsic size for the bitmap renderer, not rendered page dimensions. Same bitmap exception as EX-009.",
+      "owner": "frontend-platform",
+      "expires": "2027-05-08",
+      "scope": "app/opengraph-image.tsx only"
+    }
+  ]
+}
