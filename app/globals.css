@@ -125,59 +125,71 @@ body {
 /* ---------- the mark, as the page draws it ---------- */
 
 /*
- * The company mark is a site-authored drawing in currentColor, so it follows
- * the ink it sits beside through the cascade. The three rays are the theme's
- * own chart hues, read as variables rather than resolved values: the one thing
- * the mark says is that the family's three products converge into one ink, and
- * the hues converging have to follow the theme like every other fill on the
- * page.
- */
-.site-logo {
-  display: block;
-  flex: none;
-  color: var(--foreground);
-}
-
-.site-logo__ray-1 {
-  stroke: var(--chart-1);
-}
-
-.site-logo__ray-2 {
-  stroke: var(--chart-2);
-}
-
-.site-logo__ray-3 {
-  stroke: var(--chart-3);
-}
-
-/*
- * The family's accents, for the drawings the hero lists. Each member's mark
- * reads the pack its own boundary carries, so these are the same three rules
- * every member site holds for its own mark, and the accent a reader sees in
- * this list is the accent they arrive at.
- */
-.site-logo__accent {
-  fill: var(--primary);
-}
-
-.site-logo__accent-stroke {
-  stroke: var(--primary);
-}
-
-.site-logo__point {
-  fill: var(--brand-ink);
-}
-
-/*
  * The drawing inside the mark's slot. `ProductMark` draws a member's own logo
  * in the sized slot the disc occupied, so the drawing is one node that fills
  * its box and arrives at every drawn size: sixteen pixels in a bar, twenty-four
- * in the hero's list and at the foot of a page.
+ * in the hero's list and at the foot of a page. The drawings themselves are the
+ * package's five, so the strokes and fills inside them are the package's
+ * `prism-mark__*` rules and this sheet holds none of the mark's ink.
  */
 .site-product-mark {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+/* ---------- the editorial figure's surfaces, on the veil ladder ---------- */
+
+/*
+ * Every translucent surface in the factory schematic names a rung of the `veil`
+ * scale rather than an alpha of its own, and it names it as a site class rather
+ * than a utility because a consumer cannot write a Prism utility: a utility
+ * exists in the emitted sheet only if a Prism component uses it, and the figure
+ * once named washes with utilities no Prism component drew, so they matched
+ * nothing and the stations they filled rendered as empty air.
+ *
+ * The rungs are roles, so each surface reads its own: the gantry wash and the
+ * readout lines fade to `faint`, the stations are a `whisper`, the products and
+ * the dashed orbits sit at `light`, and the conveyor stops are a full `--primary`
+ * because a signal dot is ink rather than a surface and the design system's own
+ * figures draw their moving parts at full ink. The rung values reach CSS as
+ * percentages because an alpha reaches it through the colour, and a retune of
+ * the ladder reaches every one of these at once.
+ */
+.site-factory__wash {
+  fill: rgb(from var(--foreground) r g b / var(--veil-faint));
+}
+
+.site-factory__station {
+  fill: rgb(from var(--foreground) r g b / var(--veil-whisper));
+}
+
+.site-factory__readout {
+  fill: rgb(from var(--foreground) r g b / var(--veil-faint));
+}
+
+.site-factory__stops {
+  fill: var(--primary);
+}
+
+.site-factory__products {
+  fill: rgb(from var(--foreground) r g b / var(--veil-light));
+}
+
+.site-factory__orbits {
+  stroke: rgb(from var(--foreground) r g b / var(--veil-light));
+}
+
+/*
+ * The central ring of the constellation, in the pack's primary. The ring pulses
+ * on the ambient cycle, and the ink it pulses in is the ground's own signal
+ * colour: the factory route from the company to each product is the one stroke
+ * on the figure that is not a hairline. A site class rather than a `stroke-*`
+ * utility, for the same reason as the figure above: the utility exists only
+ * where a Prism component already drew it.
+ */
+.site-constellation__pulse {
+  stroke: var(--primary);
 }
 
 /*

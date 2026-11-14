@@ -1,6 +1,6 @@
 # UI Governance — Zero-Custom-UI, Zero-Custom-Styling and Asset Governance
 
-**Design system**: `@nanisoft/prism-ui` **1.7.1** (pinned exactly, `package.json`).
+**Design system**: `@nanisoft/prism-ui` **1.8.0** (pinned exactly, `package.json`).
 The mission's `@company/ui` is this package under its real name; there is no
 alias and no monorepo source import. Every visual component is imported from
 the published subpaths (`/components/*`, `/blocks/*`, `/pages/*`, `/theming`,
@@ -40,29 +40,36 @@ every stylesheet; `package.json` + lockfile graph read; built-export parse.
 | Colours / spacing / radii | All via `var(--*)` DS tokens; radii only `calc(var(--radius) * 0.8)` or `0`; spacing via `var(--spacing-*)` | Compliant (prism-gates `token-read` + `stylesheet-ownership` also pass). |
 | Responsive | 11 `@media` in globals.css: 30rem, 40rem, 48rem, 63.9375rem, 64rem | DS scale (40/48/64) + 30rem exception EX-008. |
 | Custom CSS variables | `--site-measure: var(--container-measure)` in `:root` | EX-006 (alias, not a value). |
-| UI components | All pages compose DS Blocks/Components/Pages: `SiteNavbar`, `SiteFooter`, `Section`, `Heading`, `Text`, `CtaLink`, `ProductMark(s)`, `PulseGraph`, `Diagram`, `InstrumentPanel01`, `LogoStrip01`, `MediaBand01`, `ProductGrid01`, `Cta01`, `PageHeader01`, `FactList`, `Prose`, `BlogPostPage`, `NotFoundPage`, `AuroraWash`, `TsparticlesField`, `HeaderTransparency`, `Reveal` | Compliant. Local components (`site-chrome`, `post-date`, `json-ld`) compose DS and own data/copy only. **Bug fixed upstream in 1.7.1:** `TsparticlesField` passed an inline `init: (engine) => loadSlim(engine)` to `ParticlesProvider`, whose global first-init check threw `ParticlesProvider init callback must be stable across the app lifecycle` on re-render (ink read) or double mount before load finished (identical in 1.6.0/1.7.0). Prism hoisted `init` to a module-stable `initTsparticles`, added a regression test, and published 1.7.1; this site consumes it directly. |
-| Locally implemented primitives | `components/logo.tsx` (SVG brand mark), `components/editorial-factory.tsx` (SVG schematic), `components/family-constellation.tsx` (SVG orbit + DS ProductMarks), blog index list, hero/pipeline/pillars composition | Registered svg-component assets (see §6); blog index / hero / pipeline / pillars are domain composition the catalogue deliberately does not ship (documented in `app/page.tsx` and `README.md`). No local Button/Input/Card/Dialog/Table. |
+| UI components | All pages compose DS Blocks/Components/Pages: `SiteNavbar`, `SiteFooter`, `Section`, `Heading`, `Text`, `CtaLink`, `ProductMark(s)`, `PulseGraph`, `Diagram`, `InstrumentPanel01`, `LogoStrip01`, `MediaBand01`, `ProductGrid01`, `Cta01`, `PageHeader01`, `FactList`, `Prose`, `BlogPostPage`, `NotFoundPage`, `Ground01`, `Reveal` | Compliant. Local components (`site-chrome`, `post-date`, `json-ld`) compose DS and own data/copy only. **Bug fixed upstream in 1.7.1:** `TsparticlesField` passed an inline `init: (engine) => loadSlim(engine)` to `ParticlesProvider`, whose global first-init check threw `ParticlesProvider init callback must be stable across the app lifecycle` on re-render (ink read) or double mount before load finished (identical in 1.6.0/1.7.0). Prism hoisted `init` to a module-stable `initTsparticles`, added a regression test, and published 1.7.1; this site consumes it directly inside `Ground01`. |
+| Locally implemented primitives | `components/editorial-factory.tsx` (SVG schematic), `components/family-constellation.tsx` (SVG orbit + DS ProductMarks), blog index list, hero/pipeline/pillars composition. The brand mark was a local drawing until 1.8 published `NaniSoftMark`; every mark on the site is the package's own now | Registered svg-component assets (see §6); blog index / hero / pipeline / pillars are domain composition the catalogue deliberately does not ship (documented in `app/page.tsx` and `README.md`). No local Button/Input/Card/Dialog/Table. |
 | Images | `public/` contains only `.gitkeep`. No raster images committed. One raw `<img>` in og bitmap (`app/opengraph-image.tsx`) | EX-009. Zero DOM raster images in the export (`ui-runtime-check`: 0 `<img>` across 9 HTML files). |
-| SVG / icons | 3 inline SVGs (logo, editorial, constellation) + og `MARK_SVG` string. No `lucide-react` import (DS `DSIcon` is internal to prism-ui) | EX-010/011/012, registered in `scripts/asset-manifest.json`, sanitized by ASSET007. |
+| SVG / icons | 2 inline SVGs (editorial, constellation) + og `MARK_SVG` string. No `lucide-react` import (DS `DSIcon` is internal to prism-ui) | EX-011/012, registered in `scripts/asset-manifest.json`, sanitized by ASSET007. |
 | Fonts (files) | None in `public/` | Compliant. |
 | DOM styling / runtime injection | None. No `document.*.style`, `getComputedStyle`, `createElement('style')` | Compliant (also `test/server-only.test.ts`). |
 | Tests / CI | Vitest (71 tests), oxlint, tsc, `prism-gates`, GitHub Actions `verify → deploy` | Extended, not replaced (see §11–14). |
 
-**Upgrade performed**: `@nanisoft/prism-ui` 1.6.0 → **1.7.1** (exact pin).
-`pnpm build`, `pnpm typecheck`, `pnpm test` (71/71) and `pnpm check`
-(prism-gates, 6 gates, 0 findings) all pass on 1.7.1. 1.7.0 adds
+**Upgrades performed**: `@nanisoft/prism-ui` 1.6.0 → 1.7.1 → **1.8.0** (exact
+pin). `pnpm build`, `pnpm typecheck`, `pnpm test` and `pnpm check`
+(prism-gates, 6 gates, 0 findings) pass on each pin. 1.7.0 added
 `@nanisoft/prism-ui/assets` (variant/budget/resolution contract) and the
 `DS*` asset components (`DSImage`, `DSIcon`, `DSLogo`, `DSAvatar`,
-`DSIllustration`, `DSVideo`, `DSMediaCard`, `DSGrid`, `DSStack`) used below.
-1.7.1 fixes the `TsparticlesField` init stability bug (see §1 table).
+`DSIllustration`, `DSVideo`, `DSMediaCard`, `DSGrid`, `DSStack`) used below;
+1.7.1 fixed the `TsparticlesField` init stability bug (see §1 table). 1.8
+publishes the page's ground as the `Ground01` Block (this site's hand
+assembly of `AuroraWash`, `TsparticlesField`, the `site-atmosphere` layer and
+`HeaderTransparency` is deleted in its favour), publishes `NaniSoftMark`
+beside the other four family marks (the local drawing is deleted), holds the
+`site-main` stacking contract on the `data-slot` (the chrome's `main` carries
+it), puts the `z` on the anchored popups' positioner, and adds the `veil`
+translucency scale, whose rungs the editorial figure's surfaces now name.
 
 ## 2. Central design system dependency
 
 ```bash
-pnpm add @nanisoft/prism-ui@1.7.1 --save-exact
+pnpm add @nanisoft/prism-ui@1.8.0 --save-exact
 ```
-- Pinned exactly (`"@nanisoft/prism-ui": "1.7.1"`), never `^`. The token
-  package (`@nanisoft/prism-tokens@1.7.0`) is prism-ui's own dependency;
+- Pinned exactly (`"@nanisoft/prism-ui": "1.8.0"`), never `^`. The token
+  package (`@nanisoft/prism-tokens@1.8.0`) is prism-ui's own dependency;
   this repo does not declare it (prism-gates `pin` enforces both).
 - No competing UI libraries, no private `/dist/` or `/src/` imports
   (UI005), no package aliases (UI007). Verified by `ui-check` package graph
@@ -136,18 +143,19 @@ Missing capabilities are requested centrally (§10), never worked around.
 
 ## 6–8. Asset governance, components, dimensions and quality
 
-Centrally owned (DS package / manifest): Inter fonts, product marks
-(`NexusMark/AtlasMark/AlphaLensMark/PrismMark`), all UI icons
+Centrally owned (DS package / manifest): Inter fonts, the five family marks
+(`NaniSoftMark/NexusMark/AtlasMark/AlphaLensMark/PrismMark`), all UI icons
 (`DSIcon` registry: search, menu, x, check, chevrons, arrows, moon/sun,
 settings, … — 37 names), logos/illustrations via `DSLogo`/`DSIllustration`.
-Never duplicated locally (UI005/ASSET008/ASSET009).
+Never duplicated locally (UI005/ASSET008/ASSET009). The company mark was a
+local drawing until 1.8 published it beside the other four; the local copy is
+deleted and every mark on the site is the package's own.
 
 Application-owned, registered in **`scripts/asset-manifest.json`**:
 
 | id | path | category / format | variant | budget | theme-aware |
 |---|---|---|---|---|---|
-| `logo-nanisoft` | `components/logo.tsx` | logo / svg-component | logo | 50 KiB | ✅ tokens + currentColor |
-| `illustration-editorial-factory` | `components/editorial-factory.tsx` | illustration / svg-component | illustration | 50 KiB | ✅ |
+| `illustration-editorial-factory` | `components/editorial-factory.tsx` | illustration / svg-component | illustration | 50 KiB | ✅ veil rungs + tokens |
 | `diagram-family-constellation` | `components/family-constellation.tsx` | illustration / svg-component | illustration | 50 KiB | ✅ |
 | `og-image-nanisoft` | `app/opengraph-image.tsx` | image / png 1200×630 | banner | 300 KiB | ❌ bitmap (EX-002/005) |
 
@@ -176,9 +184,9 @@ Application-owned, registered in **`scripts/asset-manifest.json`**:
 - UI icons: `DSIcon` only (closed registry; unknown names throw).
   No `lucide-react` import, no `.svg` import, no inline icon SVG,
   no icon fonts (UI005/ASSET008).
-- Logos: `DSLogo` (image src) or a registered svg-component with a
-  manifest exception (EX-010). Illustrations: `DSIllustration` or a
-  registered svg-component (EX-011/012).
+- Logos: the five family marks from `@nanisoft/prism-ui/components/product-marks`,
+  or `DSLogo` (image src) for an image asset. Illustrations:
+  `DSIllustration` or a registered svg-component (EX-011/012).
 - Complex SVGs are registered, sanitized (ASSET007: no `<script>`,
   `<foreignObject>`, `on*`, `javascript:`) and validated (budget,
   theme-aware) via the manifest — the approved governance process.
@@ -199,9 +207,9 @@ Blocks/primitives; defects are not fixed with local CSS.
 2. Layout primitives for: split hero with identity column, 6-stage
    pipeline band with live figure, 3-shape claim band (band/ledger/framed),
    family constellation, blog index list. These are the EX-001 bands.
-3. `DSIllustration` support for svg-component sources (editorial factory)
-   and `DSLogo` support for theme-aware svg-component marks, so EX-010/011
-   can be retired by emitting static `.svg` files.
+3. `DSIllustration` support for svg-component sources (editorial factory),
+   so EX-011 can be retired by emitting a static `.svg` file. (The mark half
+   of this request closed with 1.8's `NaniSoftMark`.)
 4. **Bug fix (not a capability, done in 1.7.1):** `TsparticlesField` now
    passes a module-stable `init` callback to `ParticlesProvider`.
 

@@ -10,7 +10,7 @@
     "site sheet (Mission 3 exception EX-001) and may only use DS tokens."
   ],
   "designSystem": "@nanisoft/prism-ui",
-  "designSystemVersion": "1.7.1",
+  "designSystemVersion": "1.8.0",
   "permittedStylesheet": "app/globals.css",
   "permittedStylesheetImport": "@nanisoft/prism-ui/styles.css",
   "sourceRoots": ["app", "components", "lib", "content"],
@@ -139,15 +139,6 @@
       "owner": "frontend-platform",
       "expires": "2027-05-08",
       "scope": "app/opengraph-image.tsx only"
-    },
-    {
-      "id": "EX-010",
-      "gate": "ASSET008",
-      "file": "components/logo.tsx",
-      "reason": "Registered svg-component brand logo (asset-manifest logo-nanisoft). DSLogo requires image src; theme-aware svg-component preserves pack/mode cascade.",
-      "owner": "frontend-platform",
-      "expires": "2027-05-08",
-      "scope": "components/logo.tsx only"
     },
     {
       "id": "EX-011",

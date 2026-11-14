@@ -1,6 +1,5 @@
 import { ProductMark } from '@nanisoft/prism-ui/components/product-mark'
-import { AlphaLensMark, AtlasMark, NexusMark, PrismMark } from '@nanisoft/prism-ui/components/product-marks'
-import { NaniSoftLogo } from '@/components/logo'
+import { AlphaLensMark, AtlasMark, NaniSoftMark, NexusMark, PrismMark } from '@nanisoft/prism-ui/components/product-marks'
 import { IDENTITY } from '@/lib/landing-content'
 import { PRODUCTS as DIRECTORY } from '@/lib/site'
 
@@ -24,7 +23,7 @@ import { PRODUCTS as DIRECTORY } from '@/lib/site'
  * arrangement and is not worth shrinking an orbit to a thumbnail for.
  */
 const DRAWINGS = {
-  www: <NaniSoftLogo className="site-product-mark" />,
+  www: <NaniSoftMark className="site-product-mark" />,
   nexus: <NexusMark className="site-product-mark" />,
   atlas: <AtlasMark className="site-product-mark" />,
   alphalens: <AlphaLensMark className="site-product-mark" />,
@@ -67,7 +66,7 @@ export function FamilyConstellation() {
           cy="200"
           r="76"
           strokeWidth="1"
-          className="stroke-primary prism-ambient-pulse"
+          className="site-constellation__pulse prism-ambient-pulse"
           style={{ transformOrigin: '200px 200px' }}
         />
       </svg>

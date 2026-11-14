@@ -1,17 +1,15 @@
 import type { Metadata } from 'next';
 import type { ReactElement } from 'react';
 
-import { AuroraWash } from '@nanisoft/prism-ui/components/aurora-wash';
 import { CtaLink } from '@nanisoft/prism-ui/components/cta-link';
 import { Diagram } from '@nanisoft/prism-ui/components/diagram';
-import { HeaderTransparency } from '@nanisoft/prism-ui/components/header-transparency';
 import { AlphaLensMark, AtlasMark, NexusMark } from '@nanisoft/prism-ui/components/product-marks';
 import { PulseGraph } from '@nanisoft/prism-ui/components/pulse-graph';
 import { Reveal } from '@nanisoft/prism-ui/components/reveal';
 import { Section, SectionHeading } from '@nanisoft/prism-ui/components/section';
-import { TsparticlesField } from '@nanisoft/prism-ui/components/tsparticles-field';
 import { Heading, Text } from '@nanisoft/prism-ui/components/typography';
 import { Cta01 } from '@nanisoft/prism-ui/blocks/cta-01';
+import { Ground01 } from '@nanisoft/prism-ui/blocks/ground-01';
 import { InstrumentPanel01 } from '@nanisoft/prism-ui/blocks/instrument-panel-01';
 import { LogoStrip01 } from '@nanisoft/prism-ui/blocks/logo-strip-01';
 import { MediaBand01 } from '@nanisoft/prism-ui/blocks/media-band-01';
@@ -190,16 +188,13 @@ export default function Landing(): ReactElement {
   return (
     <SiteChrome>
       <JsonLd data={JSON_LD} />
-      <HeaderTransparency />
+      {/* The page's one continuous ground, as the published Block rather than an
+          assembly: the aurora wash at full presence, the particle field, the fixed
+          atmosphere layer and the bar's scroll transparency, chosen by props. The
+          stacking contract the ground needs is the chrome's to hold, and it does:
+          the main element carries the `site-main` slot. */}
+      <Ground01 />
       <>
-        {/* The page's one continuous ground: light and a moving medium, fixed
-            behind every section so the whole page reads as one surface rather
-            than as a hero and a set of separate bands. It is `aria-hidden`
-            because a medium is not information. */}
-        <div aria-hidden className="site-atmosphere">
-          <AuroraWash />
-          <TsparticlesField />
-        </div>
 
         {/* The thesis, the page's own h1, and the family it built.
 
@@ -215,10 +210,6 @@ export default function Landing(): ReactElement {
             second logo forty pixels below it was the same word twice in the one
             place a reader looks first. The thesis is the first thing in the copy
             column now. */}
-        {/* The hero's ground: light through the surface and a medium moving
-            through it, both the design system's own and both complete at rest.
-            The clip is the band's, so the wash and the field read as the page's
-            own weather rather than as a picture behind it. */}
         <Section data-slot="nanisoft-hero" size="tall">
           <div className="site-hero">
             <div className="site-hero__copy">

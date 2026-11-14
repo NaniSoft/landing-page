@@ -2,12 +2,17 @@ import type { ReactNode } from 'react';
 
 import { SiteFooter } from '@nanisoft/prism-ui/blocks/site-footer';
 import { SiteNavbar } from '@nanisoft/prism-ui/blocks/site-navbar';
-import { AlphaLensMark, AtlasMark, NexusMark, PrismMark } from '@nanisoft/prism-ui/components/product-marks';
+import {
+  AlphaLensMark,
+  AtlasMark,
+  NaniSoftMark,
+  NexusMark,
+  PrismMark,
+} from '@nanisoft/prism-ui/components/product-marks';
 
 import { COPY, NAV, SITES } from '@/lib/bar';
 import { FOOTER_COLUMNS, FOOTER_LEGAL } from '@/lib/navigation';
 import { DEFAULT_MODE, GROUND_PACK, SITE_PRODUCT } from '@/lib/site';
-import { NaniSoftLogo } from '@/components/logo';
 
 /**
  * The chrome, in one place, and the reason it is not in the root layout.
@@ -58,23 +63,25 @@ export type SiteSection = '/about' | '/blog';
 /*
  * The product, as the chrome draws it: the same three facts the bar and the
  * footer have always read, plus the drawing. The mark is the company's own
- * convergence mark, and it is the sign in the row, in the mobile panel and at
- * the foot of the page from this one fact, so a reader meets one sign three
- * times rather than a disc twice and a drawing once.
+ * convergence mark as the package publishes it, and it is the sign in the row,
+ * in the mobile panel and at the foot of the page from this one fact, so a
+ * reader meets one sign three times and the drawing is held in step with the
+ * other four by the one package that publishes all five.
  */
-const PRODUCT = { ...SITE_PRODUCT, mark: <NaniSoftLogo className="site-product-mark" /> };
+const PRODUCT = { ...SITE_PRODUCT, mark: <NaniSoftMark className="site-product-mark" /> };
 
 /**
  * The family's marks, as the bar's sites menu draws them.
  *
  * The directory in `lib/site.json` carries each product's id, name, pack and
  * destination, and not its drawing: a JSON file cannot hold a React node. The
- * drawings live here beside the mark this bar already draws for its own product,
- * so the menu shows each member's own logo rather than the two-colour disc, and a
- * reader recognises a destination by its sign before they read its name.
+ * drawings live here, every one from the package's own five, so the menu shows
+ * each member's own logo rather than the two-colour disc, a reader recognises a
+ * destination by its sign before they read its name, and a mark that changes
+ * upstream changes here without a copy of it being edited.
  */
 const SITE_MARKS: Record<string, ReactNode> = {
-  www: <NaniSoftLogo className="site-product-mark" />,
+  www: <NaniSoftMark className="site-product-mark" />,
   nexus: <NexusMark className="site-product-mark" />,
   atlas: <AtlasMark className="site-product-mark" />,
   alphalens: <AlphaLensMark className="site-product-mark" />,
@@ -119,7 +126,14 @@ export function SiteChrome({
         }}
         mode={{ lightLabel: COPY.toDark, darkLabel: COPY.toLight }}
       />
-      <main className="site-main">{children}</main>
+      {/* The slot is the design system's stacking contract, and the class is
+          this site's own layout rule: a page that wears the ground gives its
+          main the slot, which is what holds it above the fixed ground layer,
+          and the class is what keeps the footer at the bottom of a short page.
+          The two name different facts, so the element carries both. */}
+      <main data-slot="site-main" className="site-main">
+        {children}
+      </main>
       <SiteFooter
         product={PRODUCT}
         about={

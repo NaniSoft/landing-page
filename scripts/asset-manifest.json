@@ -13,19 +13,6 @@
   "version": 1,
   "assets": [
     {
-      "id": "logo-nanisoft",
-      "path": "components/logo.tsx",
-      "category": "logo",
-      "format": "svg-component",
-      "allowedVariants": ["logo"],
-      "themeAware": true,
-      "budgetKiB": 50,
-      "role": "brand-logo",
-      "license": "NaniSoft proprietary",
-      "alt": "NaniSoft",
-      "exception": "Brand convergence mark. DSLogo takes an image src; this mark is a theme-aware svg-component (chart tokens + currentColor) so a pack/mode cascade repaints it. Registered here per Mission 9 for complex SVG assets; sanitized by ASSET007 (no script/foreignObject/handlers)."
-    },
-    {
       "id": "illustration-editorial-factory",
       "path": "components/editorial-factory.tsx",
       "category": "illustration",

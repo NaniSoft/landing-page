@@ -9,6 +9,15 @@ import type { CSSProperties } from 'react'
  * tokens the page uses, so it follows the pack and the mode rather than carrying
  * a colour of its own.
  *
+ * **Every translucent surface in it names a rung of the `veil` scale, as a site
+ * class rather than a utility.** A consumer cannot write a Prism utility class,
+ * because a utility exists in the emitted sheet only if a Prism component uses
+ * it: this figure used to name its washes with `fill-foreground/10` and its kin,
+ * none of which any Prism component drew, so the classes matched nothing and the
+ * stations they filled rendered as empty air. A site class cannot vanish with a
+ * release, and the rung it reads is the same ladder the wash behind the page and
+ * the glass over the bar are priced by.
+ *
  * The packet is the one moving part. It rides `prism-ambient-travel`, which is
  * priced by the token package and stopped by the universal reduced-motion rule.
  * Every station is visible with the animation stopped, so the figure still says
@@ -28,7 +37,7 @@ export function EditorialFactory() {
     >
       <rect width="1200" height="675" className="fill-muted" />
 
-      <g className="fill-foreground/5 stroke-border" strokeWidth="1.5">
+      <g className="site-factory__wash stroke-border" strokeWidth="1.5">
         <rect x="110" y="118" width="980" height="392" rx="12" />
         <rect x="146" y="154" width="908" height="320" rx="8" />
       </g>
@@ -39,23 +48,23 @@ export function EditorialFactory() {
         <path d="M 146 300 H 1054" strokeDasharray="2 10" />
       </g>
 
-      <g className="fill-foreground/10">
+      <g className="site-factory__station">
         {Array.from({ length: 6 }, (_, index) => {
           const x = 220 + index * 128
           return (
             <g key={index}>
-              <rect x={x} y={232} width="64" height="86" rx="6" />
-              <rect x={x + 10} y={244} width="44" height="8" rx="3" opacity="0.5" />
-              <rect x={x + 10} y={262} width="30" height="6" rx="3" opacity="0.35" />
-              <rect x={x + 10} y={278} width="38" height="6" rx="3" opacity="0.35" />
+              <rect x={x} y="232" width="64" height="86" rx="6" />
+              <rect x={x + 10} y="244" width="44" height="8" rx="3" className="site-factory__readout" />
+              <rect x={x + 10} y="262" width="30" height="6" rx="3" className="site-factory__readout" />
+              <rect x={x + 10} y="278" width="38" height="6" rx="3" className="site-factory__readout" />
             </g>
           )
         })}
       </g>
 
-      <g className="text-primary/60" fill="currentColor">
+      <g className="site-factory__stops" fill="currentColor">
         {Array.from({ length: 5 }, (_, index) => (
-          <circle key={index} cx={252 + index * 128} cy={360} r="5" />
+          <circle key={index} cx={252 + index * 128} cy="360" r="5" />
         ))}
       </g>
 
@@ -68,16 +77,16 @@ export function EditorialFactory() {
         ))}
       </g>
 
-      <g className="text-foreground/25" fill="currentColor">
+      <g className="site-factory__products" fill="currentColor">
         {Array.from({ length: 4 }, (_, index) => (
           <g key={index}>
             <rect x={900 + index * 42} y={300 - index * 8} width="26" height="26" rx="4" />
-            <rect x={900 + index * 42} y={334 - index * 8} width="26" height="8" rx="3" opacity="0.5" />
+            <rect x={900 + index * 42} y={334 - index * 8} width="26" height="8" rx="3" className="site-factory__readout" />
           </g>
         ))}
       </g>
 
-      <g className="text-foreground/20" stroke="currentColor" strokeWidth="1.5" fill="none">
+      <g className="site-factory__orbits" stroke="currentColor" strokeWidth="1.5" fill="none">
         <circle cx="600" cy="330" r="238" strokeDasharray="6 10" />
         <circle cx="600" cy="330" r="170" />
         <circle cx="600" cy="330" r="104" strokeDasharray="3 8" />

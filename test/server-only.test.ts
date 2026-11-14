@@ -80,7 +80,6 @@ describe('the site has no client code', () => {
       'components/editorial-factory.tsx',
       'components/family-constellation.tsx',
       'components/json-ld.tsx',
-      'components/logo.tsx',
       'components/post-date.tsx',
       'components/site-chrome.tsx',
       'lib/bar.ts',

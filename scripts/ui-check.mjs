@@ -377,7 +377,7 @@ function scanTsFile(file, root, config, findings, ctx) {
     // the governed way ProductMark accepts a logo drawing. Not a visual override.
     ['NexusMark', 'site-product-mark'], ['AtlasMark', 'site-product-mark'],
     ['AlphaLensMark', 'site-product-mark'], ['PrismMark', 'site-product-mark'],
-    ['NaniSoftLogo', 'site-product-mark'], ['NaniSoftLogo', 'site-logo'],
+    ['NaniSoftMark', 'site-product-mark'],
   ];
   const nonDsComponents = new Set(['Link', 'SiteChrome', 'SiteFooter', 'SiteNavbar', 'JsonLd', 'PostDate', 'FamilyConstellation', 'EditorialFactory']);
 
