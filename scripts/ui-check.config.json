@@ -10,10 +10,15 @@
     "site sheet (Mission 3 exception EX-001) and may only use DS tokens."
   ],
   "designSystem": "@nanisoft/prism-ui",
-  "designSystemVersion": "1.8.0",
+  "designSystemVersion": "1.10.0",
   "permittedStylesheet": "app/globals.css",
   "permittedStylesheetImport": "@nanisoft/prism-ui/styles.css",
-  "sourceRoots": ["app", "components", "lib", "content"],
+  "sourceRoots": [
+    "app",
+    "components",
+    "lib",
+    "content"
+  ],
   "assetManifest": "scripts/asset-manifest.json",
   "dsAssetManifest": "node_modules/@nanisoft/prism-ui/dist/assets/manifest.json",
   "allowedImports": [
@@ -55,9 +60,26 @@
     "jss",
     "postcss"
   ],
-  "allowedBreakpointsRem": [30, 40, 48, 63.9375, 64],
-  "allowedCssVariables": ["--site-measure"],
-  "allowedFormats": ["png", "webp", "avif", "svg", "ico", "woff2", "mp4", "webm"],
+  "allowedBreakpointsRem": [
+    30,
+    40,
+    48,
+    63.9375,
+    64
+  ],
+  "allowedCssVariables": [
+    "--site-measure"
+  ],
+  "allowedFormats": [
+    "png",
+    "webp",
+    "avif",
+    "svg",
+    "ico",
+    "woff2",
+    "mp4",
+    "webm"
+  ],
   "exceptions": [
     {
       "id": "EX-001",
