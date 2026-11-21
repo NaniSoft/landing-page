@@ -455,12 +455,16 @@ body {
 /* ---------- The pipeline band ---------- */
 
 /*
- * The live figure above the six stages, not beside them.
+ * The live figure, and the six stages as its station roster beside it.
  *
  * Beside them was the first arrangement and it was wrong for a measurement: `PulseGraph`
  * draws six stage names into a 640-unit canvas, and in a 430-pixel column those names
  * render at about four pixels, which is a drawing nobody can read and a screen-reader
- * user is the only one who gets the sentence it stands for.
+ * user is the only one who gets the sentence it stands for. The arrangement below is
+ * not that one: the roster never shares a row with a squeezed drawing, because the
+ * split only exists at 64rem and up, where the container has room for a drawing at the
+ * width its names stay legible at. Below 64rem the figure sits above the list, which
+ * is the arrangement the measurement asked for and the only one a phone gets.
  *
  * The width is capped at 46rem rather than left to fill the container. The drawing's
  * own canvas is 640 by 360 with its content in the middle third, so a full-width panel
@@ -480,6 +484,19 @@ body {
  * sideways to read a paragraph. A grid track of `minmax(0, 1fr)` takes the container's
  * width and lets the panel keep the scroller it already had, so the drawing is reached
  * by scrolling inside the figure rather than by scrolling the page.
+ *
+ * **The figure track is capped at 43rem, and the roster takes everything else.** The
+ * drawing's own minimum is 40rem and the panel around it pads two columns at
+ * `--spacing-4` behind a 1px border on each edge, so 43rem is the narrowest half-rem
+ * step of the token scale that holds all of that without the drawing ever meeting the
+ * panel's scroller at a desktop width: at the 64rem viewport the
+ * container is 976px, the figure takes its full 688px, and the roster gets the
+ * remaining 248px; at 1440 the roster widens to 376px and the drawing still renders
+ * at its native 640px canvas, where its six stage names hold the legible measure the
+ * cap was checked at. A ratio track would widen the drawing past the width its names
+ * were measured at and then hand the overflow to a scrollbar; the cap spends the
+ * surplus on the roster, which is the column that reads longer, not the drawing that
+ * scrolls.
  */
 .site-pipeline {
   display: grid;
@@ -487,8 +504,15 @@ body {
   gap: var(--spacing-10);
 }
 
+@media (min-width: 64rem) {
+  .site-pipeline {
+    grid-template-columns: minmax(0, 43rem) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
 .site-pipeline__figure {
-  max-width: 46rem;
+  max-width: 43rem;
 }
 
 .site-pipeline__stages {
@@ -505,10 +529,17 @@ body {
   }
 }
 
+/*
+ * Beside the running figure the six stages are one column: the roster. A grid of
+ * stage cells under a drawing of the same stages is the same list twice in two
+ * directions, so at the width where the two sit together the list stands up and
+ * reads against the figure, stage for stage, at the same vertical rhythm the
+ * drawing's rail runs at.
+ */
 @media (min-width: 64rem) {
   .site-pipeline__stages {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--spacing-10);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
   }
 }
 
@@ -518,14 +549,55 @@ body {
  * first stage's rule is the column's opening line and there is no stray rule under the
  * last. No ordinal is drawn, because this is an `<ol>` and a screen reader already
  * announces "3 of 6"; a printed number beside a number the markup knows is a second
- * answer to a question the list has already answered.
+ * answer to a question the list has already answered, and the band already carries
+ * the sequence visually: the marker on the rail is the stage the list is on.
  *
- * The hairline is on the cell rather than between cells, so in three columns it reads
- * as three lists of two rather than as one list of six with rules that stop and start.
+ * The hairline is on the cell rather than between cells, so in the two-wide
+ * arrangement below 64rem it reads as two lists of three rather than as one list of
+ * six with rules that stop and start.
  */
 .site-pipeline__stage {
+  position: relative;
   padding-top: var(--spacing-4);
   border-top: 1px solid var(--border);
+}
+
+/*
+ * The station. The editorial factory draws its conveyor stops at full `--primary`,
+ * because a signal dot is ink rather than a surface and the design system's own
+ * figures draw their moving parts at full ink; the roster rides the same rule. One
+ * dot per stage, seated on the hairline the stage hangs from, is what makes six
+ * text cells read as six stations of the line the figure is drawing: the dots are
+ * the stops, the figure's marker is the packet between them, and with every
+ * animation stopped both halves of that sentence are still true.
+ *
+ * The dot is spent from the pack radius rather than declared: the governed
+ * `calc(var(--radius) * 0.8)` on an eight-pixel box rounds past the box's half
+ * measure, so the corner clamps to the circle a stop is, the same way every other
+ * spent corner on this page is a fraction of the one radius the ground owns.
+ */
+.site-pipeline__stage::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--spacing-2);
+  height: var(--spacing-2);
+  border-radius: calc(var(--radius) * 0.8);
+  background-color: var(--primary);
+  transform: translateY(-50%);
+}
+
+/*
+ * In the roster the rows take the vertical rhythm into their own padding, because
+ * the grid gap is zero there: the rule between two stations belongs to the lower
+ * one, and the space under a station's caption is the next rule's padding-top, so
+ * the six rows run at one even beat instead of at a gap the roster never asked for.
+ */
+@media (min-width: 64rem) {
+  .site-pipeline__stage {
+    padding-top: var(--spacing-5);
+  }
 }
 
 .site-pipeline__name {
@@ -542,6 +614,104 @@ body {
   font-size: var(--text-sm);
   line-height: var(--leading-normal);
   text-wrap: pretty;
+}
+
+/* ---------- The products ledger ---------- */
+
+/*
+ * The product rows as a ledger, not a stack of hairlines with nothing between them.
+ *
+ * The catalogue Block drew a mark, a tagline and a rule per row, and what the band
+ * was missing was never more content: it was the row never announcing itself as a
+ * row. A ledger row owns its edges, its padding and its hover, so a reader moving a
+ * pointer down the band can see the row they are on, and the three facts a reader
+ * decides from sit in three columns they can scan: the mark and the name it carries,
+ * the sentence about the product, and the destination it lives at.
+ *
+ * The edges are hairlines, top on every row and a closing one under the last, which
+ * is the arrangement the catalogue's own product rows use: a ledger that opens and
+ * closes with a rule, rather than a list that trails off.
+ */
+.site-products {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-product {
+  border-top: 1px solid var(--border);
+}
+
+.site-product:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+/*
+ * The row is the link, the way the catalogue draws product rows, so the browser's
+ * own affordances work: a status bar shows the destination and a middle-click opens
+ * it in a new tab. The wash on hover is instant, the way the constellation's is: no
+ * transition is authored here, because the page's reduced-motion answer already
+ * removes one and an unlayered instant hover is the honest version of the same
+ * state change.
+ *
+ * The corners are spent, not declared: the hover wash rounds at the same fraction of
+ * the pack radius every site-drawn corner on this page rounds at, so the wash reads
+ * as a surface this page drew rather than as a highlight painted over one.
+ */
+.site-product__link {
+  display: grid;
+  gap: var(--spacing-3);
+  padding: var(--spacing-6) var(--spacing-4);
+  border-radius: calc(var(--radius) * 0.8);
+}
+
+.site-product__link:hover {
+  background-color: var(--accent);
+}
+
+/*
+ * Three columns from the first width that has room for the readout beside the
+ * sentence: the mark rail, the tagline, and the destination readout, the mark rail
+ * sized to what a mark and its name need rather than to a fraction of the row.
+ */
+@media (min-width: 30rem) {
+  .site-product__link {
+    grid-template-columns: minmax(0, 14rem) minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: var(--spacing-6);
+  }
+}
+
+.site-product__mark {
+  display: flex;
+  align-items: center;
+}
+
+/*
+ * The sentence about the product, at the body step rather than the caption step,
+ * because the band's heading says what the set is and each row's one job is to say
+ * what its product is: a row that reads at caption size under a band heading is a
+ * footnote to a section that has no footnotes.
+ */
+.site-product__tagline {
+  max-width: 52ch;
+  color: var(--muted-foreground);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  text-wrap: pretty;
+}
+
+/* ---------- The framed schematic ---------- */
+
+/*
+ * The architecture drawing shares the pipeline figure's cap, so the page's two
+ * framed drawings hold one width and the band rhythm reads as a pair. The cap is a
+ * maximum: at a phone width the panel is the container's width, and the drawing
+ * inside it scales to what is left.
+ */
+.site-schematic {
+  max-width: 46rem;
 }
 
 /* ---------- Why Nanisoft ---------- */

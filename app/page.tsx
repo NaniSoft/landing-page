@@ -3,6 +3,7 @@ import type { ReactElement } from 'react';
 
 import { CtaLink } from '@nanisoft/prism-ui/components/cta-link';
 import { Diagram } from '@nanisoft/prism-ui/components/diagram';
+import { ProductMark } from '@nanisoft/prism-ui/components/product-mark';
 import { AlphaLensMark, AtlasMark, NexusMark } from '@nanisoft/prism-ui/components/product-marks';
 import { PulseGraph } from '@nanisoft/prism-ui/components/pulse-graph';
 import { Reveal } from '@nanisoft/prism-ui/components/reveal';
@@ -13,7 +14,6 @@ import { Ground01 } from '@nanisoft/prism-ui/blocks/ground-01';
 import { InstrumentPanel01 } from '@nanisoft/prism-ui/blocks/instrument-panel-01';
 import { LogoStrip01 } from '@nanisoft/prism-ui/blocks/logo-strip-01';
 import { MediaBand01 } from '@nanisoft/prism-ui/blocks/media-band-01';
-import { ProductGrid01 } from '@nanisoft/prism-ui/blocks/product-grid-01';
 
 import {
   ARCHITECTURE,
@@ -102,7 +102,7 @@ const JSON_LD = {
  * resolves its colours through the cascade rather than by reading a value once at
  * mount.
  *
- * **Three of the eight bands are composed here rather than taken whole**, and the
+ * **Four of the eight bands are composed here rather than taken whole**, and the
  * line is drawn at whether the catalogue ships the band:
  *
  *   - The hero. No Block in the catalogue draws a thesis beside the product set, and
@@ -113,14 +113,19 @@ const JSON_LD = {
  *   - The pipeline band. No Block draws a live figure beside the six stages it
  *     describes: `ProcessRail01` admits four steps and this page has six, and a rail
  *     cannot hold a panel.
+ *   - The products band. The catalogue's Block draws a mark, one muted tagline and a
+ *     hairline per row, and this page's band is the product directory: a row here has
+ *     to carry the product's destination as a readout beside its mark, because the
+ *     reader who leaves for a product leaves from this band, and a Block that renders
+ *     neither the destination nor the pack name a reader is standing in cannot say it.
  *   - The "why" band. `NoteGrid01` renders a hairline and no fill, `FeatureGrid01`
  *     requires an icon from a package this repository cannot import, and three tinted
  *     panels are what the section is for.
  *
- * Everything else is a Block, unmodified. The layout families on this page are eight
- * and no two of them are the same shape: a split hero, a strip, a figure beside a list,
- * hairline product rows, a schematic, three claims in three shapes, a narrow measure of
- * prose, and a filled closing band.
+ * Everything else is a Block or a Component composition, unmodified. The layout
+ * families on this page are eight and no two of them are the same shape: a split hero,
+ * a strip, a live panel with its station roster, a product ledger, a framed schematic,
+ * three claims in three shapes, a narrow measure of prose, and a filled closing band.
  *
  * **One region carries a second pack in the hero, one in the products band, and both
  * are in `scripts/pack-map.json`.** Every one of those boundaries lands on a
@@ -253,7 +258,7 @@ export default function Landing(): ReactElement {
             reveal; the hero, the strip and the closing ask stay still. */}
         <Reveal>
         <Section id="pipeline">
-          <SectionHeading as="h2" align="left" title={heading(PIPELINE.label, PIPELINE.spectrum)} className="mb-10" />
+          <SectionHeading as="h2" title={heading(PIPELINE.label, PIPELINE.spectrum)} className="mb-10" />
           <div className="site-pipeline">
             <div className="site-pipeline__figure">
               <InstrumentPanel01
@@ -283,36 +288,80 @@ export default function Landing(): ReactElement {
         </Section>
         </Reveal>
 
-        {/* The products. One of the two bands that carry a second pack: each row's mark is
-            its product's own boundary, and the mark is the only element in this section
-            that carries one. */}
+        {/* The products, as a ledger. One of the two bands that carry a second pack: each
+            row's mark is its product's own boundary, and the mark is the only element in
+            this section that carries one.
+
+            The row is a hairline ledger row, which is the shape the family's product
+            rows share, and its three columns are the three facts a reader decides from:
+            the mark and the name it carries, the sentence about the product, and the
+            destination it lives at. The destination is drawn as a mono readout beside
+            the pack the row stands in, because a domain reads like an instrument value
+            and a reader who is about to leave for a product is exactly the reader a
+            destination line is for. The wash on hover is instant, the way the
+            constellation's is: a site class cannot carry a transition the design
+            system prices, and an unlayered hover that changes in one frame is the
+            reduced-motion answer the ground already gave. */}
         <Reveal delay={1}>
-        <ProductGrid01
-          title={heading(PRODUCTS.label, PRODUCTS.spectrum)}
-          products={PRODUCTS.rows.map((product) => ({
-            id: product.id,
-            name: product.name,
-            pack: markPack(product.id),
-            mark: PRODUCT_MARKS[product.id],
-            tagline: product.tagline,
-            href: product.url,
-          }))}
-        />
+        <Section>
+          <SectionHeading as="h2" title={heading(PRODUCTS.label, PRODUCTS.spectrum)} className="mb-10" />
+          <ul data-slot="product-grid" className="site-products">
+            {PRODUCTS.rows.map((product) => {
+              const pack = markPack(product.id)
+              return (
+                <li key={product.id} data-slot="product-grid-row" className="site-product">
+                  <a href={product.url} className="site-product__link">
+                    <span className="site-product__mark">
+                      <ProductMark
+                        id={product.id}
+                        name={product.name}
+                        pack={pack}
+                        mark={PRODUCT_MARKS[product.id]}
+                        size="lg"
+                      />
+                    </span>
+                    <span className="site-product__tagline">{product.tagline}</span>
+                    <span className="site-product__meta site-mono">
+                      {pack} · {new URL(product.url).hostname}
+                    </span>
+                  </a>
+                </li>
+              )
+            })}
+          </ul>
+        </Section>
         </Reveal>
 
-        {/* The architecture. The five-node graph used to be a client component because it
-            resolved five pack inks in JavaScript at mount, which is why a light-mode reader
-            was served dark-mode ink until hydration; the schematic it drew is now a server
-            Component whose every stroke and fill names a semantic token, so the cascade
-            restyles all of them and a boundary above it would too. */}
+        {/* The architecture, framed as the schematic it is. The five-node graph used to be
+            a client component because it resolved five pack inks in JavaScript at mount,
+            which is why a light-mode reader was served dark-mode ink until hydration; the
+            schematic it drew is now a server Component whose every stroke and fill names
+            a semantic token, so the cascade restyles all of them and a boundary above it
+            would too.
+
+            The instrument frame is the pipeline panel's, at the neutral state, because
+            the page already owns the shape: a drawing this page argues from is shown the
+            way the page shows a drawing that runs, minus the live claim. The bar names
+            the figure a drawing, and the footnote states the stroke convention the two
+            dashed edges obey, which is the part of the schematic a reader otherwise has
+            to infer. The figure is capped at the panel width the pipeline figure uses,
+            so the page's two framed drawings share one width and the band rhythm reads
+            as a pair rather than as two guesses. */}
         <Reveal>
         <Section>
-          <SectionHeading as="h2" align="left" title={heading(ARCHITECTURE.label, ARCHITECTURE.spectrum)} className="mb-10" />
-          <Diagram
-            label={ARCHITECTURE.aria}
-            nodes={ARCHITECTURE.nodes}
-            relations={ARCHITECTURE.relations}
-          />
+          <SectionHeading as="h2" title={heading(ARCHITECTURE.label, ARCHITECTURE.spectrum)} className="mb-10" />
+          <div className="site-schematic">
+            <InstrumentPanel01
+              label={ARCHITECTURE.panel.label}
+              footnote={ARCHITECTURE.panel.footnote}
+            >
+              <Diagram
+                label={ARCHITECTURE.aria}
+                nodes={ARCHITECTURE.nodes}
+                relations={ARCHITECTURE.relations}
+              />
+            </InstrumentPanel01>
+          </div>
           <p className="site-caption">{ARCHITECTURE.caption}</p>
         </Section>
         </Reveal>
@@ -335,7 +384,7 @@ export default function Landing(): ReactElement {
             and it went. */}
         <Reveal delay={1}>
         <Section>
-          <SectionHeading as="h2" align="left" title={heading(WHY.label, WHY.spectrum)} className="mb-10" />
+          <SectionHeading as="h2" title={heading(WHY.label, WHY.spectrum)} className="mb-10" />
           <ul className="site-pillars">
             {WHY.pillars.map((pillar) => (
               <li key={pillar.name} className="site-pillar" data-shape={pillar.shape}>

@@ -21,6 +21,7 @@ next-env.d.ts
 # same: nothing here is read by the build, by the gates or by a reader, and every
 # file in it is somebody's editor state.
 .opencode/
+.impeccable/
 
 # misc
 .DS_Store
