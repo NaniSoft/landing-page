@@ -193,6 +193,16 @@ export const ARCHITECTURE = {
   caption:
     'Prism is the language they all wear. Nexus is the engine that builds them. Peach is reserved for what the factory builds next.',
   aria: 'NaniSoft architecture: Prism, the shared language, feeds Nexus; Nexus builds Atlas and AlphaLens; both point at future products.',
+  /**
+   * The instrument frame the schematic is shown in. A drawn thing says what it
+   * is, and the frame's bar is where it says it: the label names the figure a
+   * drawing, and the footnote states the one convention the strokes use, which
+   * a reader would otherwise have to infer from the two dashed edges.
+   */
+  panel: {
+    label: 'the platform, drawn',
+    footnote: 'Solid edges carry the claim. Dashed edges point at what the factory builds next.',
+  },
   nodes: ARCHITECTURE_NODES,
   relations: ARCHITECTURE_RELATIONS,
 } as const;
