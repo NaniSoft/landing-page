@@ -261,6 +261,27 @@ describe('the display step', () => {
   });
 });
 
+describe('the footer tagline and interactive target padding', () => {
+  it('draws the footer tagline in the ink of the brand', () => {
+    const tagline = rules().find((rule) => rule.selector === '.site-footer-tagline');
+    expect(tagline, 'app/globals.css declares no .site-footer-tagline rule').toBeTruthy();
+    expect(declared(tagline, 'color')).toBe('var(--brand-ink)');
+  });
+
+  it('gives the blog index titles and mobile constellation links vertical tap padding', () => {
+    const blogTitle = rules().find((rule) => rule.selector === '.site-blog-list__title');
+    expect(declared(blogTitle, 'display')).toBe('inline-block');
+    expect(declared(blogTitle, 'padding-block')).toBe('var(--spacing-2)');
+
+    const mobileLink = rules().find(
+      (rule) =>
+        rule.selector === '.site-constellation__link' &&
+        rule.media?.includes('max-width: 63.9375rem'),
+    );
+    expect(declared(mobileLink, 'padding')).toBe('var(--spacing-2) 0');
+  });
+});
+
 describe('the three claims', () => {
   it('renders one container per claim, and the container is named by the claim', () => {
     const { container } = render(<HomePage />);

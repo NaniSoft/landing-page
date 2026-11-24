@@ -68,4 +68,11 @@ describe('blog content', () => {
       expect(source, `${slug} drifts into install steps`).not.toMatch(/^## install/m);
     }
   });
+
+  it('uses semantic level-2 headings rather than bold pseudo-headings in the product ledger', async () => {
+    const source = await readFile(path.join(BLOG, 'where-the-products-stand', 'index.mdx'), 'utf8');
+    expect(source).toMatch(/^## Live today$/m);
+    expect(source).toMatch(/^## In development$/m);
+    expect(source).toMatch(/^## Designed, not built$/m);
+  });
 });

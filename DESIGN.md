@@ -23,6 +23,11 @@ colors:
   ray-mint: "#9ddcad"
   ray-gold: "#edc47d"
   ray-sky: "#9bd1ff"
+  spectrum-blush: "#ec88a0"
+  spectrum-lavender: "#bc97e7"
+  spectrum-mint: "#73bf88"
+  spectrum-sky: "#6cb2eb"
+  spectrum-peach: "#e4965e"
 typography:
   display:
     fontFamily: "Inter, Inter Fallback, ui-sans-serif, system-ui, sans-serif"
@@ -30,6 +35,12 @@ typography:
     fontWeight: 600
     lineHeight: 1.02
     letterSpacing: "-0.035em"
+  catalog-title:
+    fontFamily: "Inter, Inter Fallback, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(1.875rem, 3.6vw, 2.75rem)"
+    fontWeight: 600
+    lineHeight: 1.25
+    letterSpacing: "-0.025em"
   heading:
     fontFamily: "Inter, Inter Fallback, ui-sans-serif, system-ui, sans-serif"
     fontWeight: 600
@@ -78,7 +89,7 @@ The atmosphere is one continuous ground. A fixed aurora-and-particle layer sits 
 
 This is the only site in the family with a small site-authored stylesheet (app/globals.css). It is a layer over the design system, not a second system: no raw color, no new radii, no transitions, one alias variable, and every class named for what it draws (site-display, site-hero, site-pillar, site-factory, site-constellation).
 
-**Sources of truth:** every value below is recorded from the pinned `@nanisoft/prism-ui@1.11.0` stylesheet (`data-pack="sky"`), which is normative, plus `app/globals.css` for the site classes. Dark values are the default rendering; `-day` siblings are the light mode. The family accents (ray-cyan, ray-mint, ray-gold, ray-sky) may appear only inside product marks.
+**Sources of truth:** every value below is recorded from the pinned `@nanisoft/prism-ui@1.13.0` stylesheet (`data-pack="sky"`), which is normative, plus `app/globals.css` for the site classes. Dark values are the default rendering; `-day` siblings are the light mode. The family accents (ray-cyan, ray-mint, ray-gold, ray-sky) may appear only inside product marks.
 
 **Key Characteristics:**
 - One sky ground, dark first, one beam of accent color per section
@@ -128,6 +139,7 @@ One pastel sky beam on a near-neutral dark ground, with the other three packs he
 
 ### Hierarchy
 - **Display** (600, clamp(2.5rem, 6.4vw, 4.25rem), 1.02 line height, -0.035em tracking, max 16ch, balanced): the hero line only, via the site-display class; tightens to 0.98 line height at 64rem and wider.
+- **Catalog Title** (600, clamp(1.875rem, 3.6vw, 2.75rem), tight line height, tight tracking, balanced): the blog index heading, via the site-catalog__title class.
 - **Heading** (600, the design system scale up to 2.25rem): section headings, with their semantic tail in spectrum ink.
 - **Title** (600, 1rem): card titles, nav lockups, pillar names in brand ink.
 - **Body** (400, 1rem): reading text at the 42rem measure; descriptions in muted ink.

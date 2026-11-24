@@ -10,7 +10,7 @@
     "site sheet (Mission 3 exception EX-001) and may only use DS tokens."
   ],
   "designSystem": "@nanisoft/prism-ui",
-  "designSystemVersion": "1.12.0",
+  "designSystemVersion": "1.13.0",
   "permittedStylesheet": "app/globals.css",
   "permittedStylesheetImport": "@nanisoft/prism-ui/styles.css",
   "sourceRoots": [

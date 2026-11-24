@@ -1,6 +1,6 @@
 # UI Governance — Zero-Custom-UI, Zero-Custom-Styling and Asset Governance
 
-**Design system**: `@nanisoft/prism-ui` **1.8.0** (pinned exactly, `package.json`).
+**Design system**: `@nanisoft/prism-ui` **1.13.0** (pinned exactly, `package.json`).
 The mission's `@company/ui` is this package under its real name; there is no
 alias and no monorepo source import. Every visual component is imported from
 the published subpaths (`/components/*`, `/blocks/*`, `/pages/*`, `/theming`,
@@ -48,7 +48,7 @@ every stylesheet; `package.json` + lockfile graph read; built-export parse.
 | DOM styling / runtime injection | None. No `document.*.style`, `getComputedStyle`, `createElement('style')` | Compliant (also `test/server-only.test.ts`). |
 | Tests / CI | Vitest (71 tests), oxlint, tsc, `prism-gates`, GitHub Actions `verify → deploy` | Extended, not replaced (see §11–14). |
 
-**Upgrades performed**: `@nanisoft/prism-ui` 1.6.0 → 1.7.1 → **1.8.0** (exact
+**Upgrades performed**: `@nanisoft/prism-ui` 1.6.0 → 1.7.1 → 1.8.0 → 1.12.0 → **1.13.0** (exact
 pin). `pnpm build`, `pnpm typecheck`, `pnpm test` and `pnpm check`
 (prism-gates, 6 gates, 0 findings) pass on each pin. 1.7.0 added
 `@nanisoft/prism-ui/assets` (variant/budget/resolution contract) and the
@@ -66,10 +66,10 @@ translucency scale, whose rungs the editorial figure's surfaces now name.
 ## 2. Central design system dependency
 
 ```bash
-pnpm add @nanisoft/prism-ui@1.8.0 --save-exact
+pnpm add @nanisoft/prism-ui@1.13.0 --save-exact
 ```
-- Pinned exactly (`"@nanisoft/prism-ui": "1.8.0"`), never `^`. The token
-  package (`@nanisoft/prism-tokens@1.8.0`) is prism-ui's own dependency;
+- Pinned exactly (`"@nanisoft/prism-ui": "1.13.0"`), never `^`. The token
+  package (`@nanisoft/prism-tokens@1.10.0`) is prism-ui's own dependency;
   this repo does not declare it (prism-gates `pin` enforces both).
 - No competing UI libraries, no private `/dist/` or `/src/` imports
   (UI005), no package aliases (UI007). Verified by `ui-check` package graph
@@ -334,7 +334,7 @@ centrally. No guessing.
 6. All images via approved asset components — ✅ (zero DOM raster images; DS* required for new media).
 7. All application-owned static assets pass validation — ✅ (`scripts/asset-manifest.json`, ASSET gates).
 8. All responsive behaviour from the DS — ✅ (DS primitives + governed breakpoints).
-9. No competing styling dependencies — ✅ (UI007; only `@nanisoft/prism-ui@1.7.1`).
+9. No competing styling dependencies — ✅ (UI007; only `@nanisoft/prism-ui@1.13.0`).
 10. All automated checks pass — ✅ (`ui:check`, `ui:runtime`, `check`, build, 71 tests).
 11. Negative fixtures prove prohibited behaviour is rejected — ✅ (`test/ui-check.test.ts`).
 12. Production build works independently of DS source — ✅ (published npm package only).
